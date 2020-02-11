@@ -5,6 +5,11 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.ws.rs.core.Response;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,9 +45,21 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
             return gatewayResponse;
         }
 
-        //Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
-        //String scn = queryStringParameters.get(SCN_KEY);
-        //String creatorName = queryStringParameters.get(CREATOR_NAME_KEY);
+        Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
+        String scn = queryStringParameters.get(SCN_KEY);
+        String creatorName = queryStringParameters.get(CREATOR_NAME_KEY);
+        AlmaSruConnection connection = new AlmaSruConnection();
+        try {
+            final URL queryUrl = connection.generateQueryUrl(scn, creatorName);
+            try (InputStreamReader streamReader = connection.connect(queryUrl)) {
+                AlmaRecordParser almaRecordParser = new AlmaRecordParser();
+                final String json = almaRecordParser.extractPublicationData(streamReader);
+            }
+        } catch (URISyntaxException | IOException | XMLStreamException e) {
+            System.out.println(e);
+            gatewayResponse.setErrorBody(e.getMessage());
+            gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
         return gatewayResponse;
     }
 
