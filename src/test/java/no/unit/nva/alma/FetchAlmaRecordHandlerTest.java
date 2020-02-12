@@ -98,4 +98,23 @@ public class FetchAlmaRecordHandlerTest {
 
     }
 
+//    @Test
+    public void testFetchRecordTitle_Full_On_IntegrationTest() {
+        final Config instance = Config.getInstance();
+        instance.setAlmaSruHost("bibsys.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK");
+
+        Map<String, String> queryParameters = new HashMap<>();
+        queryParameters.put(FetchAlmaRecordHandler.SCN_KEY, "8071732");
+        queryParameters.put(FetchAlmaRecordHandler.CREATOR_NAME_KEY, "Gabriel, Ute");
+        Map<String, Object> event = new HashMap<>();
+        event.put(FetchAlmaRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
+
+        FetchAlmaRecordHandler mockAlmaRecordHandler = new FetchAlmaRecordHandler();
+
+        final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
+        assertEquals(Response.Status.OK.getStatusCode(), gatewayResponse.getStatusCode());
+        assertTrue(gatewayResponse.getBody().contains(AlmaRecordParserTest.EXPECTED_SUBTITLE));
+
+    }
+
 }
