@@ -13,6 +13,17 @@ import java.net.URL;
 public class AlmaSruConnection {
 
     public static final String HTTPS = "https";
+    public static final String VERSION_KEY = "version";
+    public static final String SRU_VERSION_1_2 = "1.2";
+    public static final String OPERATION_KEY = "operation";
+    public static final String OPERATION_SEARCH_RETRIEVE = "searchRetrieve";
+    public static final String RECORD_SCHEMA_KEY = "recordSchema";
+    public static final String RECORD_SCHEMA = "marcxml";
+    public static final String MAXIMUM_RECORDS_KEY = "maximumRecords";
+    public static final String MAX_NUMBER_RECODS = "2";
+    public static final String START_RECORD_KEY = "startRecord";
+    public static final String START_RECORD_1 = "1";
+    public static final String QUERY_KEY = "query";
 
     protected InputStreamReader connect(URL url) throws IOException {
         return new InputStreamReader(url.openStream());
@@ -30,12 +41,12 @@ public class AlmaSruConnection {
                 .setScheme(HTTPS)
                 .setHost(Config.getInstance().getAlmaSruHost())
                 .setPath(Config.ALMA_SRU_QUERY_PATH)
-                .setParameter("version", "1.2")
-                .setParameter("operation", "searchRetrieve")
-                .setParameter("recordSchema", "dc")
-                .setParameter("maximumRecords", "50")
-                .setParameter("startRecord", "1")
-                .setParameter("query", encodedCqlQuery)
+                .setParameter(VERSION_KEY, SRU_VERSION_1_2)
+                .setParameter(OPERATION_KEY, OPERATION_SEARCH_RETRIEVE)
+                .setParameter(RECORD_SCHEMA_KEY, RECORD_SCHEMA)
+                .setParameter(MAXIMUM_RECORDS_KEY, MAX_NUMBER_RECODS)
+                .setParameter(START_RECORD_KEY, START_RECORD_1)
+                .setParameter(QUERY_KEY, encodedCqlQuery)
                 .build();
         return uri.toURL();
     }

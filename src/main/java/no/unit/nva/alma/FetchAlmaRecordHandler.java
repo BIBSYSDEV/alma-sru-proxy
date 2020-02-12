@@ -22,6 +22,16 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
     public static final String QUERY_STRING_PARAMETERS_KEY = "queryStringParameters";
     public static final String CREATOR_NAME_KEY = "creatorname";
     public static final String SCN_KEY = "scn";
+    protected final transient AlmaSruConnection connection;
+
+
+    public FetchAlmaRecordHandler() {
+        connection = new AlmaSruConnection();
+    }
+
+    public FetchAlmaRecordHandler(AlmaSruConnection connection) {
+        this.connection = connection;
+    }
 
     /**
      * Main lambda function to fetch records from Alma.
@@ -47,7 +57,6 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
         String scn = queryStringParameters.get(SCN_KEY);
         String creatorName = queryStringParameters.get(CREATOR_NAME_KEY);
-        AlmaSruConnection connection = new AlmaSruConnection();
         try {
             final URL queryUrl = connection.generateQueryUrl(scn, creatorName);
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
