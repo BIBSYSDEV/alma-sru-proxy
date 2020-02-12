@@ -29,7 +29,7 @@ Parameters:
   AlmaSruHost:
     Type: String
     Description: Address to Alma-SRU
-    Default: '{{resolve:ssm:almaSruHost:2}}'
+    Default: '{{resolve:ssm:almaSruHost:1}}'
 
 Resources:
 
