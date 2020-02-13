@@ -42,15 +42,77 @@ Resources:
           MyCognitoAuthorizer:
             UserPoolArn: !Ref CognitoAuthorizerArn
       EndpointConfiguration: Regional
-      Models:
-        FetchAlmaRecordEventModel:
-          type: object
-          properties:
-            scn:
-              type: string
-            creatorname:
-              type: string
+      DefinitionBody:
+        openapi: 3.0.0
+        info:
+          title: NVA Alma SRU Proxy
+          version: '1.0'
+        paths:
+          /:
+            get:
+              summary:  Fetch most recent publication to an author given by creatorname and authorityID (scn)
+              parameters:
+                - in: query
+                  name: scn
+                  required: true
+                  type: string
+                  description: systemControlNumber (scn).
+                - in: query
+                  name: creatorname
+                  required: true
+                  type: string
+                  description: authors name (inverted).
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${NvaFetchAlmaRecordFunction.Arn}/invocations
+                responses: {}
+                httpMethod: GET
+                type: AWS_PROXY
+              responses:
+                '200':
+                  description: 'title'
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/fetchAlmaRecordResponseBody'
+                '400':
+                  description: 'Bad request.'
+                  content:
+                    application/json:
+                      schema:
+                        type: object
+                '404':
+                  description: 'No record found.'
+                  content:
+                    application/json:
+                      schema:
+                        type: object
+                '500':
+                  description: 'Internal server error.'
+                  content:
+                    application/json:
+                      schema:
+                        type: object
 
+        components:
+          securitySchemes:
+            CognitoUserPool:
+              type: apiKey
+              name: Authorization
+              in: header
+              x-amazon-apigateway-authtype: cognito_user_pools
+              x-amazon-apigateway-authorizer:
+                type: cognito_user_pools
+                providerARNs:
+                  - !Ref CognitoAuthorizerArn
+          schemas:
+            fetchAlmaRecordResponseBody:
+              title: publication (alma record)
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: title of the publication in Alma
 
   NvaFetchAlmaRecordFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -58,6 +120,7 @@ Resources:
       Environment:
         Variables:
           ALMA_SRU_HOST: !Ref AlmaSruHost
+          ALLOWED_ORIGIN:  '*'
       Handler: no.unit.nva.alma.FetchAlmaRecordHandler::handleRequest
       Runtime: java8
       MemorySize: 512
@@ -70,11 +133,6 @@ Resources:
             RestApiId: !Ref NvaAlmaSruProxyApi
             Method: get
             Path: /
-            RequestParameters:
-              - method.request.querystring.scn:
-                  Required: true
-              - method.request.querystring.creatorname:
-                  Required: true
 
 
   NvaAlmaSruProxyBasePathMapping:
