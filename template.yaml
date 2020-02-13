@@ -80,19 +80,23 @@ Resources:
                   content:
                     application/json:
                       schema:
+                        title: 400 Bad request
                         type: object
-                '404':
-                  description: 'No record found.'
-                  content:
-                    application/json:
-                      schema:
-                        type: object
+                        properties:
+                          error:
+                            type: string
+                            description: error message
                 '500':
                   description: 'Internal server error.'
                   content:
                     application/json:
                       schema:
+                        title: 500 internal server error
                         type: object
+                        properties:
+                          error:
+                            type: string
+                            description: error message
 
         components:
           securitySchemes:

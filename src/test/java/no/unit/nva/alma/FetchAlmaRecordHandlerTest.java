@@ -98,7 +98,7 @@ public class FetchAlmaRecordHandlerTest {
 
     }
 
-//    @Test
+    //@Test
     public void testFetchRecordTitle_Full_On_IntegrationTest() {
         final Config instance = Config.getInstance();
         instance.setAlmaSruHost("bibsys.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK");
