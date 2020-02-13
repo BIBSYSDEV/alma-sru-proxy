@@ -70,13 +70,13 @@ Resources:
                 httpMethod: GET
                 type: AWS_PROXY
               responses:
-                200:
+                '200':
                   description: title
                   content:
                     application/json:
                       schema:
                         $ref: '#/components/schemas/fetchAlmaRecordResponseBody'
-                400:
+                '400':
                   description: Bad request.
                   content:
                     application/json:
@@ -87,7 +87,7 @@ Resources:
                           error:
                             type: string
                             description: error message
-                500:
+                '500':
                   description: Internal server error.
                   content:
                     application/json:
