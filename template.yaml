@@ -51,6 +51,7 @@ Resources:
           /:
             get:
               summary:  Fetch most recent publication to an author given by creatorname and authorityID (scn)
+              description:  Fetches a publication title by creatorname and authorityID (scn)
               parameters:
                 - in: query
                   name: scn
@@ -69,14 +70,14 @@ Resources:
                 httpMethod: GET
                 type: AWS_PROXY
               responses:
-                '200':
-                  description: 'title'
+                200:
+                  description: title
                   content:
                     application/json:
                       schema:
                         $ref: '#/components/schemas/fetchAlmaRecordResponseBody'
-                '400':
-                  description: 'Bad request.'
+                400:
+                  description: Bad request.
                   content:
                     application/json:
                       schema:
@@ -86,8 +87,8 @@ Resources:
                           error:
                             type: string
                             description: error message
-                '500':
-                  description: 'Internal server error.'
+                500:
+                  description: Internal server error.
                   content:
                     application/json:
                       schema:
