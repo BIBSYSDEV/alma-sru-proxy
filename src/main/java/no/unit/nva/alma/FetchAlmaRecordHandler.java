@@ -3,8 +3,12 @@ package no.unit.nva.alma;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.xml.sax.SAXException;
 
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
@@ -64,6 +68,8 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
                 final String json = almaRecordParser.extractPublicationTitle(streamReader);
                 gatewayResponse.setBody(json);
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
+            } catch (TransformerException | SAXException | ParserConfigurationException | XPathExpressionException e) {
+                e.printStackTrace();
             }
         } catch (URISyntaxException | IOException e) {
             System.out.println(e);

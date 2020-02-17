@@ -1,7 +1,11 @@
 package no.unit.nva.alma;
 
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,7 +28,7 @@ public class AlmaRecordParserTest {
 
 
     @Test
-    public void testExtractPublicationTitle() throws IOException {
+    public void testExtractPublicationTitle() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_2_HITS);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
@@ -34,7 +38,7 @@ public class AlmaRecordParserTest {
 
 
     @Test
-    public void testExtractPublicationSubtitle() throws IOException {
+    public void testExtractPublicationSubtitle() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_WITH_SUBTITLE);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
@@ -43,7 +47,7 @@ public class AlmaRecordParserTest {
     }
 
     @Test
-    public void testExtractPublicationTitle_FromZeroHits() throws IOException {
+    public void testExtractPublicationTitle_FromZeroHits() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_ZERO_HITS);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
@@ -51,8 +55,8 @@ public class AlmaRecordParserTest {
         assertEquals(AlmaRecordParser.EMPTY_JSON, json);
     }
 
-    @Test(expected = IOException.class)
-    public void testExtractPublicationTitle_MalformedSruResponseOnEnd() throws IOException {
+    @Test(expected = SAXException.class)
+    public void testExtractPublicationTitle_MalformedSruResponseOnEnd() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_END_TRUNCATED);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
@@ -60,8 +64,8 @@ public class AlmaRecordParserTest {
         fail("Since the SRU response is truncated and thus unreadable, we expect an exception to be thrown");
     }
 
-    @Test(expected = IOException.class)
-    public void testExtractPublicationTitle_MalformedSruResponseOnStart() throws IOException {
+    @Test(expected = SAXException.class)
+    public void testExtractPublicationTitle_MalformedSruResponseOnStart() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_START_TRUNCATED);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();

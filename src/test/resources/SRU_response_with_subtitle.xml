@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/">
     <version>1.2</version>
     <numberOfRecords>2</numberOfRecords>
@@ -88,7 +89,7 @@
                     <datafield tag="245" ind1="1" ind2="0">
                         <subfield code="a">Strafbedürfnisse und Strafeinstellungen =</subfield>
                         <subfield code="b">Attitudes towards and demands for punishment</subfield>
-                        <subfield code="c">Ute Gabriel & Werner Greve</subfield>
+                        <subfield code="c">Ute Gabriel &amp; Werner Greve</subfield>
                     </datafield>
                     <datafield tag="246" ind1="3" ind2="1">
                         <subfield code="a">Attitudes towards and demands for punishment</subfield>
