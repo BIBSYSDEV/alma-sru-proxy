@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -32,8 +32,8 @@ public class AlmaRecordParserTest {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_2_HITS);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
-        String json = almaRecordParser.extractPublicationTitle(inputStreamReader);
-        assertTrue(json.contains(EXPECTED_TITLE));
+        Reference reference = almaRecordParser.extractPublicationTitle(inputStreamReader);
+        assertTrue(reference.getTitle().contains(EXPECTED_TITLE));
     }
 
 
@@ -42,8 +42,8 @@ public class AlmaRecordParserTest {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_WITH_SUBTITLE);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
-        String json = almaRecordParser.extractPublicationTitle(inputStreamReader);
-        assertTrue(json.contains(EXPECTED_SUBTITLE));
+        Reference reference = almaRecordParser.extractPublicationTitle(inputStreamReader);
+        assertTrue(reference.getTitle().contains(EXPECTED_SUBTITLE));
     }
 
     @Test
@@ -51,8 +51,8 @@ public class AlmaRecordParserTest {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_ZERO_HITS);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
-        String json = almaRecordParser.extractPublicationTitle(inputStreamReader);
-        assertEquals(AlmaRecordParser.EMPTY_JSON, json);
+        Reference reference = almaRecordParser.extractPublicationTitle(inputStreamReader);
+        assertNull(reference.getTitle());
     }
 
     @Test(expected = SAXException.class)

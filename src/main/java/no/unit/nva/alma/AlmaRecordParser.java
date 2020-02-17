@@ -1,8 +1,6 @@
 package no.unit.nva.alma;
 
 import com.google.common.io.CharStreams;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
@@ -40,7 +38,6 @@ public class AlmaRecordParser {
     public static final String MARC_DATAFIELD_245 = "245";
     public static final char MARC_SUBFIELD_A = 'a';
     public static final char MARC_SUBFIELD_B = 'b';
-    public static final String EMPTY_JSON = "{}";
     public static final String BLANK = " ";
     public static final String MARC_RECORD_XPATH = "//marc:record";
     public static final String MARC_NAMESPACE = "http://www.loc.gov/MARC21/slim";
@@ -55,20 +52,16 @@ public class AlmaRecordParser {
      * @return simple json with <code>title</code>
      * @throws IOException some stream reading went south
      */
-    public String extractPublicationTitle(InputStreamReader inputStreamReader) throws IOException, TransformerException, SAXException, ParserConfigurationException, XPathExpressionException {
+    public Reference extractPublicationTitle(InputStreamReader inputStreamReader) throws IOException, TransformerException, SAXException, ParserConfigurationException, XPathExpressionException {
 
         Reference reference = new Reference();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         try (InputStream inputStream = new ByteArrayInputStream(
                 CharStreams.toString(inputStreamReader).getBytes(StandardCharsets.UTF_8))) {
 
             Record record = getFirstMarcRecord(inputStream);
 
-            // TODO: move serialization to response
-
             if (isNull(record)) {
-                return gson.toJson(reference, Reference.class);
+                return reference;
             }
 
             DataField datafield = (DataField) record.getVariableField(MARC_DATAFIELD_245);
@@ -79,7 +72,7 @@ public class AlmaRecordParser {
                     .map(Map.Entry::getValue).collect(Collectors.joining(BLANK));
 
             reference.setTitle(title);
-            return gson.toJson(reference);
+            return reference;
         }
     }
 

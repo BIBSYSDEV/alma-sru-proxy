@@ -11,7 +11,7 @@ public class Reference {
         this.title = title;
     }
 
-    public Object getTitle() {
+    public String getTitle() {
         return this.title;
     }
 }

@@ -2,6 +2,8 @@ package no.unit.nva.alma;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
@@ -61,12 +63,13 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
         String scn = queryStringParameters.get(SCN_KEY);
         String creatorName = queryStringParameters.get(CREATOR_NAME_KEY);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
             final URL queryUrl = connection.generateQueryUrl(scn, creatorName);
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
                 AlmaRecordParser almaRecordParser = new AlmaRecordParser();
-                final String json = almaRecordParser.extractPublicationTitle(streamReader);
-                gatewayResponse.setBody(json);
+                Reference json = almaRecordParser.extractPublicationTitle(streamReader);
+                gatewayResponse.setBody(gson.toJson(json, Reference.class));
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             } catch (TransformerException | SAXException | ParserConfigurationException | XPathExpressionException e) {
                 e.printStackTrace();
