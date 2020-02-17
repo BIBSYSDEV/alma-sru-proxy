@@ -12,7 +12,7 @@ Globals:
   Api:
     Cors:
       AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-      AllowMethods: "'OPTIONS, GET, PUT, POST'"
+      AllowMethods: "'OPTIONS, GET'"
       AllowOrigin: "'*'"
 
 
