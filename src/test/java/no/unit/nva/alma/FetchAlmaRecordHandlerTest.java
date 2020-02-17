@@ -98,6 +98,9 @@ public class FetchAlmaRecordHandlerTest {
 
     }
 
+    /**
+     * Test integration.
+     */
     //@Test
     public void testFetchRecordTitle_Full_On_IntegrationTest() {
         final Config instance = Config.getInstance();

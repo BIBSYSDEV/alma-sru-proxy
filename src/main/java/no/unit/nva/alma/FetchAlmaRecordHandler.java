@@ -72,7 +72,8 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
                 gatewayResponse.setBody(gson.toJson(json, Reference.class));
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             }
-        } catch (URISyntaxException | IOException | TransformerException | SAXException | ParserConfigurationException | XPathExpressionException e) {
+        } catch (URISyntaxException | IOException | TransformerException | SAXException | ParserConfigurationException
+                | XPathExpressionException e) {
             System.out.println(e);
             gatewayResponse.setErrorBody(e.getMessage());
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());

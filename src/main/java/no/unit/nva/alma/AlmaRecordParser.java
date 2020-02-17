@@ -45,14 +45,20 @@ public class AlmaRecordParser {
     public static final int FIRST_NODE = 0;
 
 
+
     /**
      * Parses a SRU-response to extract the title of an marcxml-record.
      *
      * @param inputStreamReader SRU-response
      * @return simple json with <code>title</code>
      * @throws IOException some stream reading went south
+     * @throws TransformerException some stream reading went south
+     * @throws SAXException some stream reading went south
+     * @throws ParserConfigurationException some stream reading went south
+     * @throws XPathExpressionException some stream reading went south
      */
-    public Reference extractPublicationTitle(InputStreamReader inputStreamReader) throws IOException, TransformerException, SAXException, ParserConfigurationException, XPathExpressionException {
+    public Reference extractPublicationTitle(InputStreamReader inputStreamReader) throws IOException,
+            TransformerException, SAXException, ParserConfigurationException, XPathExpressionException {
 
         Reference reference = new Reference();
         try (InputStream inputStream = new ByteArrayInputStream(

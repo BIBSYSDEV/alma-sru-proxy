@@ -18,6 +18,7 @@ Globals:
 
 Parameters:
   CognitoAuthorizerArn:
+    Default: '{{resolve:ssm:CognitoAuthorizerArn:1}}'
     Type: String
     Description: Reference to Cognito UserPool for the stage
   CustomDomain:

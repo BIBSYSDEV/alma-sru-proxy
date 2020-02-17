@@ -28,7 +28,8 @@ public class AlmaRecordParserTest {
 
 
     @Test
-    public void testExtractPublicationTitle() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
+    public void testExtractPublicationTitle() throws IOException, ParserConfigurationException, TransformerException,
+            SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_2_HITS);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
@@ -38,7 +39,8 @@ public class AlmaRecordParserTest {
 
 
     @Test
-    public void testExtractPublicationSubtitle() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
+    public void testExtractPublicationSubtitle() throws IOException, ParserConfigurationException, TransformerException,
+            SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_WITH_SUBTITLE);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
@@ -47,7 +49,8 @@ public class AlmaRecordParserTest {
     }
 
     @Test
-    public void testExtractPublicationTitle_FromZeroHits() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
+    public void testExtractPublicationTitle_FromZeroHits() throws IOException, ParserConfigurationException,
+            TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_ZERO_HITS);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
@@ -56,7 +59,8 @@ public class AlmaRecordParserTest {
     }
 
     @Test(expected = SAXException.class)
-    public void testExtractPublicationTitle_MalformedSruResponseOnEnd() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
+    public void testExtractPublicationTitle_MalformedSruResponseOnEnd() throws IOException,
+            ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_END_TRUNCATED);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
@@ -65,7 +69,8 @@ public class AlmaRecordParserTest {
     }
 
     @Test(expected = SAXException.class)
-    public void testExtractPublicationTitle_MalformedSruResponseOnStart() throws IOException, ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
+    public void testExtractPublicationTitle_MalformedSruResponseOnStart() throws IOException,
+            ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_START_TRUNCATED);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
