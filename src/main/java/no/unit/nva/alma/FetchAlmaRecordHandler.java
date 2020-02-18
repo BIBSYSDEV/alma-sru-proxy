@@ -2,10 +2,15 @@ package no.unit.nva.alma;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
+import org.xml.sax.SAXException;
 
 import javax.ws.rs.core.Response;
-import javax.xml.stream.XMLStreamException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
@@ -23,6 +28,16 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
     public static final String QUERY_STRING_PARAMETERS_KEY = "queryStringParameters";
     public static final String CREATOR_NAME_KEY = "creatorname";
     public static final String SCN_KEY = "scn";
+    protected final transient AlmaSruConnection connection;
+
+
+    public FetchAlmaRecordHandler() {
+        connection = new AlmaSruConnection();
+    }
+
+    public FetchAlmaRecordHandler(AlmaSruConnection connection) {
+        this.connection = connection;
+    }
 
     /**
      * Main lambda function to fetch records from Alma.
@@ -48,14 +63,17 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
         String scn = queryStringParameters.get(SCN_KEY);
         String creatorName = queryStringParameters.get(CREATOR_NAME_KEY);
-        AlmaSruConnection connection = new AlmaSruConnection();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
             final URL queryUrl = connection.generateQueryUrl(scn, creatorName);
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
                 AlmaRecordParser almaRecordParser = new AlmaRecordParser();
-                final String json = almaRecordParser.extractPublicationData(streamReader);
+                Reference json = almaRecordParser.extractPublicationTitle(streamReader);
+                gatewayResponse.setBody(gson.toJson(json, Reference.class));
+                gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             }
-        } catch (URISyntaxException | IOException | XMLStreamException e) {
+        } catch (URISyntaxException | IOException | TransformerException | SAXException | ParserConfigurationException
+                | XPathExpressionException e) {
             System.out.println(e);
             gatewayResponse.setErrorBody(e.getMessage());
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
