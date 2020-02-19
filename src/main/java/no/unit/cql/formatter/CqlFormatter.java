@@ -25,7 +25,7 @@ public class CqlFormatter {
 
     private static final String SORT_BY = "sortBy";
     private static final String SORT_MODIFIER = "sort.descending";
-    public static final int LAST_TWENTY_YEARS = 20;
+    public static final int LAST_N_YEARS = 41;
     public static final String LOGICAL_AND = "AND";
     public static final String STRING_DELIMITER = "\"";
     public static final String CLAUSE_DELIMITER_LEFT = "(";
@@ -95,7 +95,7 @@ public class CqlFormatter {
         int currentYear = Year.now().getValue();
         List<String> dateClauses = new ArrayList<>();
 
-        IntStream.range(0, LAST_TWENTY_YEARS).forEach(year -> dateClauses
+        IntStream.range(0, LAST_N_YEARS).forEach(year -> dateClauses
                 .add(generateCqlClause(generateIndex(PUBLICATION_DATE), String.valueOf(currentYear - year))));
         Collections.reverse(dateClauses);
 
