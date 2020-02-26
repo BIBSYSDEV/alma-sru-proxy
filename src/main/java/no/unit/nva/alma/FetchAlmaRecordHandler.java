@@ -29,6 +29,7 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
     public static final String CREATOR_NAME_KEY = "creatorname";
     public static final String SCN_KEY = "scn";
     protected final transient AlmaSruConnection connection;
+    private final transient Logger log = Logger.instance();
 
 
     public FetchAlmaRecordHandler() {
@@ -48,13 +49,13 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
     @Override
     @SuppressWarnings("unchecked")
     public GatewayResponse handleRequest(final Map<String, Object> input, Context context) {
-        System.out.println(input);
+        log.info(input);
         GatewayResponse gatewayResponse = new GatewayResponse();
         try {
             Config.getInstance().checkProperties();
             this.checkParameters(input);
         } catch (RuntimeException e) {
-            System.out.println(e);
+            log.error(e);
             gatewayResponse.setErrorBody(e.getMessage());
             gatewayResponse.setStatusCode(Response.Status.BAD_REQUEST.getStatusCode());
             return gatewayResponse;
@@ -74,7 +75,7 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
             }
         } catch (URISyntaxException | IOException | TransformerException | SAXException | ParserConfigurationException
                 | XPathExpressionException e) {
-            System.out.println(e);
+            log.error(e);
             gatewayResponse.setErrorBody(e.getMessage());
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
