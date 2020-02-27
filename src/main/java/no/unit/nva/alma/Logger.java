@@ -1,14 +1,13 @@
 package no.unit.nva.alma;
 
-import java.util.Arrays;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.util.Map;
 
 import static no.unit.nva.alma.Logger.LogLevel.ERROR;
 import static no.unit.nva.alma.Logger.LogLevel.INFO;
 
 public class Logger {
-
-    public static final String TAB = "\t";
 
     protected enum LogLevel {
         ERROR, INFO
@@ -29,7 +28,7 @@ public class Logger {
 
     public void error(Exception e) {
         error(e.getMessage());
-        Arrays.stream(e.getStackTrace()).forEach(x -> System.out.println(TAB + x.toString()));
+        error(dumpException(e));
     }
 
     public void error(String errorMessage) {
@@ -39,4 +38,9 @@ public class Logger {
     public void info(Map<String, Object> infoMessage) {
         System.out.println(INFO.name() + " - " + infoMessage);
     }
+
+    private String dumpException(Exception e) {
+        return ExceptionUtils.getStackTrace(e).replace("\n", "\r");
+    }
+
 }
