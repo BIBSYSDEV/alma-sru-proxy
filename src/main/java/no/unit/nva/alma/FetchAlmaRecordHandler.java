@@ -20,6 +20,8 @@ import java.util.Objects;
 
 public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object>, GatewayResponse> {
 
+    public static final String GENERAL_EXCEPTION_MESSAGE = "An error occurred, error has been logged";
+
     public static final String MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS =
             "Missing event element 'queryStringParameters'.";
     public static final String MANDATORY_PARAMETER_SCN_MISSING = "Mandatory parameter 'scn' is missing.";
@@ -53,9 +55,9 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
         try {
             Config.getInstance().checkProperties();
             this.checkParameters(input);
-        } catch (RuntimeException e) {
-            System.out.println(e);
-            gatewayResponse.setErrorBody(e.getMessage());
+        } catch (MissingParameterException e) {
+            DebugUtils.dumpException(e);
+            gatewayResponse.setErrorBody(e.getMessage()); // Exception contains missing parameter name
             gatewayResponse.setStatusCode(Response.Status.BAD_REQUEST.getStatusCode());
             return gatewayResponse;
         }
@@ -74,8 +76,8 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
             }
         } catch (URISyntaxException | IOException | TransformerException | SAXException | ParserConfigurationException
                 | XPathExpressionException e) {
-            System.out.println(e);
-            gatewayResponse.setErrorBody(e.getMessage());
+            DebugUtils.dumpException(e);
+            gatewayResponse.setErrorBody(GENERAL_EXCEPTION_MESSAGE);
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
         return gatewayResponse;
@@ -85,16 +87,16 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
     private void checkParameters(Map<String, Object> input) {
         if (Objects.isNull(input) || !input.containsKey(QUERY_STRING_PARAMETERS_KEY)
                 || Objects.isNull(input.get(QUERY_STRING_PARAMETERS_KEY))) {
-            throw new RuntimeException(MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS);
+            throw new MissingParameterException(MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS);
         }
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
         final String scn = queryStringParameters.get(SCN_KEY);
         if (StringUtils.isEmpty(scn)) {
-            throw new RuntimeException(MANDATORY_PARAMETER_SCN_MISSING);
+            throw new MissingParameterException(MANDATORY_PARAMETER_SCN_MISSING);
         }
         final String creatorName = queryStringParameters.get(CREATOR_NAME_KEY);
         if (StringUtils.isEmpty(creatorName)) {
-            throw new RuntimeException(MANDATORY_PARAMETER_CREATORNAME_MISSING);
+            throw new MissingParameterException(MANDATORY_PARAMETER_CREATORNAME_MISSING);
         }
     }
 
