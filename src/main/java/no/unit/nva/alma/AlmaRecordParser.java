@@ -29,9 +29,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
 
 public class AlmaRecordParser {
 
@@ -64,29 +63,27 @@ public class AlmaRecordParser {
         try (InputStream inputStream = new ByteArrayInputStream(
                 CharStreams.toString(inputStreamReader).getBytes(StandardCharsets.UTF_8))) {
 
-            Record record = getFirstMarcRecord(inputStream);
+            Optional<Record> record = getFirstMarcRecord(inputStream);
 
-            if (isNull(record)) {
-                return reference;
-            }
-
-            DataField datafield = (DataField) record.getVariableField(MARC_DATAFIELD_245);
-            String title = datafield.getSubfields().stream()
-                    .filter(this::filterSubfields)
-                    .collect(Collectors.toMap(Subfield::getCode, Subfield::getData))
-                    .entrySet().stream().sorted(Map.Entry.comparingByKey())
-                    .map(Map.Entry::getValue).collect(Collectors.joining(BLANK));
-
-            reference.setTitle(title);
-            return reference;
+            record.ifPresent(value -> reference.setTitle(extractTitleFromMarcRecord(value)));
         }
+        return reference;
     }
 
-    private boolean filterSubfields(Subfield subfield) {
+    private String extractTitleFromMarcRecord(Record record) {
+        DataField datafield245 = (DataField) record.getVariableField(MARC_DATAFIELD_245);
+        return datafield245.getSubfields().stream()
+                .filter(this::filterSubfieldsAorB)
+                .collect(Collectors.toMap(Subfield::getCode, Subfield::getData))
+                .entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .map(Map.Entry::getValue).collect(Collectors.joining(BLANK));
+    }
+
+    private boolean filterSubfieldsAorB(Subfield subfield) {
         return subfield.getCode() == MARC_SUBFIELD_A || subfield.getCode() == MARC_SUBFIELD_B;
     }
 
-    private Record getFirstMarcRecord(InputStream inputStream) throws TransformerException,
+    private Optional<Record> getFirstMarcRecord(InputStream inputStream) throws TransformerException,
             XPathExpressionException, IOException, SAXException, ParserConfigurationException {
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -96,22 +93,25 @@ public class AlmaRecordParser {
         document.getDocumentElement().normalize();
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new NamespaceResolver(document));
-        Node element = (Node) xpath.evaluate(MARC_RECORD_XPATH, document.getDocumentElement(), XPathConstants.NODE);
+        Optional<Node> element = Optional.ofNullable((Node) xpath.evaluate(MARC_RECORD_XPATH,
+                document.getDocumentElement(),
+                XPathConstants.NODE));
 
-        if (isNull(element)) {
-            return null;
+        Optional<Record> optionalRecord = Optional.empty();
+        if (element.isPresent()) {
+            Document result = documentBuilder.newDocument();
+            Node collection = result.createElementNS(MARC_NAMESPACE, COLLECTION_ELEMENT);
+            result.appendChild(collection);
+            Node node = result.importNode(element.get(), true);
+            result.getElementsByTagNameNS(MARC_NAMESPACE, COLLECTION_ELEMENT).item(FIRST_NODE).appendChild(node);
+
+            Source source = new DOMSource(result);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Result outputTarget = new StreamResult(outputStream);
+            TransformerFactory.newInstance().newTransformer().transform(source, outputTarget);
+            optionalRecord =
+                    Optional.ofNullable(new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next());
         }
-
-        Document result = documentBuilder.newDocument();
-        Node collection = result.createElementNS(MARC_NAMESPACE, COLLECTION_ELEMENT);
-        result.appendChild(collection);
-        Node node = result.importNode(element, true);
-        result.getElementsByTagNameNS(MARC_NAMESPACE, COLLECTION_ELEMENT).item(FIRST_NODE).appendChild(node);
-
-        Source source = new DOMSource(result);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Result outputTarget = new StreamResult(outputStream);
-        TransformerFactory.newInstance().newTransformer().transform(source, outputTarget);
-        return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next();
+        return optionalRecord;
     }
 }
