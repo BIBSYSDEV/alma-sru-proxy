@@ -5,8 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 public class Config {
 
     public static final String MISSING_ENVIRONMENT_VARIABLES = "Missing environment variables";
-    public static final String CORS_ALLOW_ORIGIN_HEADER_ENVIRONMENT_NAME = "AllowOrigin";
+    public static final String CORS_ALLOW_ORIGIN_HEADER_ENVIRONMENT_NAME = "ALLOWED_ORIGIN";
     public static final String ALMA_SRU_HOST_KEY = "ALMA_SRU_HOST";
+    public static final String ALMA_SRU_QUERY_PATH = "view/sru/47BIBSYS_NETWORK";
 
     private String corsHeader;
     private String almaSruHost;

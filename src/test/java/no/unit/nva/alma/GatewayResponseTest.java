@@ -30,7 +30,7 @@ public class GatewayResponseTest {
         GatewayResponse gatewayResponse = new GatewayResponse();
         gatewayResponse.setBody(null);
         gatewayResponse.setErrorBody(ERROR_BODY);
-        gatewayResponse.setStatusCode(Response.Status.CREATED.getStatusCode());
+        gatewayResponse.setStatusCode(Response.Status.BAD_REQUEST.getStatusCode());
         assertEquals(ERROR_JSON, gatewayResponse.getBody());
     }
 
@@ -39,12 +39,12 @@ public class GatewayResponseTest {
         final Config config = Config.getInstance();
         config.setCorsHeader(EMPTY_STRING);
         final String corsHeader = config.getCorsHeader();
-        GatewayResponse gatewayResponse = new GatewayResponse(MOCK_BODY, Response.Status.CREATED.getStatusCode());
+        GatewayResponse gatewayResponse = new GatewayResponse(MOCK_BODY, Response.Status.BAD_REQUEST.getStatusCode());
         assertFalse(gatewayResponse.getHeaders().containsKey(GatewayResponse.CORS_ALLOW_ORIGIN_HEADER));
         assertFalse(gatewayResponse.getHeaders().containsValue(corsHeader));
 
         config.setCorsHeader(CORS_HEADER);
-        GatewayResponse gatewayResponse1 = new GatewayResponse(MOCK_BODY, Response.Status.CREATED.getStatusCode());
+        GatewayResponse gatewayResponse1 = new GatewayResponse(MOCK_BODY, Response.Status.BAD_REQUEST.getStatusCode());
         assertTrue(gatewayResponse1.getHeaders().containsKey(GatewayResponse.CORS_ALLOW_ORIGIN_HEADER));
     }
 
