@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object>, GatewayResponse> {
 
-    public static final String GENERAL_EXCEPTION_MESSAGE = "An error occurred, error has been logged";
+    public static final String INTERNAL_SERVER_ERROR_MESSAGE = "An error occurred, error has been logged";
 
     public static final String MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS =
             "Missing event element 'queryStringParameters'.";
@@ -77,7 +77,7 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
         } catch (URISyntaxException | IOException | TransformerException | SAXException | ParserConfigurationException
                 | XPathExpressionException e) {
             DebugUtils.dumpException(e);
-            gatewayResponse.setErrorBody(GENERAL_EXCEPTION_MESSAGE);
+            gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE);
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
         return gatewayResponse;

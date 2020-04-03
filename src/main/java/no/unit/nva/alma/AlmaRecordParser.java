@@ -5,6 +5,7 @@ import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
+import org.marc4j.marc.VariableField;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -65,18 +66,23 @@ public class AlmaRecordParser {
 
             Optional<Record> record = getFirstMarcRecord(inputStream);
 
-            record.ifPresent(value -> reference.setTitle(extractTitleFromMarcRecord(value)));
+            record.ifPresent(value -> reference.setTitle(extractTitleFromMarcRecord(value).get()));
         }
         return reference;
     }
 
-    private String extractTitleFromMarcRecord(Record record) {
-        DataField datafield245 = (DataField) record.getVariableField(MARC_DATAFIELD_245);
-        return datafield245.getSubfields().stream()
-                .filter(this::filterSubfieldsAorB)
-                .collect(Collectors.toMap(Subfield::getCode, Subfield::getData))
-                .entrySet().stream().sorted(Map.Entry.comparingByKey())
-                .map(Map.Entry::getValue).collect(Collectors.joining(BLANK));
+    private Optional<String> extractTitleFromMarcRecord(Record record) {
+        VariableField variableField = record.getVariableField(MARC_DATAFIELD_245);
+        if (variableField instanceof  DataField) {
+            DataField datafield245 = (DataField) variableField;
+            return Optional.of(datafield245.getSubfields().stream()
+                    .filter(this::filterSubfieldsAorB)
+                    .collect(Collectors.toMap(Subfield::getCode, Subfield::getData))
+                    .entrySet().stream().sorted(Map.Entry.comparingByKey())
+                    .map(Map.Entry::getValue).collect(Collectors.joining(BLANK)));
+        } else {
+            return Optional.empty();
+        }
     }
 
     private boolean filterSubfieldsAorB(Subfield subfield) {
