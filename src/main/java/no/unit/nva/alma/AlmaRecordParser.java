@@ -75,17 +75,21 @@ public class AlmaRecordParser {
         VariableField variableField = record.getVariableField(MARC_DATAFIELD_245);
         if (variableField instanceof  DataField) {
             DataField datafield245 = (DataField) variableField;
-            return Optional.of(datafield245.getSubfields().stream()
-                    .filter(this::filterSubfieldsAorB)
-                    .collect(Collectors.toMap(Subfield::getCode, Subfield::getData))
-                    .entrySet().stream().sorted(Map.Entry.comparingByKey())
-                    .map(Map.Entry::getValue).collect(Collectors.joining(BLANK)));
+            return getTitleFromMarc245(datafield245);
         } else {
             return Optional.empty();
         }
     }
 
-    private boolean filterSubfieldsAorB(Subfield subfield) {
+    private Optional<String> getTitleFromMarc245(DataField datafield245) {
+        return Optional.of(datafield245.getSubfields().stream()
+                .filter(this::containsSubFieldAOrSubFieldB)
+                .collect(Collectors.toMap(Subfield::getCode, Subfield::getData))
+                .entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .map(Map.Entry::getValue).collect(Collectors.joining(BLANK)));
+    }
+
+    private boolean containsSubFieldAOrSubFieldB(Subfield subfield) {
         return subfield.getCode() == MARC_SUBFIELD_A || subfield.getCode() == MARC_SUBFIELD_B;
     }
 
