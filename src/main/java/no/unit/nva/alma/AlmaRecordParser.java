@@ -105,12 +105,12 @@ public class AlmaRecordParser {
             addExtractedRecordToResultDoc(element.get(), result);
 
             ByteArrayOutputStream outputStream = perfomMysteriousTransformation(result);
-            optionalRecord =Optional.ofNullable(anotherMysteriousAction(outputStream));
+            optionalRecord =Optional.ofNullable(readRecordFromXMLStream(outputStream));
         }
         return optionalRecord;
     }
 
-    private Record anotherMysteriousAction(ByteArrayOutputStream outputStream) {
+    private Record readRecordFromXMLStream(ByteArrayOutputStream outputStream) {
         return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next();
     }
 
@@ -119,6 +119,7 @@ public class AlmaRecordParser {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Result outputTarget = new StreamResult(outputStream);
         TransformerFactory.newInstance().newTransformer().transform(source, outputTarget);
+        return  outputStream;
     }
 
     private void addExtractedRecordToResultDoc(Node element, Document result) {
@@ -153,35 +154,5 @@ public class AlmaRecordParser {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         return documentBuilderFactory.newDocumentBuilder();
-    }
-            XPathExpressionException, IOException, SAXException, ParserConfigurationException {
-
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(inputStream);
-        document.getDocumentElement().normalize();
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        xpath.setNamespaceContext(new NamespaceResolver(document));
-        Optional<Node> element = Optional.ofNullable((Node) xpath.evaluate(MARC_RECORD_XPATH,
-                document.getDocumentElement(),
-                XPathConstants.NODE));
-
-        Optional<Record> optionalRecord = Optional.empty();
-        if (element.isPresent()) {
-            Document result = documentBuilder.newDocument();
-            Node collection = result.createElementNS(MARC_NAMESPACE, COLLECTION_ELEMENT);
-            result.appendChild(collection);
-            Node node = result.importNode(element.get(), true);
-            result.getElementsByTagNameNS(MARC_NAMESPACE, COLLECTION_ELEMENT).item(FIRST_NODE).appendChild(node);
-
-            Source source = new DOMSource(result);
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            Result outputTarget = new StreamResult(outputStream);
-            TransformerFactory.newInstance().newTransformer().transform(source, outputTarget);
-            optionalRecord =
-                    Optional.ofNullable(new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next());
-        }
-        return optionalRecord;
     }
 }
