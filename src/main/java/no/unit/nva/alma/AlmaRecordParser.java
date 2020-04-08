@@ -104,7 +104,7 @@ public class AlmaRecordParser {
             Document result = documentBuilder.newDocument();
             addExtractedRecordToResultDoc(element.get(), result);
 
-            ByteArrayOutputStream outputStream = perfomMysteriousTransformation(result);
+            ByteArrayOutputStream outputStream = readAndTransformDocument(result);
             optionalRecord =Optional.ofNullable(readRecordFromXMLStream(outputStream));
         }
         return optionalRecord;
@@ -114,7 +114,7 @@ public class AlmaRecordParser {
         return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next();
     }
 
-    private ByteArrayOutputStream perfomMysteriousTransformation(Document result) throws TransformerException {
+    private ByteArrayOutputStream readAndTransformDocument(Document result) throws TransformerException {
         Source source = new DOMSource(result);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Result outputTarget = new StreamResult(outputStream);
