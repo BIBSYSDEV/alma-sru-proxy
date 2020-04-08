@@ -93,7 +93,67 @@ public class AlmaRecordParser {
         return subfield.getCode() == MARC_SUBFIELD_A || subfield.getCode() == MARC_SUBFIELD_B;
     }
 
-    private Optional<Record> getFirstMarcRecord(InputStream inputStream) throws TransformerException,
+ private Optional<Record> getFirstMarcRecord(InputStream inputStream) throws TransformerException,
+            XPathExpressionException, IOException, SAXException, ParserConfigurationException {
+
+        DocumentBuilder documentBuilder = createDocumentBuilder();
+        Optional<Node> element = extractFirstMarcRecord(inputStream, documentBuilder);
+
+        Optional<Record> optionalRecord = Optional.empty();
+        if (element.isPresent()) {
+            Document result = documentBuilder.newDocument();
+            addExtractedRecordToResultDoc(element.get(), result);
+
+            ByteArrayOutputStream outputStream = perfomMysteriousTransformation(result);
+            optionalRecord =Optional.ofNullable(anotherMysteriousAction(outputStream));
+        }
+        return optionalRecord;
+    }
+
+    private Record anotherMysteriousAction(ByteArrayOutputStream outputStream) {
+        return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next();
+    }
+
+    private ByteArrayOutputStream perfomMysteriousTransformation(Document result) throws TransformerException {
+        Source source = new DOMSource(result);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Result outputTarget = new StreamResult(outputStream);
+        TransformerFactory.newInstance().newTransformer().transform(source, outputTarget);
+    }
+
+    private void addExtractedRecordToResultDoc(Node element, Document result) {
+        Node collection = result.createElementNS(MARC_NAMESPACE, COLLECTION_ELEMENT);
+        result.appendChild(collection);
+        Node node = result.importNode(element, true);
+        result.getElementsByTagNameNS(MARC_NAMESPACE, COLLECTION_ELEMENT).item(FIRST_NODE).appendChild(node);
+    }
+
+    private Optional<Node> extractFirstMarcRecord(InputStream inputStream, DocumentBuilder documentBuilder)
+        throws SAXException, IOException, XPathExpressionException {
+        Document document = parseInputStreamToXmlDoc(inputStream, documentBuilder);
+        return searchForTheFirstMarcRecord(document);
+    }
+
+    private Document parseInputStreamToXmlDoc(InputStream inputStream, DocumentBuilder documentBuilder)
+        throws SAXException, IOException {
+        Document document = documentBuilder.parse(inputStream);
+        document.getDocumentElement().normalize();
+        return document;
+    }
+
+    private Optional<Node> searchForTheFirstMarcRecord(Document document) throws XPathExpressionException {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        xpath.setNamespaceContext(new NamespaceResolver(document));
+        return Optional.ofNullable((Node) xpath.evaluate(MARC_RECORD_XPATH,
+                document.getDocumentElement(),
+                XPathConstants.NODE));
+    }
+
+    private DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        return documentBuilderFactory.newDocumentBuilder();
+    }
             XPathExpressionException, IOException, SAXException, ParserConfigurationException {
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
