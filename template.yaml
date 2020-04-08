@@ -1,17 +1,16 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Sets up lambda, api and basepathmapping to fetch  most recent publication for an author
+  Sets up lambda, api and base path mapping to fetch most recent publication for an author
 
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: SruLastPublication
     Description: Fetches most recent publication for an author via SRU from a library system
     Author: Unit
-    SemanticVersion: 1.0.0
     SpdxLicenseId: MIT
     LicenseUrl: LICENSE
-
+    Labels: ['${CODEBUILD_RESOLVED_SOURCE_VERSION}', '${GIT_REPO}']
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
