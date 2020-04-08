@@ -104,17 +104,17 @@ public class AlmaRecordParser {
             Document result = documentBuilder.newDocument();
             addExtractedRecordToResultDoc(element.get(), result);
 
-            ByteArrayOutputStream outputStream = readAndTransformDocument(result);
-            optionalRecord =Optional.ofNullable(readRecordFromXMLStream(outputStream));
+            ByteArrayOutputStream outputStream = removeStylesheet(result);
+            optionalRecord =Optional.ofNullable(readRecordFromCleanXml(outputStream));
         }
         return optionalRecord;
     }
 
-    private Record readRecordFromXMLStream(ByteArrayOutputStream outputStream) {
+    private Record readRecordFromCleanXml(ByteArrayOutputStream outputStream) {
         return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next();
     }
 
-    private ByteArrayOutputStream readAndTransformDocument(Document result) throws TransformerException {
+    private ByteArrayOutputStream removeStylesheet(Document result) throws TransformerException {
         Source source = new DOMSource(result);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Result outputTarget = new StreamResult(outputStream);
