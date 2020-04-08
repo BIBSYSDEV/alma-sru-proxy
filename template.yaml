@@ -1,9 +1,16 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  AWS
+  Sets up lambda, api and base path mapping to fetch most recent publication for an author
 
-  Sample SAM Template for AWS
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: SruLastPublication
+    Description: Fetches most recent publication for an author via SRU from a library system
+    Author: Unit
+    SpdxLicenseId: MIT
+    LicenseUrl: LICENSE
+    Labels: ['${CODEBUILD_RESOLVED_SOURCE_VERSION}', '${GIT_REPO}']
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -128,7 +135,7 @@ Resources:
           ALMA_SRU_HOST: !Ref AlmaSruHost
           ALLOWED_ORIGIN:  '*'
       Handler: no.unit.nva.alma.FetchAlmaRecordHandler::handleRequest
-      Runtime: java8
+      Runtime: java11
       MemorySize: 512
       Events:
         NvaFetchAlmaRecordEvent:

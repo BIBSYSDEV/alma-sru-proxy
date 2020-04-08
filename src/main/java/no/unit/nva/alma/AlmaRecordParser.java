@@ -5,6 +5,7 @@ import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
+import org.marc4j.marc.VariableField;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -29,9 +30,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
 
 public class AlmaRecordParser {
 
@@ -64,54 +64,95 @@ public class AlmaRecordParser {
         try (InputStream inputStream = new ByteArrayInputStream(
                 CharStreams.toString(inputStreamReader).getBytes(StandardCharsets.UTF_8))) {
 
-            Record record = getFirstMarcRecord(inputStream);
+            Optional<Record> record = getFirstMarcRecord(inputStream);
 
-            if (isNull(record)) {
-                return reference;
-            }
+            record.ifPresent(value -> reference.setTitle(extractTitleFromMarcRecord(value).get()));
+        }
+        return reference;
+    }
 
-            DataField datafield = (DataField) record.getVariableField(MARC_DATAFIELD_245);
-            String title = datafield.getSubfields().stream()
-                    .filter(this::filterSubfields)
-                    .collect(Collectors.toMap(Subfield::getCode, Subfield::getData))
-                    .entrySet().stream().sorted(Map.Entry.comparingByKey())
-                    .map(Map.Entry::getValue).collect(Collectors.joining(BLANK));
-
-            reference.setTitle(title);
-            return reference;
+    private Optional<String> extractTitleFromMarcRecord(Record record) {
+        VariableField variableField = record.getVariableField(MARC_DATAFIELD_245);
+        if (variableField instanceof  DataField) {
+            DataField datafield245 = (DataField) variableField;
+            return getTitleFromMarc245(datafield245);
+        } else {
+            return Optional.empty();
         }
     }
 
-    private boolean filterSubfields(Subfield subfield) {
+    private Optional<String> getTitleFromMarc245(DataField datafield245) {
+        return Optional.of(datafield245.getSubfields().stream()
+                .filter(this::containsSubFieldAOrSubFieldB)
+                .collect(Collectors.toMap(Subfield::getCode, Subfield::getData))
+                .entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .map(Map.Entry::getValue).collect(Collectors.joining(BLANK)));
+    }
+
+    private boolean containsSubFieldAOrSubFieldB(Subfield subfield) {
         return subfield.getCode() == MARC_SUBFIELD_A || subfield.getCode() == MARC_SUBFIELD_B;
     }
 
-    private Record getFirstMarcRecord(InputStream inputStream) throws TransformerException,
+ private Optional<Record> getFirstMarcRecord(InputStream inputStream) throws TransformerException,
             XPathExpressionException, IOException, SAXException, ParserConfigurationException {
 
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(inputStream);
-        document.getDocumentElement().normalize();
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        xpath.setNamespaceContext(new NamespaceResolver(document));
-        Node element = (Node) xpath.evaluate(MARC_RECORD_XPATH, document.getDocumentElement(), XPathConstants.NODE);
+        DocumentBuilder documentBuilder = createDocumentBuilder();
+        Optional<Node> element = extractFirstMarcRecord(inputStream, documentBuilder);
 
-        if (isNull(element)) {
-            return null;
+        Optional<Record> optionalRecord = Optional.empty();
+        if (element.isPresent()) {
+            Document result = documentBuilder.newDocument();
+            addExtractedRecordToResultDoc(element.get(), result);
+
+            ByteArrayOutputStream outputStream = removeStylesheet(result);
+            optionalRecord =Optional.ofNullable(readRecordFromCleanXml(outputStream));
         }
+        return optionalRecord;
+    }
 
-        Document result = documentBuilder.newDocument();
-        Node collection = result.createElementNS(MARC_NAMESPACE, COLLECTION_ELEMENT);
-        result.appendChild(collection);
-        Node node = result.importNode(element, true);
-        result.getElementsByTagNameNS(MARC_NAMESPACE, COLLECTION_ELEMENT).item(FIRST_NODE).appendChild(node);
+    private Record readRecordFromCleanXml(ByteArrayOutputStream outputStream) {
+        return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next();
+    }
 
+    private ByteArrayOutputStream removeStylesheet(Document result) throws TransformerException {
         Source source = new DOMSource(result);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Result outputTarget = new StreamResult(outputStream);
         TransformerFactory.newInstance().newTransformer().transform(source, outputTarget);
-        return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray())).next();
+        return  outputStream;
+    }
+
+    private void addExtractedRecordToResultDoc(Node element, Document result) {
+        Node collection = result.createElementNS(MARC_NAMESPACE, COLLECTION_ELEMENT);
+        result.appendChild(collection);
+        Node node = result.importNode(element, true);
+        result.getElementsByTagNameNS(MARC_NAMESPACE, COLLECTION_ELEMENT).item(FIRST_NODE).appendChild(node);
+    }
+
+    private Optional<Node> extractFirstMarcRecord(InputStream inputStream, DocumentBuilder documentBuilder)
+        throws SAXException, IOException, XPathExpressionException {
+        Document document = parseInputStreamToXmlDoc(inputStream, documentBuilder);
+        return searchForTheFirstMarcRecord(document);
+    }
+
+    private Document parseInputStreamToXmlDoc(InputStream inputStream, DocumentBuilder documentBuilder)
+        throws SAXException, IOException {
+        Document document = documentBuilder.parse(inputStream);
+        document.getDocumentElement().normalize();
+        return document;
+    }
+
+    private Optional<Node> searchForTheFirstMarcRecord(Document document) throws XPathExpressionException {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        xpath.setNamespaceContext(new NamespaceResolver(document));
+        return Optional.ofNullable((Node) xpath.evaluate(MARC_RECORD_XPATH,
+                document.getDocumentElement(),
+                XPathConstants.NODE));
+    }
+
+    private DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        return documentBuilderFactory.newDocumentBuilder();
     }
 }

@@ -1,20 +1,20 @@
 package no.unit.nva.alma;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class ConfigTest {
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testCheckPropertiesNothingSet() {
         final Config config = Config.getInstance();
         config.setAlmaSruHost(null);
-        config.checkProperties();
-        fail();
+        Assertions.assertThrows(RuntimeException.class, () -> config.checkProperties());
     }
 
     @Test
@@ -33,12 +33,10 @@ public class ConfigTest {
         assertEquals(Config.ALMA_SRU_HOST_KEY, instance.getAlmaSruHost());
     }
 
-
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testCheckPropertiesSetOnlyApiKey() {
         final Config instance = Config.getInstance();
         instance.setAlmaSruHost(null);
-        instance.checkProperties();
-        fail();
+        Assertions.assertThrows(RuntimeException.class, () -> instance.checkProperties());
     }
 }

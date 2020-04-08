@@ -1,6 +1,7 @@
 package no.unit.nva.alma;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -10,12 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AlmaRecordParserTest {
-
 
     public static final String SRU_RESPONSE_2_HITS = "/SRU_response_2_hits.xml";
     public static final String SRU_RESPONSE_WITH_SUBTITLE = "/SRU_response_with_subtitle.xml";
@@ -37,7 +36,6 @@ public class AlmaRecordParserTest {
         assertTrue(reference.getTitle().contains(EXPECTED_TITLE));
     }
 
-
     @Test
     public void testExtractPublicationSubtitle() throws IOException, ParserConfigurationException, TransformerException,
             SAXException, XPathExpressionException {
@@ -58,23 +56,21 @@ public class AlmaRecordParserTest {
         assertNull(reference.getTitle());
     }
 
-    @Test(expected = SAXException.class)
+    @Test
     public void testExtractPublicationTitle_MalformedSruResponseOnEnd() throws IOException,
             ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_END_TRUNCATED);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
-        almaRecordParser.extractPublicationTitle(inputStreamReader);
-        fail("Since the SRU response is truncated and thus unreadable, we expect an exception to be thrown");
+        Assertions.assertThrows(SAXException.class, () -> almaRecordParser.extractPublicationTitle(inputStreamReader));
     }
 
-    @Test(expected = SAXException.class)
+    @Test
     public void testExtractPublicationTitle_MalformedSruResponseOnStart() throws IOException,
             ParserConfigurationException, TransformerException, SAXException, XPathExpressionException {
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_START_TRUNCATED);
         InputStreamReader inputStreamReader = new InputStreamReader(stream);
         AlmaRecordParser almaRecordParser = new AlmaRecordParser();
-        almaRecordParser.extractPublicationTitle(inputStreamReader);
-        fail("Since the SRU response is truncated and thus unreadable, we expect an exception to be thrown");
+        Assertions.assertThrows(SAXException.class, () -> almaRecordParser.extractPublicationTitle(inputStreamReader));
     }
 }

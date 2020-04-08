@@ -1,12 +1,6 @@
 package no.unit.nva.alma;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -15,24 +9,18 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class FetchAlmaRecordHandlerTest {
 
     public static final String SRU_RESPONSE_2_HITS = "/SRU_response_2_hits.xml";
     public static final String MOCK_CREATOR_NAME = "Creator, Mock";
     public static final String MOCK_SCN = "1123456789";
     public static final String MOCK_SRU_HOST = "alma-sru-host-dot-com";
-
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
-
-    @Mock
-    AlmaSruConnection mockConnection;
 
     @Test
     public void testFetchRecord_MissingQueryStrings() {
@@ -88,6 +76,7 @@ public class FetchAlmaRecordHandlerTest {
         Map<String, Object> event = new HashMap<>();
         event.put(FetchAlmaRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
 
+        AlmaSruConnection mockConnection =  mock(AlmaSruConnection.class);
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_2_HITS);
         FetchAlmaRecordHandler mockAlmaRecordHandler = new FetchAlmaRecordHandler(mockConnection);
         when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
@@ -95,7 +84,6 @@ public class FetchAlmaRecordHandlerTest {
         final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
         assertEquals(Response.Status.OK.getStatusCode(), gatewayResponse.getStatusCode());
         assertTrue(gatewayResponse.getBody().contains(AlmaRecordParserTest.EXPECTED_TITLE));
-
     }
 
 }

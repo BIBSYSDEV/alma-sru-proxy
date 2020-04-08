@@ -1,24 +1,13 @@
 package no.unit.nva.alma;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-@RunWith(MockitoJUnitRunner.class)
 public class GatewayResponseTest {
 
     private static final String EMPTY_STRING = "";
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
 
     public static final String CORS_HEADER = "CORS header";
     public static final String MOCK_BODY = "mock";
@@ -31,7 +20,7 @@ public class GatewayResponseTest {
         gatewayResponse.setBody(null);
         gatewayResponse.setErrorBody(ERROR_BODY);
         gatewayResponse.setStatusCode(Response.Status.BAD_REQUEST.getStatusCode());
-        assertEquals(ERROR_JSON, gatewayResponse.getBody());
+        Assertions.assertEquals(ERROR_JSON, gatewayResponse.getBody());
     }
 
     @Test
@@ -40,12 +29,12 @@ public class GatewayResponseTest {
         config.setCorsHeader(EMPTY_STRING);
         final String corsHeader = config.getCorsHeader();
         GatewayResponse gatewayResponse = new GatewayResponse(MOCK_BODY, Response.Status.BAD_REQUEST.getStatusCode());
-        assertFalse(gatewayResponse.getHeaders().containsKey(GatewayResponse.CORS_ALLOW_ORIGIN_HEADER));
-        assertFalse(gatewayResponse.getHeaders().containsValue(corsHeader));
+        Assertions.assertFalse(gatewayResponse.getHeaders().containsKey(GatewayResponse.CORS_ALLOW_ORIGIN_HEADER));
+        Assertions.assertFalse(gatewayResponse.getHeaders().containsValue(corsHeader));
 
         config.setCorsHeader(CORS_HEADER);
         GatewayResponse gatewayResponse1 = new GatewayResponse(MOCK_BODY, Response.Status.BAD_REQUEST.getStatusCode());
-        assertTrue(gatewayResponse1.getHeaders().containsKey(GatewayResponse.CORS_ALLOW_ORIGIN_HEADER));
+        Assertions.assertTrue(gatewayResponse1.getHeaders().containsKey(GatewayResponse.CORS_ALLOW_ORIGIN_HEADER));
     }
 
 }

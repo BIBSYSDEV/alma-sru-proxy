@@ -1,12 +1,12 @@
 package no.unit.nva.alma;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AlmaSruConnectionTest {
 

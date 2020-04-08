@@ -9,8 +9,8 @@ plugins {
 group 'no.unit.nva'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = JavaVersion.VERSION_1_8  // source-code version and must be <= targetCompatibility
-targetCompatibility = JavaVersion.VERSION_1_8 // bytecode target version
+sourceCompatibility = JavaVersion.VERSION_11  // source-code version and must be <= targetCompatibility
+targetCompatibility = JavaVersion.VERSION_11 // bytecode target version
 
 repositories {
     mavenCentral()
@@ -25,8 +25,8 @@ dependencies {
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
     implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '2.2.7'
     implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.0'
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.6.1'
 
     shadowJar {
         archiveClassifier.set('')
@@ -36,6 +36,7 @@ dependencies {
 
 
 test {
+    useJUnitPlatform()
     failFast = true
     finalizedBy jacocoTestReport
 }
