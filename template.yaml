@@ -40,10 +40,15 @@ Parameters:
     Default: '{{resolve:ssm:almaSruHost:1}}'
 
 Resources:
+  ApiAccessLogGroup:
+    Type: AWS::Logs::LogGroup
 
   NvaAlmaSruProxyApi:
     Type: AWS::Serverless::Api
     Properties:
+      AccessLogSetting:
+        DestinationArn: !GetAtt ApiAccessLogGroup.Arn
+        Format: '{ "apiId": "$context.apiId", "requestId": "$context.requestId", "requestTime": "$context.requestTime", "requestTimeEpoch": "$context.requestTimeEpoch", "httpMethod": "$context.httpMethod", "path": "$context.path", "status": "$context.status",  "error.message": "$context.error.message" }'
       StageName: Prod
       Auth:
         Authorizers:
