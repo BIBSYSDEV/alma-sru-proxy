@@ -25,7 +25,6 @@ Globals:
 
 Parameters:
   CognitoAuthorizerArn:
-    Default: '{{resolve:ssm:CognitoAuthorizerArn:2}}'
     Type: String
     Description: Reference to Cognito UserPool for the stage
   CustomDomain:
@@ -37,7 +36,6 @@ Parameters:
   AlmaSruHost:
     Type: String
     Description: Address to Alma-SRU
-    Default: '{{resolve:ssm:almaSruHost:1}}'
 
 Resources:
   ApiAccessLogGroup:
