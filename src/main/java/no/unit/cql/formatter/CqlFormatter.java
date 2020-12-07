@@ -47,7 +47,7 @@ public class CqlFormatter {
         return this;
     }
 
-    public CqlFormatter withMms_id(String mmsId) {
+    public CqlFormatter withMmsId(String mmsId) {
         this.mmsId = mmsId;
         return this;
     }

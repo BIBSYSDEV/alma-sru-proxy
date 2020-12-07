@@ -88,8 +88,8 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
             throw new MissingParameterException(MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS);
         }
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
-        final String mms_id = queryStringParameters.get(MMSID_KEY);
-        if (StringUtils.isEmpty(mms_id)) {
+        final String mmsId = queryStringParameters.get(MMSID_KEY);
+        if (StringUtils.isEmpty(mmsId)) {
             throw new MissingParameterException(MANDATORY_PARAMETER_MMSID_MISSING);
         }
     }

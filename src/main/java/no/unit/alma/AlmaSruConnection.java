@@ -57,7 +57,7 @@ public class AlmaSruConnection {
         String encodedCqlQuery = new CqlFormatter()
                 .withRetrospective(true)
                 .withSorting(true)
-                .withMms_id(mmsId)
+                .withMmsId(mmsId)
                 .withInstitution(institution)
                 .encode();
         URI uri = new URIBuilder()
