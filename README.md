@@ -1,4 +1,4 @@
-# Nva Alma-SRU Proxy
+# Alma-SRU Proxy
 
 The purpose of this project is to fetch an Alma-record (publication) by given parameters. One has to send the authors id
  (authorityId resp. ```scn```) and the authors name (```creatorname```) in inverted form as query parameters.
@@ -25,4 +25,3 @@ deployment process that updates your application code.
           }
      ```
 
-let me test.
