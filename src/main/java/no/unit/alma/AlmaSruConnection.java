@@ -1,4 +1,4 @@
-package no.unit.nva.alma;
+package no.unit.alma;
 
 import no.unit.cql.formatter.CqlFormatter;
 import org.apache.http.client.utils.URIBuilder;

@@ -137,7 +137,7 @@ Resources:
         Variables:
           ALMA_SRU_HOST: !Ref AlmaSruHost
           ALLOWED_ORIGIN:  '*'
-      Handler: no.unit.nva.alma.FetchAlmaRecordHandler::handleRequest
+      Handler: no.unit.alma.FetchAlmaRecordHandler::handleRequest
       Runtime: java11
       MemorySize: 512
       Events:

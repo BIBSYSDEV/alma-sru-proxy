@@ -1,4 +1,4 @@
-package no.unit.nva.alma;
+package no.unit.alma;
 
 import com.google.common.io.CharStreams;
 import org.marc4j.MarcXmlReader;

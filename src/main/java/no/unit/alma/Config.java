@@ -1,4 +1,4 @@
-package no.unit.nva.alma;
+package no.unit.alma;
 
 import org.apache.commons.lang3.StringUtils;
 
