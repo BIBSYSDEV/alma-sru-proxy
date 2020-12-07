@@ -61,11 +61,11 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
         }
 
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
-        String mms_id = queryStringParameters.get(MMSID_KEY);
+        String mmsId = queryStringParameters.get(MMSID_KEY);
         String institution = queryStringParameters.get(INSTITUTION_KEY);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
-            final URL queryUrl = connection.generateQueryByMmsIdUrl(mms_id, institution);
+            final URL queryUrl = connection.generateQueryByMmsIdUrl(mmsId, institution);
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
                 AlmaRecordParser almaRecordParser = new AlmaRecordParser();
                 Reference json = almaRecordParser.extractPublicationTitle(streamReader);

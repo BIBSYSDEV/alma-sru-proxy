@@ -37,7 +37,7 @@ public class CqlFormatter {
 
     private transient String authorityId;
     private transient String creator;
-    private transient String mms_id;
+    private transient String mmsId;
     private transient String institution;
     private transient boolean sorted;
     private transient boolean retrospective;
@@ -47,8 +47,8 @@ public class CqlFormatter {
         return this;
     }
 
-    public CqlFormatter withMms_id(String mms_id) {
-        this.mms_id = mms_id;
+    public CqlFormatter withMms_id(String mmsId) {
+        this.mmsId = mmsId;
         return this;
     }
 
@@ -73,8 +73,8 @@ public class CqlFormatter {
             clauses.add(generateCqlClause(generateIndex(CREATOR), this.creator));
         }
 
-        if (nonNull(this.mms_id)) {
-            clauses.add(generateCqlClause(generateIndex(MMS_ID), this.mms_id));
+        if (nonNull(this.mmsId)) {
+            clauses.add(generateCqlClause(generateIndex(MMS_ID), this.mmsId));
         }
 
         if (nonNull(this.institution)) {

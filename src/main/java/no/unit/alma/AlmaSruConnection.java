@@ -52,12 +52,12 @@ public class AlmaSruConnection {
         return uri.toURL();
     }
 
-    protected URL generateQueryByMmsIdUrl(String mms_id, String institution)
+    protected URL generateQueryByMmsIdUrl(String mmsId, String institution)
             throws MalformedURLException, URISyntaxException {
         String encodedCqlQuery = new CqlFormatter()
                 .withRetrospective(true)
                 .withSorting(true)
-                .withMms_id(mms_id)
+                .withMms_id(mmsId)
                 .withInstitution(institution)
                 .encode();
         URI uri = new URIBuilder()
