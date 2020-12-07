@@ -18,26 +18,24 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
 
-public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object>, GatewayResponse> {
+public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Object>, GatewayResponse> {
 
     public static final String INTERNAL_SERVER_ERROR_MESSAGE = "An error occurred, error has been logged";
 
     public static final String MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS =
             "Missing event element 'queryStringParameters'.";
-    public static final String MANDATORY_PARAMETER_SCN_MISSING = "Mandatory parameter 'scn' is missing.";
-    public static final String MANDATORY_PARAMETER_CREATORNAME_MISSING =
-            "Mandatory parameter 'creatorname' is missing.";
+    public static final String MANDATORY_PARAMETER_MMSID_MISSING = "Mandatory parameter 'mms_id' is missing.";
     public static final String QUERY_STRING_PARAMETERS_KEY = "queryStringParameters";
-    public static final String CREATOR_NAME_KEY = "creatorname";
-    public static final String SCN_KEY = "scn";
+    public static final String INSTITUTION_KEY = "institution";
+    public static final String MMSID_KEY = "mms_id";
     protected final transient AlmaSruConnection connection;
 
 
-    public FetchAlmaRecordHandler() {
+    public GetAlmaSruRecordHandler() {
         connection = new AlmaSruConnection();
     }
 
-    public FetchAlmaRecordHandler(AlmaSruConnection connection) {
+    public GetAlmaSruRecordHandler(AlmaSruConnection connection) {
         this.connection = connection;
     }
 
@@ -63,11 +61,11 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
         }
 
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
-        String scn = queryStringParameters.get(SCN_KEY);
-        String creatorName = queryStringParameters.get(CREATOR_NAME_KEY);
+        String mms_id = queryStringParameters.get(MMSID_KEY);
+        String institution = queryStringParameters.get(INSTITUTION_KEY);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
-            final URL queryUrl = connection.generateQueryByAuthorUrl(scn, creatorName);
+            final URL queryUrl = connection.generateQueryByMmsIdUrl(mms_id, institution);
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
                 AlmaRecordParser almaRecordParser = new AlmaRecordParser();
                 Reference json = almaRecordParser.extractPublicationTitle(streamReader);
@@ -90,13 +88,9 @@ public class FetchAlmaRecordHandler implements RequestHandler<Map<String, Object
             throw new MissingParameterException(MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS);
         }
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
-        final String scn = queryStringParameters.get(SCN_KEY);
-        if (StringUtils.isEmpty(scn)) {
-            throw new MissingParameterException(MANDATORY_PARAMETER_SCN_MISSING);
-        }
-        final String creatorName = queryStringParameters.get(CREATOR_NAME_KEY);
-        if (StringUtils.isEmpty(creatorName)) {
-            throw new MissingParameterException(MANDATORY_PARAMETER_CREATORNAME_MISSING);
+        final String mms_id = queryStringParameters.get(MMSID_KEY);
+        if (StringUtils.isEmpty(mms_id)) {
+            throw new MissingParameterException(MANDATORY_PARAMETER_MMSID_MISSING);
         }
     }
 

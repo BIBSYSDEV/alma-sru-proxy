@@ -20,7 +20,8 @@ public class AlmaSruConnection {
     public static final String RECORD_SCHEMA_KEY = "recordSchema";
     public static final String RECORD_SCHEMA = "marcxml";
     public static final String MAXIMUM_RECORDS_KEY = "maximumRecords";
-    public static final String MAX_NUMBER_RECODS = "2";
+    public static final String MAX_NUMBER_RECORDS = "2";
+    public static final String ONE_RECORD_ONLY = "1";
     public static final String START_RECORD_KEY = "startRecord";
     public static final String START_RECORD_1 = "1";
     public static final String QUERY_KEY = "query";
@@ -29,7 +30,7 @@ public class AlmaSruConnection {
         return new InputStreamReader(url.openStream());
     }
 
-    protected URL generateQueryUrl(String scn, String creatorName)
+    protected URL generateQueryByAuthorUrl(String scn, String creatorName)
             throws MalformedURLException, URISyntaxException {
         String encodedCqlQuery = new CqlFormatter()
                 .withRetrospective(true)
@@ -44,7 +45,29 @@ public class AlmaSruConnection {
                 .setParameter(VERSION_KEY, SRU_VERSION_1_2)
                 .setParameter(OPERATION_KEY, OPERATION_SEARCH_RETRIEVE)
                 .setParameter(RECORD_SCHEMA_KEY, RECORD_SCHEMA)
-                .setParameter(MAXIMUM_RECORDS_KEY, MAX_NUMBER_RECODS)
+                .setParameter(MAXIMUM_RECORDS_KEY, MAX_NUMBER_RECORDS)
+                .setParameter(START_RECORD_KEY, START_RECORD_1)
+                .setParameter(QUERY_KEY, encodedCqlQuery)
+                .build();
+        return uri.toURL();
+    }
+
+    protected URL generateQueryByMmsIdUrl(String mms_id, String institution)
+            throws MalformedURLException, URISyntaxException {
+        String encodedCqlQuery = new CqlFormatter()
+                .withRetrospective(true)
+                .withSorting(true)
+                .withMms_id(mms_id)
+                .withInstitution(institution)
+                .encode();
+        URI uri = new URIBuilder()
+                .setScheme(HTTPS)
+                .setHost(Config.getInstance().getAlmaSruHost())
+                .setPath(Config.ALMA_SRU_QUERY_PATH)
+                .setParameter(VERSION_KEY, SRU_VERSION_1_2)
+                .setParameter(OPERATION_KEY, OPERATION_SEARCH_RETRIEVE)
+                .setParameter(RECORD_SCHEMA_KEY, RECORD_SCHEMA)
+                .setParameter(MAXIMUM_RECORDS_KEY, ONE_RECORD_ONLY)
                 .setParameter(START_RECORD_KEY, START_RECORD_1)
                 .setParameter(QUERY_KEY, encodedCqlQuery)
                 .build();
