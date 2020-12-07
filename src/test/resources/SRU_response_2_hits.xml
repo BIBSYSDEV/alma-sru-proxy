@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/">
+    <version>1.2</version>
+    <numberOfRecords>4</numberOfRecords>
+    <records>
+        <record>
+            <recordSchema>marcxml</recordSchema>
+            <recordPacking>xml</recordPacking>
+            <recordData>
+                <record xmlns="http://www.loc.gov/MARC21/slim">
+                    <leader>01095cam a2200325 c 4500</leader>
+                    <controlfield tag="001">998611116644702201</controlfield>
+                    <controlfield tag="005">20110826164106.0</controlfield>
+                    <controlfield tag="007">ta</controlfield>
+                    <controlfield tag="008">110826s1986    xx#|||||||||||000|u|und|d</controlfield>
+                    <datafield tag="020" ind1=" " ind2=" ">
+                        <subfield code="a">8259541971</subfield>
+                    </datafield>
+                    <datafield tag="035" ind1=" " ind2=" ">
+                        <subfield code="a">861111664-47bibsys_network</subfield>
+                    </datafield>
+                    <datafield tag="035" ind1=" " ind2=" ">
+                        <subfield code="a">(NO-TrBIB)861111664</subfield>
+                    </datafield>
+                    <datafield tag="040" ind1=" " ind2=" ">
+                        <subfield code="a">NO-TrBIB</subfield>
+                        <subfield code="b">nob</subfield>
+                        <subfield code="e">katreg</subfield>
+                    </datafield>
+                    <datafield tag="080" ind1=" " ind2=" ">
+                        <subfield code="a">621.39</subfield>
+                    </datafield>
+                    <datafield tag="080" ind1=" " ind2=" ">
+                        <subfield code="a">654.1</subfield>
+                    </datafield>
+                    <datafield tag="080" ind1=" " ind2=" ">
+                        <subfield code="a">681.324</subfield>
+                    </datafield>
+                    <datafield tag="080" ind1=" " ind2=" ">
+                        <subfield code="a">681.327.8</subfield>
+                    </datafield>
+                    <datafield tag="100" ind1="1" ind2=" ">
+                        <subfield code="a">Mjølsnes, Stig Frode</subfield>
+                        <subfield code="d">1956-</subfield>
+                        <subfield code="0">(NO-TrBIB)90128656</subfield>
+                    </datafield>
+                    <datafield tag="245" ind1="1" ind2="0">
+                        <subfield code="a">Bedriftsintern telekommunikasjon</subfield>
+                        <subfield code="c">S. F. Mjølsnes, P. Hovde og T. Hystad</subfield>
+                    </datafield>
+                    <datafield tag="260" ind1=" " ind2=" ">
+                        <subfield code="a">Trondheim</subfield>
+                        <subfield code="b">Elektronikklaboratoriet ved NTH</subfield>
+                        <subfield code="c">1986</subfield>
+                    </datafield>
+                    <datafield tag="300" ind1=" " ind2=" ">
+                        <subfield code="a">VIII, 109, 9, 12 s.</subfield>
+                        <subfield code="b">ill.</subfield>
+                    </datafield>
+                    <datafield tag="490" ind1="1" ind2=" ">
+                        <subfield code="a">ELAB rapport</subfield>
+                        <subfield code="v">STF44 A86030</subfield>
+                    </datafield>
+                    <datafield tag="650" ind1=" " ind2="7">
+                        <subfield code="a">Telekommunikasjoner</subfield>
+                        <subfield code="x">Internsystemer</subfield>
+                        <subfield code="2">tekord</subfield>
+                    </datafield>
+                    <datafield tag="650" ind1=" " ind2="7">
+                        <subfield code="a">Datamaskinnett</subfield>
+                        <subfield code="2">tekord</subfield>
+                    </datafield>
+                    <datafield tag="650" ind1=" " ind2="7">
+                        <subfield code="a">Dataoverføring</subfield>
+                        <subfield code="2">tekord</subfield>
+                    </datafield>
+                    <datafield tag="653" ind1=" " ind2=" ">
+                        <subfield code="a">telekommunikasjon</subfield>
+                        <subfield code="a">teleautomatikk</subfield>
+                        <subfield code="a">datanett</subfield>
+                        <subfield code="a">datateknikk</subfield>
+                        <subfield code="a">bedriftskommunikasjon</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1="1" ind2=" ">
+                        <subfield code="a">Hovde, Per</subfield>
+                        <subfield code="0">(NO-TrBIB)90304864</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1="1" ind2=" ">
+                        <subfield code="a">Hystad, Toralf</subfield>
+                        <subfield code="0">(NO-TrBIB)90304797</subfield>
+                    </datafield>
+                    <datafield tag="830" ind1=" " ind2="0">
+                        <subfield code="a">ELAB rapport (trykt utg.)</subfield>
+                        <subfield code="v">STF44 A86030</subfield>
+                        <subfield code="w">998010207354702201</subfield>
+                    </datafield>
+                    <datafield tag="852" ind1="0" ind2="1">
+                        <subfield code="a">47BIBSYS_NTNU_UB</subfield>
+                        <subfield code="6">998611116644702203</subfield>
+                        <subfield code="9">P</subfield>
+                    </datafield>
+                    <datafield tag="901" ind1=" " ind2=" ">
+                        <subfield code="a">80</subfield>
+                    </datafield>
+                </record>
+            </recordData>
+            <recordIdentifier>998611116644702201</recordIdentifier>
+            <recordPosition>1</recordPosition>
+        </record>
+        <record>
+            <recordSchema>marcxml</recordSchema>
+            <recordPacking>xml</recordPacking>
+            <recordData>
+                <record xmlns="http://www.loc.gov/MARC21/slim">
+                    <leader>00980cam a2200301 c 4500</leader>
+                    <controlfield tag="001">998610776954702201</controlfield>
+                    <controlfield tag="005">19860610000000.0</controlfield>
+                    <controlfield tag="007">ta</controlfield>
+                    <controlfield tag="008">860610s1986    xx#|||||||||||000|u|und|d</controlfield>
+                    <datafield tag="020" ind1=" " ind2=" ">
+                        <subfield code="a">8259541939</subfield>
+                    </datafield>
+                    <datafield tag="035" ind1=" " ind2=" ">
+                        <subfield code="a">861077695-47bibsys_network</subfield>
+                    </datafield>
+                    <datafield tag="035" ind1=" " ind2=" ">
+                        <subfield code="a">(NO-TrBIB)861077695</subfield>
+                    </datafield>
+                    <datafield tag="040" ind1=" " ind2=" ">
+                        <subfield code="a">NO-TrBIB</subfield>
+                        <subfield code="b">nob</subfield>
+                        <subfield code="e">katreg</subfield>
+                    </datafield>
+                    <datafield tag="080" ind1=" " ind2=" ">
+                        <subfield code="a">681.3:621.39</subfield>
+                    </datafield>
+                    <datafield tag="080" ind1=" " ind2=" ">
+                        <subfield code="a">681.3:654.1</subfield>
+                    </datafield>
+                    <datafield tag="080" ind1=" " ind2=" ">
+                        <subfield code="a">681.327.8</subfield>
+                    </datafield>
+                    <datafield tag="100" ind1="1" ind2=" ">
+                        <subfield code="a">Hovde, Per</subfield>
+                        <subfield code="0">(NO-TrBIB)90304864</subfield>
+                    </datafield>
+                    <datafield tag="245" ind1="1" ind2="0">
+                        <subfield code="a">DARPA's internettprotokoll :</subfield>
+                        <subfield code="b">implementasjon på VAX/VMS</subfield>
+                        <subfield code="c">Per Hovde, Petter Kongshaug, Tore Riksaasen</subfield>
+                    </datafield>
+                    <datafield tag="260" ind1=" " ind2=" ">
+                        <subfield code="a">Trondheim</subfield>
+                        <subfield code="c">1986</subfield>
+                    </datafield>
+                    <datafield tag="300" ind1=" " ind2=" ">
+                        <subfield code="a">VII, 71 bl.</subfield>
+                        <subfield code="b">fig.</subfield>
+                    </datafield>
+                    <datafield tag="490" ind1="1" ind2=" ">
+                        <subfield code="a">SINTEF rapport</subfield>
+                        <subfield code="v">STF44 A86004</subfield>
+                    </datafield>
+                    <datafield tag="650" ind1=" " ind2="7">
+                        <subfield code="a">Teleteknikk</subfield>
+                        <subfield code="x">Databehandling</subfield>
+                        <subfield code="2">tekord</subfield>
+                    </datafield>
+                    <datafield tag="650" ind1=" " ind2="7">
+                        <subfield code="a">Dataoverføring</subfield>
+                        <subfield code="x">Databehandling</subfield>
+                        <subfield code="2">tekord</subfield>
+                    </datafield>
+                    <datafield tag="650" ind1=" " ind2="7">
+                        <subfield code="a">Telekommunikasjoner</subfield>
+                        <subfield code="2">tekord</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1="1" ind2=" ">
+                        <subfield code="a">Kongshaug, Petter</subfield>
+                        <subfield code="0">(NO-TrBIB)90289365</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1="1" ind2=" ">
+                        <subfield code="a">Riksaasen, Tore,</subfield>
+                        <subfield code="d">--1999</subfield>
+                        <subfield code="0">(NO-TrBIB)90087394</subfield>
+                    </datafield>
+                    <datafield tag="830" ind1=" " ind2="0">
+                        <subfield code="a">ELAB rapport (trykt utg.)</subfield>
+                        <subfield code="v">STF44 A86004</subfield>
+                        <subfield code="w">998010207354702201</subfield>
+                    </datafield>
+                    <datafield tag="852" ind1="0" ind2="1">
+                        <subfield code="a">47BIBSYS_NTNU_UB</subfield>
+                        <subfield code="6">998610776954702203</subfield>
+                        <subfield code="9">P</subfield>
+                    </datafield>
+                    <datafield tag="901" ind1=" " ind2=" ">
+                        <subfield code="a">80</subfield>
+                    </datafield>
+                </record>
+            </recordData>
+            <recordIdentifier>998610776954702201</recordIdentifier>
+            <recordPosition>2</recordPosition>
+        </record>
+    </records>
+    <nextRecordPosition>3</nextRecordPosition>
+    <extraResponseData xmlns:xb="http://www.exlibris.com/repository/search/xmlbeans/">
+        <xb:exact>true</xb:exact>
+        <xb:responseDate>2020-02-12T11:02:17+0100</xb:responseDate>
+    </extraResponseData>
+</searchRetrieveResponse>
