@@ -219,7 +219,6 @@ Resources:
   NvaFetchAlmaRecordFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: alma/
       Environment:
         Variables:
           ALMA_SRU_HOST: !Ref AlmaSruHost
@@ -238,7 +237,6 @@ Resources:
   GetAlmaSruRecordFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: alma/
       Environment:
         Variables:
           ALMA_SRU_HOST: !Ref AlmaSruHost
