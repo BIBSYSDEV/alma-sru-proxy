@@ -130,6 +130,95 @@ Resources:
                   type: string
                   description: title of the publication in Alma
 
+  AlmaSruProxyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      AccessLogSetting:
+        DestinationArn: !GetAtt ApiAccessLogGroup.Arn
+        Format: '{ "apiId": "$context.apiId", "requestId": "$context.requestId", "requestTime": "$context.requestTime", "requestTimeEpoch": "$context.requestTimeEpoch", "httpMethod": "$context.httpMethod", "path": "$context.path", "status": "$context.status",  "error.message": "$context.error.message" }'
+      StageName: Prod
+      Auth:
+        Authorizers:
+          MyCognitoAuthorizer:
+            UserPoolArn: !Ref CognitoAuthorizerArn
+      EndpointConfiguration: Regional
+      DefinitionBody:
+        openapi: 3.0.0
+        info:
+          title: Alma SRU Proxy
+          version: '1.0'
+        paths:
+          /:
+            get:
+              summary:  Get record given by mms_id and optional institution
+              description:  gets the record by mms_id
+              parameters:
+                - in: query
+                  name: mms_id
+                  required: true
+                  type: string
+                  description: mms_id.
+                - in: query
+                  name: institution
+                  required: false
+                  type: string
+                  description: institution (alma_code).
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetAlmaSruRecordFunction.Arn}/invocations
+                responses: {}
+                httpMethod: POST
+                type: AWS_PROXY
+              responses:
+                '200':
+                  description: title
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/getAlmaSruRecordResponseBody'
+                '400':
+                  description: Bad request.
+                  content:
+                    application/json:
+                      schema:
+                        title: 400 Bad request
+                        type: object
+                        properties:
+                          error:
+                            type: string
+                            description: error message
+                '500':
+                  description: Internal server error.
+                  content:
+                    application/json:
+                      schema:
+                        title: 500 internal server error
+                        type: object
+                        properties:
+                          error:
+                            type: string
+                            description: error message
+
+        components:
+          securitySchemes:
+            CognitoUserPool:
+              type: apiKey
+              name: Authorization
+              in: header
+              x-amazon-apigateway-authtype: cognito_user_pools
+              x-amazon-apigateway-authorizer:
+                type: cognito_user_pools
+                providerARNs:
+                  - !Ref CognitoAuthorizerArn
+          schemas:
+            getAlmaSruRecordResponseBody:
+              title: alma record
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: bibliographic record from Alma
+
   NvaFetchAlmaRecordFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -148,6 +237,23 @@ Resources:
             Method: get
             Path: /
 
+  GetAlmaSruRecordFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Environment:
+        Variables:
+          ALMA_SRU_HOST: !Ref AlmaSruHost
+          ALLOWED_ORIGIN:  '*'
+      Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
+      Runtime: java11
+      MemorySize: 512
+      Events:
+        GetAlmaSruRecordEvent:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref AlmaSruProxyApi
+            Method: get
+            Path: /
 
   NvaAlmaSruProxyBasePathMapping:
     Type: AWS::ApiGateway::BasePathMapping
@@ -156,3 +262,11 @@ Resources:
       DomainName: !Ref CustomDomain
       RestApiId: !Ref NvaAlmaSruProxyApi
       Stage: !Ref NvaAlmaSruProxyApi.Stage
+
+  AlmaSruProxyBasePathMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    Properties:
+      BasePath: !Ref CustomDomainBasePath
+      DomainName: !Ref CustomDomain
+      RestApiId: !Ref AlmaSruProxyApi
+      Stage: !Ref AlmaSruProxyApi.Stage
