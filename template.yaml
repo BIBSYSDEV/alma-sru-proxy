@@ -24,9 +24,6 @@ Globals:
 
 
 Parameters:
-  CognitoAuthorizerArn:
-    Type: String
-    Description: Reference to Cognito UserPool for the stage
   CustomDomain:
     Type: String
     Description: Custom API to connect this lambda to
