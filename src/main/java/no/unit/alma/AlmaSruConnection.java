@@ -1,5 +1,6 @@
 package no.unit.alma;
 
+import java.util.Locale;
 import no.unit.cql.formatter.CqlFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -63,7 +64,7 @@ public class AlmaSruConnection {
                 .encode();
         String almaSruQueryPath = Config.ALMA_SRU_QUERY_PATH_NETWORK;
         if (StringUtils.isNotEmpty(institution)) {
-            almaSruQueryPath = almaSruQueryPath.replace("NETWORK", institution.toUpperCase());
+            almaSruQueryPath = almaSruQueryPath.replace("NETWORK", institution.toUpperCase(Locale.getDefault()));
         }
         URI uri = new URIBuilder()
                 .setScheme(HTTPS)
