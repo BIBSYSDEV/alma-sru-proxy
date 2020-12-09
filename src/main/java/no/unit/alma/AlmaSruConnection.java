@@ -27,6 +27,7 @@ public class AlmaSruConnection {
     public static final String START_RECORD_KEY = "startRecord";
     public static final String START_RECORD_1 = "1";
     public static final String QUERY_KEY = "query";
+    public static final String NETWORK = "NETWORK";
 
     protected InputStreamReader connect(URL url) throws IOException {
         return new InputStreamReader(url.openStream());
@@ -64,7 +65,7 @@ public class AlmaSruConnection {
                 .encode();
         String almaSruQueryPath = Config.ALMA_SRU_QUERY_PATH_NETWORK;
         if (StringUtils.isNotEmpty(institution)) {
-            almaSruQueryPath = almaSruQueryPath.replace("NETWORK", institution.toUpperCase(Locale.getDefault()));
+            almaSruQueryPath = almaSruQueryPath.replace(NETWORK, institution.toUpperCase(Locale.getDefault()));
         }
         URI uri = new URIBuilder()
                 .setScheme(HTTPS)
