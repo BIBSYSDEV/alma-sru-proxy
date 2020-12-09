@@ -1,6 +1,7 @@
 package no.unit.alma;
 
 import no.unit.cql.formatter.CqlFormatter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class AlmaSruConnection {
         URI uri = new URIBuilder()
                 .setScheme(HTTPS)
                 .setHost(Config.getInstance().getAlmaSruHost())
-                .setPath(Config.ALMA_SRU_QUERY_PATH)
+                .setPath(Config.ALMA_SRU_QUERY_PATH_NETWORK)
                 .setParameter(VERSION_KEY, SRU_VERSION_1_2)
                 .setParameter(OPERATION_KEY, OPERATION_SEARCH_RETRIEVE)
                 .setParameter(RECORD_SCHEMA_KEY, RECORD_SCHEMA)
@@ -55,15 +56,19 @@ public class AlmaSruConnection {
     protected URL generateQueryByMmsIdUrl(String mmsId, String institution)
             throws MalformedURLException, URISyntaxException {
         String encodedCqlQuery = new CqlFormatter()
-                .withRetrospective(true)
-                .withSorting(true)
+                .withRetrospective(false)
+                .withSorting(false)
                 .withMmsId(mmsId)
                 .withInstitution(institution)
                 .encode();
+        String almaSruQueryPath = Config.ALMA_SRU_QUERY_PATH_NETWORK;
+        if (StringUtils.isNotEmpty(institution)) {
+            almaSruQueryPath = almaSruQueryPath.replace("NETWORK", institution.toUpperCase());
+        }
         URI uri = new URIBuilder()
                 .setScheme(HTTPS)
                 .setHost(Config.getInstance().getAlmaSruHost())
-                .setPath(Config.ALMA_SRU_QUERY_PATH)
+                .setPath(almaSruQueryPath)
                 .setParameter(VERSION_KEY, SRU_VERSION_1_2)
                 .setParameter(OPERATION_KEY, OPERATION_SEARCH_RETRIEVE)
                 .setParameter(RECORD_SCHEMA_KEY, RECORD_SCHEMA)

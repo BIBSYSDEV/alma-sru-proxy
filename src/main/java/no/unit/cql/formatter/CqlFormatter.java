@@ -23,7 +23,7 @@ public class CqlFormatter {
     private static final String PUBLICATION_DATE = "main_pub_date";
 
     private static final String MMS_ID = "mms_id";
-    private static final String INSTITUTION = "alma_code";
+    private static final String INSTITUTION_MMS_ID = "all_for_ui";
 
     private static final String SORT_BY = "sortBy";
     private static final String SORT_MODIFIER = "sort.descending";
@@ -74,11 +74,12 @@ public class CqlFormatter {
         }
 
         if (nonNull(this.mmsId)) {
-            clauses.add(generateCqlClause(generateIndex(MMS_ID), this.mmsId));
-        }
+            if (nonNull(this.institution)) {
+                clauses.add(generateCqlClause(generateIndex(INSTITUTION_MMS_ID), this.mmsId));
+            } else {
+                clauses.add(generateCqlClause(generateIndex(MMS_ID), this.mmsId));
+            }
 
-        if (nonNull(this.institution)) {
-            clauses.add(generateCqlClause(generateIndex(INSTITUTION), this.institution));
         }
 
         if (retrospective) {

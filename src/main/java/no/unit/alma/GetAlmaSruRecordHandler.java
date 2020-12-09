@@ -2,8 +2,14 @@ package no.unit.alma;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
@@ -63,17 +69,16 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
         String mmsId = queryStringParameters.get(MMSID_KEY);
         String institution = queryStringParameters.get(INSTITUTION_KEY);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try {
             final URL queryUrl = connection.generateQueryByMmsIdUrl(mmsId, institution);
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
-                AlmaRecordParser almaRecordParser = new AlmaRecordParser();
-                Reference json = almaRecordParser.extractPublicationTitle(streamReader);
-                gatewayResponse.setBody(gson.toJson(json, Reference.class));
+                String xml = new BufferedReader(streamReader)
+                    .lines()
+                    .collect(Collectors.joining(System.lineSeparator()));
+                gatewayResponse.setBody(xml);
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             }
-        } catch (URISyntaxException | IOException | TransformerException | SAXException | ParserConfigurationException
-                | XPathExpressionException e) {
+        } catch (URISyntaxException | IOException e) {
             DebugUtils.dumpException(e);
             gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE);
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
