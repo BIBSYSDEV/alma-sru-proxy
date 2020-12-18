@@ -3,26 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   Sets up lambda, api and base path mapping to fetch most recent publication for an author
 
-Metadata:
-  AWS::ServerlessRepo::Application:
-    Name: SruLastPublication
-    Description: Fetches most recent publication for an author via SRU from a library system
-    Author: Unit
-    SpdxLicenseId: MIT
-    Labels: ['${CODEBUILD_RESOLVED_SOURCE_VERSION}', '${GIT_REPO}', '@${BUILD_TIMESTAMP}']
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-  Function:
-    Timeout: 20
-  Api:
-    Cors:
-      AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
-      AllowMethods: '''OPTIONS, GET'''
-      AllowOrigin: '''*'''
-    EndpointConfiguration: REGIONAL
-
-
 Parameters:
   CustomDomain:
     Type: AWS::SSM::Parameter::Value<String>
@@ -39,11 +19,19 @@ Parameters:
     Description: Url Endpoint to the SRU server
     Default: 'https://bibsys.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK'
 
-
 Conditions:
   HasDomainName: !Not [!Equals [!Ref CustomDomain, '']]
   HasCustomDomainBasePath: !Not [!Equals [!Ref CustomDomainBasePath, '']]
 
+Globals:
+  Function:
+    Timeout: 20
+  Api:
+    Cors:
+      AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
+      AllowMethods: '''OPTIONS, GET'''
+      AllowOrigin: '''*'''
+    EndpointConfiguration: REGIONAL
 
 Resources:
   AlmaSruProxyApi:
