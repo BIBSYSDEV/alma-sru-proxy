@@ -17,25 +17,46 @@ Globals:
     Timeout: 20
   Api:
     Cors:
-      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-      AllowMethods: "'OPTIONS, GET'"
-      AllowOrigin: "'*'"
+      AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
+      AllowMethods: '''OPTIONS, GET'''
+      AllowOrigin: '''*'''
+    EndpointConfiguration: REGIONAL
 
 
 Parameters:
   CustomDomain:
-    Type: String
-    Description: Custom API to connect this lambda to
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: '/api/domainName'
+    Description: (Optional) Custom domain name for the API endpoint
   CustomDomainBasePath:
     Type: String
-    Description: Base path mapping in CustomDomain
-  AlmaSruHost:
+    Default: 'alma'
+    Description: (Optional) Base path mapping in CustomDomain
+    AllowedPattern: "^[a-zA-Z0-9$\\-_.+!*'(),]*$"
+    ConstraintDescription: "May contain only letters, numbers and one of $-_.+!*'(),"
+  SruEndpoint:
     Type: String
-    Description: Address to Alma-SRU
+    Description: Url Endpoint to the SRU server
+    Default: 'https://bibsys.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK'
+
+
+Conditions:
+  HasDomainName: !Not [!Equals [!Ref CustomDomain, '']]
+  HasCustomDomainBasePath: !Not [!Equals [!Ref CustomDomainBasePath, '']]
+
 
 Resources:
   AlmaSruProxyApi:
     Type: AWS::Serverless::Api
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W64
+            reason: "Skip access logging for artifacts bucket"
+          - id: W68
+            reason: "Skip encryption for artifacts bucket"
+          - id: W69
+            reason: "Skip bucket policy for artifacts bucket"
     Properties:
       Name: !Sub "${AWS::StackName}"
       StageName: v1
@@ -47,7 +68,7 @@ Resources:
           title: Alma SRU Proxy
           version: '1.0'
         paths:
-          /alma:
+          /:
             get:
               summary:  Get Alma record given by mms_id and optional institution
               description:  gets the Alma record by mms_id
@@ -113,8 +134,8 @@ Resources:
     Properties:
       Environment:
         Variables:
-          ALMA_SRU_HOST: !Ref AlmaSruHost
           ALLOWED_ORIGIN:  '*'
+          SRU_ENDPOINT: !Ref SruEndpoint
       Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
       Runtime: java11
       MemorySize: 512
@@ -128,8 +149,20 @@ Resources:
 
   AlmaSruProxyBasePathMapping:
     Type: AWS::ApiGateway::BasePathMapping
+    Condition: HasDomainName
     Properties:
-      BasePath: !Ref CustomDomainBasePath
+      BasePath: !If
+        - HasCustomDomainBasePath
+        - !Ref CustomDomainBasePath
+        - !Ref 'AWS::NoValue'
       DomainName: !Ref CustomDomain
       RestApiId: !Ref AlmaSruProxyApi
       Stage: !Ref AlmaSruProxyApi.Stage
+
+Outputs:
+  ApiEndpoint:
+    Description: "Endpoint base URL for the API"
+    Value: !If
+      - HasDomainName
+      - !Sub "https://${CustomDomain}/${CustomDomainBasePath}"
+      - !Sub "https://${AlmaSruProxyApi}.execute-api.${AWS::Region}.amazonaws.com/${AlmaSruProxyApi.Stage}/"
