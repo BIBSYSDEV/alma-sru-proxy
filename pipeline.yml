@@ -81,7 +81,9 @@ Parameters:
   PipelineApprovalEmail:
     Type: String
     Default: ''
-    Description: The target email address for pipeline approval messages
+    Description: The target email address for pipeline approval messages. Required when PipelineApprovalAction is Yes
+    AllowedPattern: '(^$|^[_A-Za-z0-9-\+\.]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$)'
+    ConstraintDescription: Valid email address or empty
   AlertTopicArn:
 #    Type: 'AWS::SSM::Parameter::Value<String>'
 #    Default: '/alert/topicArn'
@@ -90,7 +92,7 @@ Parameters:
 
 Conditions:
   IsPipelineApprovalActionCondition: !Equals [!Ref PipelineApprovalAction, 'Yes']
-  HasApprovalEmailAddress: !Not [ !Equals [ !Ref PipelineApprovalEmail, '' ] ]
+  HasApprovalEmailAddress: !Not [!Equals [!Ref PipelineApprovalEmail, '']]
   HasAlertTopic: !Not [!Equals [!Ref AlertTopicArn, '']]
 
 Resources:
@@ -131,8 +133,8 @@ Resources:
     Properties:
       Subscription: # When adding Subscription, SNS formats the messages before sending
         - !If [HasApprovalEmailAddress, {Endpoint: !Ref PipelineApprovalEmail, Protocol: email}, !Ref 'AWS::NoValue']
-  #        - Endpoint: !Ref PipelineApprovalEmail
-  #          Protocol: email
+#        - Endpoint: !Ref PipelineApprovalEmail
+#          Protocol: email
 
   PipelineRole:
 #    DependsOn: CloudFormationRole # make sure that CloudFormationRole is deleted last
