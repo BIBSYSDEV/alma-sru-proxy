@@ -40,7 +40,7 @@ phases:
       - sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yml
 
       # Lint after 'package'
-      - cfn-lint packaged.yml
+      - cfn-lint packaged.yaml
 
     post_build:
       commands:
