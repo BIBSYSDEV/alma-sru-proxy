@@ -14,7 +14,6 @@ phases:
       # Upgrade AWS CLI to the latest version
       # Install aws-sam-cli
       - pip3 install aws-sam-cli
-        -
       # Install cfn_nag
       - gem install cfn-nag
 
