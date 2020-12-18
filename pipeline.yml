@@ -90,6 +90,7 @@ Parameters:
 
 Conditions:
   IsPipelineApprovalActionCondition: !Equals [!Ref PipelineApprovalAction, 'Yes']
+  HasApprovalEmailAddress: !Not [ !Equals [ !Ref PipelineApprovalEmail, '' ] ]
   HasAlertTopic: !Not [!Equals [!Ref AlertTopicArn, '']]
 
 Resources:
@@ -129,8 +130,9 @@ Resources:
     Condition: IsPipelineApprovalActionCondition
     Properties:
       Subscription: # When adding Subscription, SNS formats the messages before sending
-      - Endpoint: !Ref PipelineApprovalEmail
-        Protocol: email
+        - !If [HasApprovalEmailAddress, {Endpoint: !Ref PipelineApprovalEmail, Protocol: email}, !Ref 'AWS::NoValue']
+  #        - Endpoint: !Ref PipelineApprovalEmail
+  #          Protocol: email
 
   PipelineRole:
 #    DependsOn: CloudFormationRole # make sure that CloudFormationRole is deleted last
