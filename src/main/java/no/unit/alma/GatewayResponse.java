@@ -74,11 +74,14 @@ public class GatewayResponse {
 
     private void generateDefaultHeaders() {
         Map<String, String> headers = new ConcurrentHashMap<>();
-        headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+        headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML);
         final String corsAllowDomain = Config.getInstance().getCorsHeader();
         if (StringUtils.isNotEmpty(corsAllowDomain)) {
             headers.put(CORS_ALLOW_ORIGIN_HEADER, corsAllowDomain);
         }
+        headers.put("Access-Control-Allow-Methods", "OPTIONS,GET");
+        headers.put("Access-Control-Allow-Credentials", "true");
+        headers.put("Access-Control-Allow-Headers", HttpHeaders.CONTENT_TYPE);
         this.headers = Collections.unmodifiableMap(new HashMap<>(headers));
     }
 
