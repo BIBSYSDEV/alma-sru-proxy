@@ -69,8 +69,8 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             }
         } catch (URISyntaxException | IOException e) {
-            DebugUtils.dumpException(e);
-            gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE);
+            String dumpException = DebugUtils.dumpException(e);
+            gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE + " : " + dumpException);
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
         return gatewayResponse;
