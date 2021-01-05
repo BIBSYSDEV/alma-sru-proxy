@@ -81,13 +81,13 @@ Resources:
                 '200':
                   description: alma record
                   content:
-                    application/json:
+                    application/xml:
                       schema:
                         $ref: '#/components/schemas/getAlmaSruRecordResponseBody'
                 '400':
                   description: Bad request.
                   content:
-                    application/json:
+                    application/xml:
                       schema:
                         title: 400 Bad request
                         type: object
@@ -98,7 +98,7 @@ Resources:
                 '500':
                   description: Internal server error.
                   content:
-                    application/json:
+                    application/xml:
                       schema:
                         title: 500 internal server error
                         type: object
