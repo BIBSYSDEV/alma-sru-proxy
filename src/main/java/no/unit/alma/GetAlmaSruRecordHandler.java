@@ -70,7 +70,7 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
             }
         } catch (URISyntaxException | IOException e) {
             String dumpException = DebugUtils.dumpException(e);
-            gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE + " : " + dumpException);
+            gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE + " : " + e.getMessage());
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
         return gatewayResponse;
