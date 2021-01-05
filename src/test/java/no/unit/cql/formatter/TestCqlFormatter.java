@@ -120,7 +120,8 @@ public class TestCqlFormatter {
                 + "OR%20alma.main_pub_date=2014%20OR%20alma.main_pub_date=2015%20"
                 + "OR%20alma.main_pub_date=2016%20OR%20alma.main_pub_date=2017%20"
                 + "OR%20alma.main_pub_date=2018%20OR%20alma.main_pub_date=2019%20"
-                + "OR%20alma.main_pub_date=2020%20OR%20alma.main_pub_date=2021)%20sortBy%20alma.main_pub_date%2Fsort.descending";
+                + "OR%20alma.main_pub_date=2020%20OR%20alma.main_pub_date=2021)%20"
+                + "sortBy%20alma.main_pub_date%2Fsort.descending";
 
         String encoded = new CqlFormatter()
                 .withRetrospective(true)
