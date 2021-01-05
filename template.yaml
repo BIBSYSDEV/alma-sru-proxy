@@ -17,7 +17,7 @@ Parameters:
   SruEndpoint:
     Type: String
     Description: Url Endpoint to the SRU server
-    Default: 'https://bibsys.alma.exlibrisgroup.com/view/sru/47BIBSYS_NETWORK'
+    Default: 'bibsys.alma.exlibrisgroup.com'
 
 Conditions:
   HasDomainName: !Not [!Equals [!Ref CustomDomain, '']]
