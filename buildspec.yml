@@ -1,23 +1,53 @@
 version: 0.2
 
+env:
+  shell: bash
+
 phases:
 
   install:
     runtime-versions:
-      java: openjdk11
-
+      java: corretto11
+      ruby: 2.6
     commands:
-
+      - pip3 install --upgrade cfn-lint
       # Upgrade AWS CLI to the latest version
       # Install aws-sam-cli
       - pip3 install aws-sam-cli
+      # Install cfn_nag
+      - gem install cfn-nag
+
+  pre_build:
+    commands:
+      - echo "pre_build steps for revision ${CODEBUILD_RESOLVED_SOURCE_VERSION}..."
+      - env
+      - node -v
+      - aws --version
+      - cfn-lint -v
+      - cfn_nag -v
+
+      # Lint
+      - cfn-lint # uses .cfnlintrc
+
+      # Run cfn-nag (looks for patterns in CFN templates that may indicate insecure infrastructure)
+      - cfn_nag_scan --output-format txt --print-suppression --fail-on-warnings --blacklist-path .cfn_nag_blacklist --input-path . --template-pattern '^(?!.*buildspec\.y[a]?ml)((..*\.y[a]?ml)|(..*\.template))$'
 
   build:
     commands:
+      - echo Build started on `date`
       # Use AWS SAM to build and package the application by using AWS CloudFormation
       - sam build
-      - sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yaml
+      - sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yml
+
+      # Lint after 'package'
+      - cfn-lint packaged.yml
+
+    post_build:
+      commands:
+        - echo Build completed on `date`
+        - echo Files
+        - ls -l
 
 artifacts:
   files:
-    - packaged.yaml
+    - '**/*'

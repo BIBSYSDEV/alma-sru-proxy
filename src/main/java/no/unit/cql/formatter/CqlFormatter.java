@@ -22,6 +22,8 @@ public class CqlFormatter {
     private static final String CREATOR = "creator";
     private static final String PUBLICATION_DATE = "main_pub_date";
 
+    private static final String MMS_ID = "mms_id";
+    private static final String INSTITUTION_MMS_ID = "all_for_ui";
 
     private static final String SORT_BY = "sortBy";
     private static final String SORT_MODIFIER = "sort.descending";
@@ -35,11 +37,23 @@ public class CqlFormatter {
 
     private transient String authorityId;
     private transient String creator;
+    private transient String mmsId;
+    private transient String institution;
     private transient boolean sorted;
     private transient boolean retrospective;
 
     public CqlFormatter withAuthorityId(String authorityId) {
         this.authorityId = authorityId;
+        return this;
+    }
+
+    public CqlFormatter withMmsId(String mmsId) {
+        this.mmsId = mmsId;
+        return this;
+    }
+
+    public CqlFormatter withInstitution(String institution) {
+        this.institution = institution;
         return this;
     }
 
@@ -57,6 +71,15 @@ public class CqlFormatter {
 
         if (nonNull(this.creator)) {
             clauses.add(generateCqlClause(generateIndex(CREATOR), this.creator));
+        }
+
+        if (nonNull(this.mmsId)) {
+            if (nonNull(this.institution)) {
+                clauses.add(generateCqlClause(generateIndex(INSTITUTION_MMS_ID), this.mmsId));
+            } else {
+                clauses.add(generateCqlClause(generateIndex(MMS_ID), this.mmsId));
+            }
+
         }
 
         if (retrospective) {
