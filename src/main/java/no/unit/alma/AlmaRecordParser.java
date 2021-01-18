@@ -1,4 +1,4 @@
-package no.unit.nva.alma;
+package no.unit.alma;
 
 import com.google.common.io.CharStreams;
 import org.marc4j.MarcXmlReader;
@@ -45,17 +45,16 @@ public class AlmaRecordParser {
     public static final int FIRST_NODE = 0;
 
 
-
     /**
      * Parses a SRU-response to extract the title of an marcxml-record.
      *
      * @param inputStreamReader SRU-response
      * @return simple json with <code>title</code>
-     * @throws IOException some stream reading went south
-     * @throws TransformerException some stream reading went south
-     * @throws SAXException some stream reading went south
+     * @throws IOException                  some stream reading went south
+     * @throws TransformerException         some stream reading went south
+     * @throws SAXException                 some stream reading went south
      * @throws ParserConfigurationException some stream reading went south
-     * @throws XPathExpressionException some stream reading went south
+     * @throws XPathExpressionException     some stream reading went south
      */
     public Reference extractPublicationTitle(InputStreamReader inputStreamReader) throws IOException,
             TransformerException, SAXException, ParserConfigurationException, XPathExpressionException {
@@ -73,7 +72,7 @@ public class AlmaRecordParser {
 
     private Optional<String> extractTitleFromMarcRecord(Record record) {
         VariableField variableField = record.getVariableField(MARC_DATAFIELD_245);
-        if (variableField instanceof  DataField) {
+        if (variableField instanceof DataField) {
             DataField datafield245 = (DataField) variableField;
             return getTitleFromMarc245(datafield245);
         } else {
@@ -93,7 +92,7 @@ public class AlmaRecordParser {
         return subfield.getCode() == MARC_SUBFIELD_A || subfield.getCode() == MARC_SUBFIELD_B;
     }
 
- private Optional<Record> getFirstMarcRecord(InputStream inputStream) throws TransformerException,
+    private Optional<Record> getFirstMarcRecord(InputStream inputStream) throws TransformerException,
             XPathExpressionException, IOException, SAXException, ParserConfigurationException {
 
         DocumentBuilder documentBuilder = createDocumentBuilder();
@@ -105,7 +104,7 @@ public class AlmaRecordParser {
             addExtractedRecordToResultDoc(element.get(), result);
 
             ByteArrayOutputStream outputStream = removeStylesheet(result);
-            optionalRecord =Optional.ofNullable(readRecordFromCleanXml(outputStream));
+            optionalRecord = Optional.ofNullable(readRecordFromCleanXml(outputStream));
         }
         return optionalRecord;
     }
@@ -119,7 +118,7 @@ public class AlmaRecordParser {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Result outputTarget = new StreamResult(outputStream);
         TransformerFactory.newInstance().newTransformer().transform(source, outputTarget);
-        return  outputStream;
+        return outputStream;
     }
 
     private void addExtractedRecordToResultDoc(Node element, Document result) {
@@ -130,13 +129,13 @@ public class AlmaRecordParser {
     }
 
     private Optional<Node> extractFirstMarcRecord(InputStream inputStream, DocumentBuilder documentBuilder)
-        throws SAXException, IOException, XPathExpressionException {
+            throws SAXException, IOException, XPathExpressionException {
         Document document = parseInputStreamToXmlDoc(inputStream, documentBuilder);
         return searchForTheFirstMarcRecord(document);
     }
 
     private Document parseInputStreamToXmlDoc(InputStream inputStream, DocumentBuilder documentBuilder)
-        throws SAXException, IOException {
+            throws SAXException, IOException {
         Document document = documentBuilder.parse(inputStream);
         document.getDocumentElement().normalize();
         return document;

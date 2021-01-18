@@ -1,0 +1,492 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Continuous Deployment setup for the alma-sru-proxy stack/function
+
+# Name:
+# Recommended: [DeployStackName]-pipeline
+#          eg: alma-sru-proxy-pipeline
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Git Settings
+        Parameters:
+          - GitRepo
+          - GitBranch
+      - Label:
+          default: Stack Settings
+        Parameters:
+          - StackTemplatePath
+          - StackTemplateConfigurationPath
+          - DeployStackName
+      - Label:
+          default: Pipeline approval
+        Parameters:
+          - PipelineApprovalAction
+          - PipelineApprovalEmail
+      - Label:
+          default: Alert Configuration
+        Parameters:
+          - AlertTopicArn
+    ParameterLabels:
+      GitRepo:
+        default: Git Repo
+      GitBranch:
+        default: Git Branch
+      StackTemplatePath:
+        default: Stack template path
+      StackTemplateConfigurationPath:
+        default: Stack template configuration path
+      DeployStackName:
+        default: Stack name
+      PipelineApprovalAction:
+        default: Approval action
+      PipelineApprovalEmail:
+        default: Email address
+      AlertTopicArn:
+        default: SNS Alert Topic Arn
+
+Parameters:
+  StackTemplatePath:
+    Type: String
+    Default: template.yaml
+    Description: CloudFormation stack template filename in the Git repo
+  StackTemplateConfigurationPath:
+    Type: String
+    Default: template-configuration.json
+    Description: CloudFormation stack template configuration filename in the Git repo
+  DeployStackName:
+    Type: String
+    Default: alma-sru-proxy
+    Description: The name to use for the CloudFormation stack managed by this pipeline. (The stack created with the template in StackTemplatePath).
+  CodeStarConnectionArn:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: '/github-connection'
+    Description: The ARN for the CodestarConnection that connects to the Git (BitBucket) repo
+  GitRepo:
+    Type: String
+    Default: BIBSYSDEV/alma-sru-proxy
+    Description: Git repository name
+  GitBranch:
+    Type: String
+    Default: develop
+    Description: Git repository branch
+  PipelineApprovalAction:
+    Description: Do you want to add a manual approval action to the Release stage of this Pipeline?
+    AllowedValues:
+      - 'Yes'
+      - 'No'
+    Default: 'Yes'
+    Type: String
+  PipelineApprovalEmail:
+    Type: String
+    Default: ''
+    Description: The target email address for pipeline approval messages. Required when PipelineApprovalAction is Yes
+    AllowedPattern: '(^$|^[_A-Za-z0-9-\+\.]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$)'
+    ConstraintDescription: Valid email address or empty
+  AlertTopicArn:
+#    Type: 'AWS::SSM::Parameter::Value<String>'
+#    Default: '/alert/topicArn'
+    Type: String
+    Default: ''
+
+Conditions:
+  IsPipelineApprovalActionCondition: !Equals [!Ref PipelineApprovalAction, 'Yes']
+  HasApprovalEmailAddress: !Not [!Equals [!Ref PipelineApprovalEmail, '']]
+  HasAlertTopic: !Not [!Equals [!Ref AlertTopicArn, '']]
+
+Resources:
+  ArtifactsBucket:
+    Type: 'AWS::S3::Bucket'
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W35
+            reason: "Skip access logging for artifacts bucket"
+          - id: W41
+            reason: "Skip encryption for artifacts bucket"
+          - id: W51
+            reason: "Skip bucket policy for artifacts bucket"
+    DependsOn: CloudFormationRole # make sure that CloudFormationRole is deleted last
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      AccessControl: Private
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: IntelligentTieringRule
+            Status: Enabled
+            Transition:
+              StorageClass: INTELLIGENT_TIERING
+              TransitionInDays: 30
+
+  PipelineApprovalTopic:
+    Type: AWS::SNS::Topic
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W47
+            reason: KMS key not relevant
+    Condition: IsPipelineApprovalActionCondition
+    Properties:
+      Subscription: # When adding Subscription, SNS formats the messages before sending
+        - !If [HasApprovalEmailAddress, {Endpoint: !Ref PipelineApprovalEmail, Protocol: email}, !Ref 'AWS::NoValue']
+#        - Endpoint: !Ref PipelineApprovalEmail
+#          Protocol: email
+
+  PipelineRole:
+#    DependsOn: CloudFormationRole # make sure that CloudFormationRole is deleted last
+    Type: 'AWS::IAM::Role'
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W76
+            reason: Pipeline needs these permissions
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - 'codepipeline.amazonaws.com'
+          Action:
+          - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: CodePipelineAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource: !GetAtt CloudFormationRole.Arn
+                Condition:
+                  StringEqualsIfExists:
+                    iam:PassedToService:
+                      - cloudformation.amazonaws.com
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetBucketVersioning
+                Resource:
+                  - !Sub ${ArtifactsBucket.Arn}
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:CreateMultipartUpload
+                  - s3:ListMultipartUploadParts
+                  - s3:AbortMultipartUpload
+                  - s3:DeleteObject
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                Resource:
+                  - !Sub '${ArtifactsBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - cloudformation:DescribeStacks
+                  - cloudformation:CreateStack
+                  - cloudformation:UpdateStack
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:DeleteChangeSet
+                Resource:
+                  - !Sub 'arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AWS::StackName}/*'
+                  - !Sub 'arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${DeployStackName}/*'
+              - Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                Resource: !Ref CodeStarConnectionArn
+              - Effect: Allow
+                Action:
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StartBuild
+                Resource:
+                  - !GetAtt CodeBuildProject.Arn
+              - !If
+                - IsPipelineApprovalActionCondition
+                - Effect: "Allow"
+                  Action:
+                    - "sns:Publish"
+                  Resource: !Ref PipelineApprovalTopic
+                - !Ref AWS::NoValue
+
+  CloudFormationRole:
+    Type: 'AWS::IAM::Role'
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W11
+            reason: CloudFormation needs permissions to create/update/delete resources in a stack (allow * resource in policy)
+          - id: F38
+            reason: CloudFormation needs permissions to create/update/delete resources in a stack (allow * resource with PassRole action on permissions policy)
+          - id: F3
+            reason: CloudFormation needs permissions to create/update/delete resources in a stack (allow * action on permissions policy)
+          - id: W76
+            reason: CloudFormation needs permissions to create/update/delete resources in a stack
+    Properties:
+      Description: 'This role is used both for the CodePipeline CFN stack, and the application CFN stack'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - 'cloudformation.amazonaws.com'
+          Action:
+          - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: CloudFormationAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - apigateway:*
+                  - application-autoscaling:*
+                  - autoscaling:*
+                  - cloudformation:*
+                  - cloudwatch:*
+                  - codebuild:*
+                  - codepipeline:*
+                  - ec2:*
+                  - ecs:*
+                  - elasticfilesystem:*
+                  - elasticloadbalancing:*
+                  - events:*
+                  - iam:*
+                  - lambda:*
+                  - logs:*
+                  - kms:*
+                  - rds:*
+                  - s3:*
+                  - secretsmanager:*
+                  - sns:*
+                  - ssm:*
+                  - resource-groups:*
+                  - route53:* # GetHostedZone
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - codestar-connections:PassConnection
+                Resource: !Ref CodeStarConnectionArn
+
+  CodeBuildRole:
+    DependsOn: CloudFormationRole # make sure that CloudFormationRole is deleted last
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W11
+            reason: "Allow Resource 'bucket/*' for s3 and Resource '*' for CloudWatch Logs."
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - 'codebuild.amazonaws.com'
+          Action:
+          - 'sts:AssumeRole'
+      Policies:
+      - PolicyName: ServiceRole
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Sid: CloudWatchLogsPolicy
+            Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: '*'
+          - Sid: S3GetPutObjects
+            Effect: Allow
+            Action:
+            - s3:GetObject
+            - s3:GetObjectVersion
+            - s3:PutObject
+#            - s3:PutObjectAcl
+            - s3:CreateMultipartUpload
+            - s3:ListMultipartUploadParts
+            - s3:AbortMultipartUpload
+            Resource: !Sub
+            - 'arn:aws:s3:::${BucketName}/*'
+            - BucketName: !Ref ArtifactsBucket
+
+  CodeBuildProject:
+    DependsOn: CloudFormationRole # make sure that CloudFormationRole is deleted last
+    Type: 'AWS::CodeBuild::Project'
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W32
+            reason: "Skip encryption for CodeBuild project"
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:4.0
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: S3_BUCKET
+            Value: !Ref ArtifactsBucket
+          - Name: CFN_TEMPLATE
+            Value: !Ref StackTemplatePath
+      Name: !Sub '${AWS::StackName}-build'
+      ServiceRole: !GetAtt 'CodeBuildRole.Arn'
+      Source:
+        Type: CODEPIPELINE
+      TimeoutInMinutes: 10
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: !Sub '${AWS::StackName}-Pipeline'
+      RoleArn: !GetAtt PipelineRole.Arn
+      RestartExecutionOnUpdate: true
+#      DisableInboundStageTransitions:
+#        - Reason: Approve Step
+#          StageName: Release
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactsBucket
+      Tags:
+        - Key: 'automation:approval-timeout'
+          Value: '1'
+      Stages:
+      - Name: Source
+        Actions:
+        - Name: Source
+          ActionTypeId:
+            Category: Source
+            Owner: AWS
+            Version: '1'
+            Provider: CodeStarSourceConnection
+          Configuration:
+            ConnectionArn: !Ref CodeStarConnectionArn
+            FullRepositoryId: !Ref GitRepo
+            BranchName: !Ref GitBranch
+            OutputArtifactFormat: "CODE_ZIP"
+          OutputArtifacts: [Name: SourceArtifacts]
+          Namespace: SourceVariables
+          RunOrder: 1
+      - Name: Build
+        Actions:
+        - Name: TestAndBuildApp
+          ActionTypeId:
+            Category: Build
+            Owner: AWS
+            Provider: CodeBuild
+            Version: '1'
+          Configuration:
+            ProjectName: !Ref CodeBuildProject
+          InputArtifacts:
+          - Name: SourceArtifacts
+          OutputArtifacts:
+          - Name: BuildArtifacts
+          RunOrder: 1
+      - Name: UpdatePipeline
+        Actions:
+        - Name: DeployPipeline
+          ActionTypeId:
+            Category: Deploy
+            Owner: AWS
+            Provider: CloudFormation
+            Version: '1'
+          Configuration:
+            ActionMode: REPLACE_ON_FAILURE
+            RoleArn: !GetAtt 'CloudFormationRole.Arn'
+            StackName: !Ref 'AWS::StackName'
+            Capabilities: CAPABILITY_IAM
+            TemplatePath: 'BuildArtifacts::pipeline.yml'
+            ParameterOverrides: !Sub |
+              {
+                "StackTemplatePath": "${StackTemplatePath}",
+                "StackTemplateConfigurationPath": "${StackTemplateConfigurationPath}",
+                "DeployStackName": "${DeployStackName}",
+                "CodeStarConnectionArn": "/github-connection",
+                "GitRepo": "${GitRepo}",
+                "GitBranch": "${GitBranch}",
+                "PipelineApprovalAction": "${PipelineApprovalAction}",
+                "PipelineApprovalEmail": "${PipelineApprovalEmail}",
+                "AlertTopicArn": "${AlertTopicArn}"
+              }
+          InputArtifacts:
+          - Name: BuildArtifacts
+          RunOrder: 1
+      - Name: Release
+        Actions:
+          - Name: CreateChangeSet
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            InputArtifacts:
+              - Name: BuildArtifacts
+            Configuration:
+              ActionMode: CHANGE_SET_REPLACE
+              ChangeSetName: !Sub '${AWS::StackName}-Pipeline-changeset'
+              RoleArn: !GetAtt CloudFormationRole.Arn
+              StackName: !Ref DeployStackName
+              Capabilities: CAPABILITY_AUTO_EXPAND,CAPABILITY_NAMED_IAM,CAPABILITY_IAM
+              TemplatePath: 'BuildArtifacts::packaged.yml'
+              TemplateConfiguration: !Sub 'BuildArtifacts::${StackTemplateConfigurationPath}'
+            RunOrder: 1
+          - !If
+            - IsPipelineApprovalActionCondition
+            - Name: ApprovalForRelease
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Version: '1'
+                Provider: Manual
+              Configuration:
+                NotificationArn: !Ref PipelineApprovalTopic
+                CustomData: !Sub 'A new change set was created for the ${DeployStackName} stack in account ${AWS::AccountId}. Commit message: "#{SourceVariables.CommitMessage}". Do you want to deploy the changes?'
+                ExternalEntityLink: 'https://aws.unit.no'
+              RunOrder: 2
+            - !Ref AWS::NoValue
+          - Name: ExecuteChangeSet
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Version: '1'
+              Provider: CloudFormation
+            Configuration:
+              ActionMode: CHANGE_SET_EXECUTE
+              ChangeSetName: !Sub '${AWS::StackName}-Pipeline-changeset'
+              StackName: !Ref DeployStackName
+              OutputFileName: ChangeSetExecuteOutput.json
+            RunOrder: 3
+
+  PipelineFailedNotification:
+    Type: 'AWS::Events::Rule'
+    Condition: HasAlertTopic
+    Properties:
+      EventPattern:
+        source:
+          - 'aws.codepipeline'
+        detail-type:
+          - 'CodePipeline Pipeline Execution State Change'
+        resources:
+          - !Ref Pipeline
+        detail:
+          state:
+            - FAILED
+      State: ENABLED
+      Targets:
+      - Arn: !Ref AlertTopicArn
+        Id: rule
+
+Outputs:
+  ArtifactsBucket:
+    Description: The artifacts bucket
+    Value: !Ref ArtifactsBucket

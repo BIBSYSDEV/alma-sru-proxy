@@ -1,4 +1,4 @@
-package no.unit.nva.alma;
+package no.unit.alma;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +15,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FetchAlmaRecordHandlerTest {
+public class GetAlmaSruRecordHandlerTest {
 
     public static final String SRU_RESPONSE_2_HITS = "/SRU_response_2_hits.xml";
-    public static final String MOCK_CREATOR_NAME = "Creator, Mock";
-    public static final String MOCK_SCN = "1123456789";
+    public static final String MOCK_INSTITUTION = "NTNU_UB";
+    public static final String MOCK_MMS_ID = "1123456789";
     public static final String MOCK_SRU_HOST = "alma-sru-host-dot-com";
 
     @Test
@@ -27,38 +27,31 @@ public class FetchAlmaRecordHandlerTest {
         final Config instance = Config.getInstance();
         instance.setAlmaSruHost(MOCK_SRU_HOST);
 
-        FetchAlmaRecordHandler mockAlmaRecordHandler = new FetchAlmaRecordHandler();
+        GetAlmaSruRecordHandler mockAlmaRecordHandler = new GetAlmaSruRecordHandler();
         GatewayResponse result = mockAlmaRecordHandler.handleRequest(null, null);
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), result.getStatusCode());
-        assertTrue(result.getBody().contains(FetchAlmaRecordHandler.MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS));
+        assertTrue(result.getBody().contains(GetAlmaSruRecordHandler.MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS));
 
         Map<String, Object> event = new HashMap<>();
         result = mockAlmaRecordHandler.handleRequest(event, null);
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), result.getStatusCode());
-        assertTrue(result.getBody().contains(FetchAlmaRecordHandler.MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS));
+        assertTrue(result.getBody().contains(GetAlmaSruRecordHandler.MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS));
 
-        event.put(FetchAlmaRecordHandler.QUERY_STRING_PARAMETERS_KEY, null);
+        event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, null);
         result = mockAlmaRecordHandler.handleRequest(event, null);
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), result.getStatusCode());
-        assertTrue(result.getBody().contains(FetchAlmaRecordHandler.MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS));
+        assertTrue(result.getBody().contains(GetAlmaSruRecordHandler.MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS));
 
         Map<String, String> queryParameters = new HashMap<>();
-        event.put(FetchAlmaRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
+        event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
         result = mockAlmaRecordHandler.handleRequest(event, null);
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), result.getStatusCode());
-        assertTrue(result.getBody().contains(FetchAlmaRecordHandler.MANDATORY_PARAMETER_SCN_MISSING));
+        assertTrue(result.getBody().contains(GetAlmaSruRecordHandler.MANDATORY_PARAMETER_MMSID_MISSING));
 
         queryParameters = new HashMap<>();
-        queryParameters.put(FetchAlmaRecordHandler.SCN_KEY, MOCK_SCN);
-        event.put(FetchAlmaRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
-        result = mockAlmaRecordHandler.handleRequest(event, null);
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), result.getStatusCode());
-        assertTrue(result.getBody().contains(FetchAlmaRecordHandler.MANDATORY_PARAMETER_CREATORNAME_MISSING));
-
-        queryParameters = new HashMap<>();
-        queryParameters.put(FetchAlmaRecordHandler.SCN_KEY, MOCK_SCN);
-        queryParameters.put(FetchAlmaRecordHandler.CREATOR_NAME_KEY, MOCK_CREATOR_NAME);
-        event.put(FetchAlmaRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
+        queryParameters.put(GetAlmaSruRecordHandler.MMSID_KEY, MOCK_MMS_ID);
+        queryParameters.put(GetAlmaSruRecordHandler.INSTITUTION_KEY, MOCK_INSTITUTION);
+        event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
         result = mockAlmaRecordHandler.handleRequest(event, null);
         // inntil videre
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), result.getStatusCode());
@@ -71,14 +64,14 @@ public class FetchAlmaRecordHandlerTest {
         instance.setAlmaSruHost(MOCK_SRU_HOST);
 
         Map<String, String> queryParameters = new HashMap<>();
-        queryParameters.put(FetchAlmaRecordHandler.SCN_KEY, MOCK_SCN);
-        queryParameters.put(FetchAlmaRecordHandler.CREATOR_NAME_KEY, MOCK_CREATOR_NAME);
+        queryParameters.put(GetAlmaSruRecordHandler.MMSID_KEY, MOCK_MMS_ID);
+        queryParameters.put(GetAlmaSruRecordHandler.INSTITUTION_KEY, MOCK_INSTITUTION);
         Map<String, Object> event = new HashMap<>();
-        event.put(FetchAlmaRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
+        event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
 
         AlmaSruConnection mockConnection =  mock(AlmaSruConnection.class);
         InputStream stream = AlmaRecordParserTest.class.getResourceAsStream(SRU_RESPONSE_2_HITS);
-        FetchAlmaRecordHandler mockAlmaRecordHandler = new FetchAlmaRecordHandler(mockConnection);
+        GetAlmaSruRecordHandler mockAlmaRecordHandler = new GetAlmaSruRecordHandler(mockConnection);
         when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
 
         final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);

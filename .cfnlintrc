@@ -1,0 +1,8 @@
+templates:
+- ./**/*.yml
+#- ./**/*.yaml
+ignore_templates:
+- ./**/buildspec.yml
+- ./**/buildspec.yaml
+- ./**/buildspec*.yml
+- ./**/buildspec*.yaml

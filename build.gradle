@@ -6,7 +6,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-group 'no.unit.nva'
+group 'no.unit.alma'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11  // source-code version and must be <= targetCompatibility
