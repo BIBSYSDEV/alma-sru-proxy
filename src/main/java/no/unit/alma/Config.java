@@ -1,6 +1,6 @@
 package no.unit.alma;
 
-import org.apache.commons.lang3.StringUtils;
+import no.unit.utils.StringUtils;
 
 public class Config {
 

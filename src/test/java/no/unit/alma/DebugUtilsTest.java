@@ -9,8 +9,7 @@ public class DebugUtilsTest {
     @Test
     public void testDumpException() {
         final RuntimeException runtimeException = new RuntimeException("RuntimeException");
-        DebugUtils debugUtils = new DebugUtils();
-        String exceptionDump = debugUtils.dumpException(runtimeException);
+        String exceptionDump = DebugUtils.dumpException(runtimeException);
         assertNotNull(exceptionDump);
     }
 
