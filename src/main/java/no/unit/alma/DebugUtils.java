@@ -1,6 +1,7 @@
 package no.unit.alma;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class DebugUtils {
 
@@ -13,7 +14,17 @@ public class DebugUtils {
      * @return Stringdump of exception
      */
     public static String dumpException(Exception e) {
-        return ExceptionUtils.getStackTrace(e).replace(NEWLINE, CARRIAGE_RETURN);
+        return getStackTrace(e).replace(NEWLINE, CARRIAGE_RETURN);
+    }
+
+    /**
+     * From org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace
+     */
+    public static String getStackTrace(final Throwable throwable) {
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+        return sw.getBuffer().toString();
     }
 
 }

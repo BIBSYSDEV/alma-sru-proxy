@@ -1,13 +1,11 @@
 package no.unit.alma;
 
 import com.google.gson.JsonObject;
-import org.apache.commons.lang3.StringUtils;
+import no.unit.utils.StringUtils;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -82,7 +80,7 @@ public class GatewayResponse {
         headers.put("Access-Control-Allow-Methods", "OPTIONS,GET");
         headers.put("Access-Control-Allow-Credentials", "true");
         headers.put("Access-Control-Allow-Headers", HttpHeaders.CONTENT_TYPE);
-        this.headers = Collections.unmodifiableMap(new HashMap<>(headers));
+        this.headers = Map.copyOf(headers);
     }
 
 }

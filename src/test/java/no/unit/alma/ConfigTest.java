@@ -14,7 +14,7 @@ public class ConfigTest {
     public void testCheckPropertiesNothingSet() {
         final Config config = Config.getInstance();
         config.setAlmaSruHost(null);
-        Assertions.assertThrows(RuntimeException.class, () -> config.checkProperties());
+        Assertions.assertThrows(RuntimeException.class, config::checkProperties);
     }
 
     @Test
@@ -37,6 +37,6 @@ public class ConfigTest {
     public void testCheckPropertiesSetOnlyApiKey() {
         final Config instance = Config.getInstance();
         instance.setAlmaSruHost(null);
-        Assertions.assertThrows(RuntimeException.class, () -> instance.checkProperties());
+        Assertions.assertThrows(RuntimeException.class, instance::checkProperties);
     }
 }
