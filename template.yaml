@@ -124,7 +124,7 @@ Resources:
         Variables:
           ALLOWED_ORIGIN:  '*'
           ALMA_SRU_HOST: !Ref SruEndpoint
-      Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
+      Handler: no.unit.alma.sru.GetAlmaSruRecordHandler::handleRequest
       Runtime: java11
       MemorySize: 512
       Events:
