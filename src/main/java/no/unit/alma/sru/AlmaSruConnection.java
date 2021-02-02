@@ -1,8 +1,9 @@
-package no.unit.alma;
+package no.unit.alma.sru;
 
 import java.util.Locale;
 
-import no.unit.cql.formatter.CqlFormatter;
+import no.unit.alma.Config;
+import no.unit.alma.sru.cql.formatter.CqlFormatter;
 import no.unit.utils.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -29,11 +30,11 @@ public class AlmaSruConnection {
     public static final String QUERY_KEY = "query";
     public static final String NETWORK = "NETWORK";
 
-    protected InputStreamReader connect(URL url) throws IOException {
+    public InputStreamReader connect(URL url) throws IOException {
         return new InputStreamReader(url.openStream());
     }
 
-    protected URL generateQueryByMmsIdUrl(String mmsId, String institution)
+    public URL generateQueryByMmsIdUrl(String mmsId, String institution)
             throws MalformedURLException, URISyntaxException {
         String encodedCqlQuery = new CqlFormatter()
                 .withRetrospective(false)

@@ -1,7 +1,8 @@
-package no.unit.alma;
+package no.unit.alma.sru;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import no.unit.alma.*;
 import no.unit.utils.StringUtils;
 
 import javax.ws.rs.core.Response;
@@ -50,6 +51,9 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
     @Override
     @SuppressWarnings("unchecked")
     public GatewayResponse handleRequest(final Map<String, Object> input, Context context) {
+        //TODO: Remove - For testing only
+        System.out.println(input);
+
         GatewayResponse gatewayResponse = new GatewayResponse();
         try {
             Config.getInstance().checkProperties();

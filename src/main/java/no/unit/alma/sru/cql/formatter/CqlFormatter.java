@@ -1,4 +1,4 @@
-package no.unit.cql.formatter;
+package no.unit.alma.sru.cql.formatter;
 
 import com.google.common.net.UrlEscapers;
 

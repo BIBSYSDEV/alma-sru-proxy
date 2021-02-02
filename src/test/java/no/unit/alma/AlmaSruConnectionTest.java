@@ -1,5 +1,6 @@
 package no.unit.alma;
 
+import no.unit.alma.sru.AlmaSruConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
