@@ -1,7 +1,6 @@
 package no.unit.alma;
 
 import no.unit.alma.sru.AlmaSruConnection;
-import no.unit.alma.sru.GetAlmaSruRecordHandler;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;

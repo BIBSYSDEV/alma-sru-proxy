@@ -1,8 +1,8 @@
-package no.unit.alma.sru;
+package no.unit.alma;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import no.unit.alma.*;
+import no.unit.alma.sru.AlmaSruConnection;
 import no.unit.utils.StringUtils;
 
 import javax.ws.rs.core.Response;
