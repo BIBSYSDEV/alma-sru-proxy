@@ -12,30 +12,30 @@ import static java.util.Objects.nonNull;
 
 public class CqlFormatter {
 
-    public static final String BEGINS_COMPARATOR = "=";
-    public static final String TERM_PATH_SEPARATOR = ".";
-    public static final String TERM_SET = "alma";
-    public static final String MODIFIER_SEPARATOR = "/";
-    public static final String CLAUSE_SEPARATOR = " ";
+    private static final String BEGINS_COMPARATOR = "=";
+    private static final String TERM_PATH_SEPARATOR = ".";
+    private static final String TERM_SET = "alma";
+    private static final String MODIFIER_SEPARATOR = "/";
+    private static final String CLAUSE_SEPARATOR = " ";
 
-    public static final String AUTHORITY_ID = "authority_id";
-    public static final String CREATOR = "creator";
-    public static final String PUBLICATION_DATE = "main_pub_date";
+    private static final String AUTHORITY_ID = "authority_id";
+    private static final String CREATOR = "creator";
+    private static final String PUBLICATION_DATE = "main_pub_date";
 
-    public static final String MMS_ID = "mms_id";
-    public static final String INSTITUTION_MMS_ID = "all_for_ui";
+    private static final String MMS_ID = "mms_id";
+    private static final String INSTITUTION_MMS_ID = "all_for_ui";
 
-    public static final String ISBN = "isbn";
+    private static final String ISBN = "isbn";
 
-    public static final String SORT_BY = "sortBy";
-    public static final String SORT_MODIFIER = "sort.descending";
-    public static final int LAST_N_YEARS = 41;
-    public static final String LOGICAL_AND = "AND";
-    public static final String STRING_DELIMITER = "\"";
-    public static final String CLAUSE_DELIMITER_LEFT = "(";
-    public static final String CLAUSE_DELIMITER_RIGHT = ")";
-    public static final CharSequence LOGICAL_OR = "OR";
-    public static final String WHITESPACE = " ";
+    private static final String SORT_BY = "sortBy";
+    private static final String SORT_MODIFIER = "sort.descending";
+    private static final int LAST_N_YEARS = 41;
+    private static final String LOGICAL_AND = "AND";
+    private static final String STRING_DELIMITER = "\"";
+    private static final String CLAUSE_DELIMITER_LEFT = "(";
+    private static final String CLAUSE_DELIMITER_RIGHT = ")";
+    private static final CharSequence LOGICAL_OR = "OR";
+    private static final String WHITESPACE = " ";
 
     private transient String authorityId;
     private transient String creator;
