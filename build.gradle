@@ -17,6 +17,7 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'org.marc4j', name: 'marc4j', version: '2.9.1'
     implementation group: 'com.google.guava', name: 'guava', version: '28.2-jre'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.10'
     implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'
