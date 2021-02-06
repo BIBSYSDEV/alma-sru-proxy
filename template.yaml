@@ -126,7 +126,7 @@ Resources:
           ALMA_SRU_HOST: !Ref SruEndpoint
       Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
       Runtime: java11
-      MemorySize: 3008
+      MemorySize: 10240
       Events:
         GetAlmaSruRecordEvent:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
