@@ -77,7 +77,7 @@ Resources:
               parameters:
                 - in: query
                   name: mms_id
-                  required: true
+                  required: false
                   type: string
                   description: mms_id.
                 - in: query
@@ -140,7 +140,7 @@ Resources:
           ALMA_SRU_HOST: !Ref SruEndpoint
       Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
       Runtime: java11
-      MemorySize: 1024
+      MemorySize: 2048
       AutoPublishAlias: live
       DeploymentPreference:
         Type: AllAtOnce # Or Canary10Percent5Minutes, Linear10PercentEvery1Minute, ...
