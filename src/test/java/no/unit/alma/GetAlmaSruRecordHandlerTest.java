@@ -11,7 +11,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,6 +34,9 @@ public class GetAlmaSruRecordHandlerTest {
     private AlmaSruConnection mockConnection;
     private GetAlmaSruRecordHandler mockAlmaRecordHandler;
 
+    /**
+     * Sets up test objects with mocks.
+     */
     @BeforeEach
     public void setup() {
         final Config instance = Config.getInstance();

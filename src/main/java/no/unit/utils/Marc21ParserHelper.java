@@ -14,14 +14,23 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 public class Marc21ParserHelper {
 
@@ -38,13 +47,13 @@ public class Marc21ParserHelper {
             InputSource is = new InputSource(new StringReader(removedSpaceBetweenElements));
             Document document = builder.parse(is);
 
-            XPath xPath = XPathFactory.newInstance().newXPath();
-            NodeList recordsNodes = (NodeList) xPath.compile("searchRetrieveResponse/records")
+            XPath path = XPathFactory.newInstance().newXPath();
+            NodeList recordsNodes = (NodeList) path.compile("searchRetrieveResponse/records")
                     .evaluate(document, XPathConstants.NODE);
 
             for (int i = 0; recordsNodes.getLength() > i; i++) {
-                xPath = XPathFactory.newInstance().newXPath();
-                Node recordNode = (Node) xPath.compile("recordData/record")
+                path = XPathFactory.newInstance().newXPath();
+                Node recordNode = (Node) path.compile("recordData/record")
                         .evaluate(recordsNodes.item(i), XPathConstants.NODE);
 
                 Document marcFriendlyDoc = builder.newDocument();

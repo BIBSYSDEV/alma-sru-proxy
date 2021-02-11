@@ -1,7 +1,5 @@
 package no.unit.alma.sru;
 
-import java.util.Locale;
-
 import no.unit.alma.Config;
 import no.unit.alma.sru.cql.formatter.CqlFormatter;
 import no.unit.utils.StringUtils;
@@ -13,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Locale;
 
 public class AlmaSruConnection {
 
