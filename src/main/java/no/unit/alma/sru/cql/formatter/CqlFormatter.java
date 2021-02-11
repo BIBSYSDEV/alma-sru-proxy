@@ -1,4 +1,4 @@
-package no.unit.cql.formatter;
+package no.unit.alma.sru.cql.formatter;
 
 import com.google.common.net.UrlEscapers;
 
@@ -25,19 +25,22 @@ public class CqlFormatter {
     private static final String MMS_ID = "mms_id";
     private static final String INSTITUTION_MMS_ID = "all_for_ui";
 
+    private static final String ISBN = "isbn";
+
     private static final String SORT_BY = "sortBy";
     private static final String SORT_MODIFIER = "sort.descending";
-    public static final int LAST_N_YEARS = 41;
-    public static final String LOGICAL_AND = "AND";
-    public static final String STRING_DELIMITER = "\"";
-    public static final String CLAUSE_DELIMITER_LEFT = "(";
-    public static final String CLAUSE_DELIMITER_RIGHT = ")";
+    private static final int LAST_N_YEARS = 41;
+    private static final String LOGICAL_AND = "AND";
+    private static final String STRING_DELIMITER = "\"";
+    private static final String CLAUSE_DELIMITER_LEFT = "(";
+    private static final String CLAUSE_DELIMITER_RIGHT = ")";
     private static final CharSequence LOGICAL_OR = "OR";
-    public static final String WHITESPACE = " ";
+    private static final String WHITESPACE = " ";
 
     private transient String authorityId;
     private transient String creator;
     private transient String mmsId;
+    private transient String isbn;
     private transient String institution;
     private transient boolean sorted;
     private transient boolean retrospective;
@@ -49,6 +52,11 @@ public class CqlFormatter {
 
     public CqlFormatter withMmsId(String mmsId) {
         this.mmsId = mmsId;
+        return this;
+    }
+
+    public CqlFormatter withIsbn(String isbn) {
+        this.isbn = isbn;
         return this;
     }
 
@@ -79,7 +87,8 @@ public class CqlFormatter {
             } else {
                 clauses.add(generateCqlClause(generateIndex(MMS_ID), this.mmsId));
             }
-
+        } else if (nonNull(this.isbn)) {
+            clauses.add(generateCqlClause(generateIndex(ISBN), this.isbn));
         }
 
         if (retrospective) {
