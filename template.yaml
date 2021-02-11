@@ -63,7 +63,7 @@ Resources:
               parameters:
                 - in: query
                   name: mms_id
-                  required: true
+                  required: false
                   type: string
                   description: mms_id.
                 - in: query
@@ -71,6 +71,11 @@ Resources:
                   required: false
                   type: string
                   description: institution (alma_code).
+                - in: query
+                   name: isbn
+                   required: false
+                   type: string
+                   description: isbn.
               x-amazon-apigateway-integration:
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetAlmaSruRecordFunction.Arn}/invocations

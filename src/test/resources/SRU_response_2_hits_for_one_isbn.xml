@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/">
+    <version>1.2</version>
+    <numberOfRecords>2</numberOfRecords>
+    <records>
+        <record>
+            <recordSchema>marcxml</recordSchema>
+            <recordPacking>xml</recordPacking>
+            <recordData>
+                <record xmlns="http://www.loc.gov/MARC21/slim">
+                    <leader>01368nam  2200325 i 4500</leader>
+                    <controlfield tag="001">999920928694002201</controlfield>
+                    <controlfield tag="006">m     o  d |</controlfield>
+                    <controlfield tag="007">cr cnu||||||||</controlfield>
+                    <controlfield tag="008">190828s2020    enk     o     000 0 eng d</controlfield>
+                    <datafield ind1=" " ind2=" " tag="020">
+                        <subfield code="a">0-429-20386-1</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="020">
+                        <subfield code="a">0-429-51226-0</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="035">
+                        <subfield code="a">(CKB)4100000008780733</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="035">
+                        <subfield code="a">(MiAaPQ)EBC5840040</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="035">
+                        <subfield code="a">(EXLCZ)994100000008780733</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="040">
+                        <subfield code="a">MiAaPQ</subfield>
+                        <subfield code="b">eng</subfield>
+                        <subfield code="e">rda</subfield>
+                        <subfield code="e">pn</subfield>
+                        <subfield code="c">MiAaPQ</subfield>
+                        <subfield code="d">MiAaPQ</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="4" tag="050">
+                        <subfield code="a">HD30.255</subfield>
+                        <subfield code="b">.S585 2020</subfield>
+                    </datafield>
+                    <datafield ind1="0" ind2=" " tag="082">
+                        <subfield code="a">658.4083</subfield>
+                        <subfield code="2">23</subfield>
+                    </datafield>
+                    <datafield ind1="1" ind2=" " tag="100">
+                        <subfield code="a">Sitkin, Alan,</subfield>
+                        <subfield code="e">author.</subfield>
+                    </datafield>
+                    <datafield ind1="1" ind2="0" tag="245">
+                        <subfield code="a">Absolute essentials of green business /</subfield>
+                        <subfield code="c">Alan Sitkin.</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="1" tag="264">
+                        <subfield code="a">London ;</subfield>
+                        <subfield code="a">New York, New York :</subfield>
+                        <subfield code="b">Routledge,</subfield>
+                        <subfield code="c">[2020]</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="4" tag="264">
+                        <subfield code="c">©2020</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="300">
+                        <subfield code="a">1 online resource (127 pages).</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="336">
+                        <subfield code="a">text</subfield>
+                        <subfield code="b">txt</subfield>
+                        <subfield code="2">rdacontent</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="337">
+                        <subfield code="a">computer</subfield>
+                        <subfield code="b">c</subfield>
+                        <subfield code="2">rdamedia</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="338">
+                        <subfield code="a">online resource</subfield>
+                        <subfield code="b">cr</subfield>
+                        <subfield code="2">rdacarrier</subfield>
+                    </datafield>
+                    <datafield ind1="0" ind2=" " tag="490">
+                        <subfield code="a">Absolute essentials of business &amp; economics</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="588">
+                        <subfield code="a">Description based on print version record.</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="0" tag="650">
+                        <subfield code="a">Business enterprises</subfield>
+                        <subfield code="x">Environmental aspects.</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="4" tag="655">
+                        <subfield code="a">Electronic books.</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="776">
+                        <subfield code="z">0-367-19672-7</subfield>
+                    </datafield>
+                    <datafield ind1="0" ind2="1" tag="852">
+                        <subfield code="a">47BIBSYS_BI</subfield>
+                        <subfield code="6">999919947877902215</subfield>
+                        <subfield code="9">E</subfield>
+                    </datafield>
+                    <datafield ind1="0" ind2="1" tag="852">
+                        <subfield code="a">47BIBSYS_UBO</subfield>
+                        <subfield code="6">999920170782702204</subfield>
+                        <subfield code="9">E</subfield>
+                    </datafield>
+                    <datafield ind1="0" ind2="1" tag="852">
+                        <subfield code="a">47BIBSYS_UBIN</subfield>
+                        <subfield code="6">999920037789802211</subfield>
+                        <subfield code="9">E</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="906">
+                        <subfield code="a">BOOK</subfield>
+                    </datafield>
+                </record>
+            </recordData>
+            <recordIdentifier>999920928694002201</recordIdentifier>
+            <recordPosition>1</recordPosition>
+        </record>
+        <record>
+            <recordSchema>marcxml</recordSchema>
+            <recordPacking>xml</recordPacking>
+            <recordData>
+                <record xmlns="http://www.loc.gov/MARC21/slim">
+                    <leader>01096nam a2200265 c 4500</leader>
+                    <controlfield tag="001">999921024491202201</controlfield>
+                    <controlfield tag="005">20200224132538.0</controlfield>
+                    <controlfield tag="007">ta</controlfield>
+                    <controlfield tag="008">200224s2020    enka   | |||||00||0 eng|c</controlfield>
+                    <datafield ind1=" " ind2=" " tag="020">
+                        <subfield code="a">978-0-367-19672-1</subfield>
+                        <subfield code="q">innbundet</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="040">
+                        <subfield code="a">NO-TrBIB</subfield>
+                        <subfield code="b">nob</subfield>
+                        <subfield code="e">rda</subfield>
+                    </datafield>
+                    <datafield ind1="0" ind2="4" tag="082">
+                        <subfield code="a">658.4083</subfield>
+                        <subfield code="2">23/nor</subfield>
+                        <subfield code="q">NO-ElHIB</subfield>
+                    </datafield>
+                    <datafield ind1="1" ind2=" " tag="100">
+                        <subfield code="a">Sitkin, Alan</subfield>
+                        <subfield code="0">(NO-TrBIB)10033295</subfield>
+                        <subfield code="4">forfatter</subfield>
+                    </datafield>
+                    <datafield ind1="1" ind2="0" tag="245">
+                        <subfield code="a">Absolute essentials of green business</subfield>
+                        <subfield code="c">Alan Sitkin</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="1" tag="260">
+                        <subfield code="a">London</subfield>
+                        <subfield code="b">Routledge</subfield>
+                        <subfield code="c">2020</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="300">
+                        <subfield code="a">xi, 113 sider</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="336">
+                        <subfield code="a">tekst</subfield>
+                        <subfield code="0">http://rdaregistry.info/termList/RDAContentType/1020</subfield>
+                        <subfield code="2">rdaco</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="337">
+                        <subfield code="a">uformidlet</subfield>
+                        <subfield code="0">http://rdaregistry.info/termList/RDAMediaType/1007</subfield>
+                        <subfield code="2">rdamt</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2=" " tag="338">
+                        <subfield code="a">bind</subfield>
+                        <subfield code="0">http://rdaregistry.info/termList/RDACarrierType/1049</subfield>
+                        <subfield code="2">rdact</subfield>
+                    </datafield>
+                    <datafield ind1="1" ind2=" " tag="490">
+                        <subfield code="a">Absolute essentials of business and economics</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="7" tag="650">
+                        <subfield code="a">Bedriftsledelse</subfield>
+                        <subfield code="0">(NO-TrBIB)HUME07578</subfield>
+                        <subfield code="2">humord</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="7" tag="650">
+                        <subfield code="a">Samfunnsansvar</subfield>
+                        <subfield code="0">(NO-TrBIB)HUME25719</subfield>
+                        <subfield code="2">humord</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="7" tag="650">
+                        <subfield code="a">Bærekraftig utvikling</subfield>
+                        <subfield code="0">(NO-TrBIB)HUME20308</subfield>
+                        <subfield code="2">humord</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="7" tag="650">
+                        <subfield code="a">Markedsføring</subfield>
+                        <subfield code="0">(NO-TrBIB)HUME07755</subfield>
+                        <subfield code="2">humord</subfield>
+                    </datafield>
+                    <datafield ind1=" " ind2="7" tag="650">
+                        <subfield code="a">Miljøøkonomi</subfield>
+                        <subfield code="0">(NO-TrBIB)HUME24723</subfield>
+                        <subfield code="2">humord</subfield>
+                    </datafield>
+                    <datafield ind1="0" ind2="1" tag="852">
+                        <subfield code="a">47BIBSYS_UBA</subfield>
+                        <subfield code="6">999920097613102209</subfield>
+                        <subfield code="9">P</subfield>
+                    </datafield>
+                    <datafield ind1="0" ind2="1" tag="852">
+                        <subfield code="a">47BIBSYS_HH</subfield>
+                        <subfield code="6">999919952533902214</subfield>
+                        <subfield code="9">P</subfield>
+                    </datafield>
+                </record>
+            </recordData>
+            <recordIdentifier>999921024491202201</recordIdentifier>
+            <recordPosition>2</recordPosition>
+        </record>
+    </records>
+    <extraResponseData xmlns:xb="http://www.exlibris.com/repository/search/xmlbeans/">
+        <xb:exact>true</xb:exact>
+        <xb:responseDate>2021-02-08T16:00:12+0100</xb:responseDate>
+    </extraResponseData>
+</searchRetrieveResponse>
