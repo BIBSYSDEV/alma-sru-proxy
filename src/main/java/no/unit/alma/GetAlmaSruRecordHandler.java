@@ -88,7 +88,7 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
                 if (isNotEmpty(isbn)) {
-                    xml = Marc21ParserHelper.getCorrectPostFromIsbnAsXML(xml, isbn);
+                    xml = Marc21ParserHelper.getCorrectPostsFromIsbnAsXML(xml, isbn);
                 }
 
                 gatewayResponse.setBody(xml);

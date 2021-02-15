@@ -38,7 +38,7 @@ public class Marc21ParserHelper {
     public static final String MARC_TAG_020 = "020";
     public static final char MARC_CODE_A = 'a';
 
-    public static String getCorrectPostFromIsbnAsXML(String xml, String isbn) throws ParsingException {
+    public static String getCorrectPostsFromIsbnAsXML(String xml, String isbn) throws ParsingException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -51,6 +51,7 @@ public class Marc21ParserHelper {
             NodeList recordsNodes = (NodeList) path.compile("searchRetrieveResponse/records")
                     .evaluate(document, XPathConstants.NODE);
 
+            String recordsAsXML = "<records>";
             for (int i = 0; recordsNodes.getLength() > i; i++) {
                 path = XPathFactory.newInstance().newXPath();
                 Node recordNode = (Node) path.compile("recordData/record")
@@ -65,15 +66,16 @@ public class Marc21ParserHelper {
                 for (DataField dataField : record.getDataFields()) {
                     String datafieldTag = dataField.getTag();
                     if (MARC_TAG_020.equals(datafieldTag) && theDataFieldHasCorrectIsbnInSubfield(dataField, isbn)) {
-                        return nodeToString(recordNode);
+                        recordsAsXML += nodeToString(recordNode);
                     }
                 }
             }
+            recordsAsXML += "</records>";
+            return recordsAsXML;
         } catch (ParserConfigurationException | SAXException | IOException
                 | TransformerException | XPathExpressionException e) {
             throw new ParsingException("Could not parse xml to marc21 data", e);
         }
-        return "";
     }
 
     private static boolean theDataFieldHasCorrectIsbnInSubfield(DataField dataField, String isbn) {
