@@ -5,8 +5,15 @@ import no.unit.alma.Config;
 import no.unit.alma.GatewayResponse;
 import no.unit.alma.UpdateAlma856Handler;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +63,7 @@ public class UpdateAlma856HandlerTest {
                   +"</datafield>"
                   +"<datafield tag='856' ind1='4' ind2='2'>"
                     +"<subfield code='3'>Beskrivelse fra forlaget (kort)</subfield>"
-                    +"<subfield code='u'>http://content.bibsys.no/content/?type=descr_publ_brief&amp;isbn=8210053418</subfield>"
+                    +"<subfield code='u'>http://innhold.bibsys.no/bilde/forside/?size=mini&id=LITE_150088182.jpg</subfield>"
                   +"</datafield>"
                   +"<datafield tag='913' ind1=' ' ind2=' '>"
                     +"<subfield code='a'>Norbok</subfield>"
@@ -88,6 +95,7 @@ public class UpdateAlma856HandlerTest {
 
         final GatewayResponse gatewayResponse = updateAlma856Handler.handleRequest(event, null);
         String result = gatewayResponse.getBody();
+        System.out.println(result);
         assertEquals(1, 1);
     }
 
@@ -95,6 +103,7 @@ public class UpdateAlma856HandlerTest {
     public void testParser(){
         String newXML = MOCK_XML.substring(MOCK_XML.indexOf("<recordData>") + 12,  MOCK_XML.lastIndexOf("</recordData>"));
         newXML = "<?xml version='1.0' encoding='UTF-8'?>" + newXML;
+        System.out.println(newXML);
         try{
             XmlParser xmlParser = new XmlParser(newXML);
             String resultID = xmlParser.extractMms_id();
@@ -102,7 +111,54 @@ public class UpdateAlma856HandlerTest {
         }catch (TransformerException e) {
             System.out.println(e);
         }
+    }
+
+    @Test
+    public void testDuplicateLenkeAndDescription(){
+        String newXML = MOCK_XML.substring(MOCK_XML.indexOf("<recordData>") + 12,  MOCK_XML.lastIndexOf("</recordData>"));
+        newXML = "<?xml version='1.0' encoding='UTF-8'?>" + newXML;
+        newXML = newXML.replace("&", "&amp;");
         System.out.println(newXML);
-         assertEquals(1,1);
+        try{
+            XmlParser xmlParser = new XmlParser(newXML);
+            assertTrue(xmlParser.alreadyExists("Beskrivelse fra forlaget (kort)", "http://innhold.bibsys.no/bilde/forside/?size=mini&amp;id=LITE_150088182.jpg".replace("&amp;", "&")));
+        }catch (TransformerException e) {
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void testParsingSkills(){
+        try{
+            final Config instance = Config.getInstance();
+            instance.setAlmaUpdateHost(MOCK_UPDATE_HOST);
+
+            Map<String, String> queryParameters = new HashMap<>();
+            queryParameters.put(UpdateAlma856Handler.ISBN_KEY, "9780367196721");
+            Map<String, Object> event = new HashMap<>();
+            event.put(UpdateAlma856Handler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
+
+            final UpdateAlma856Handler updateAlma856Handler = new UpdateAlma856Handler();
+
+            final GatewayResponse gatewayResponse = updateAlma856Handler.handleRequest(event, null);
+            String result = gatewayResponse.getBody();
+            String newXML = result;
+            newXML = newXML.replace("&", "&amp;");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(new InputSource(new StringReader(newXML)));
+            doc.getDocumentElement().normalize();
+            NodeList nList = doc.getElementsByTagName("recordData");
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+                NodeList childList = nList.item(temp).getChildNodes();
+                for(int i = 0; i < childList.getLength(); i++){
+                    System.out.println(childList.item(i).getNodeName());
+                }
+            }
+            assertTrue(true);
+        } catch(Exception e){
+            System.out.println(e);
+        }
+
     }
 }

@@ -9,4 +9,5 @@ public class GetRecordByISBNConnection {
     public InputStreamReader connect(URL url) throws IOException {
         return new InputStreamReader(url.openStream());
     }
+
 }

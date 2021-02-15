@@ -62,6 +62,7 @@ public class UpdateAlma856Handler implements RequestHandler<Map<String, Object>,
                     .collect(Collectors.joining(System.lineSeparator()));
             gatewayResponse.setBody(xml);
             gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
+
         }
         catch (Exception e){
             System.out.println(e.toString());

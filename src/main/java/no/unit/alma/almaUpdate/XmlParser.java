@@ -33,6 +33,8 @@ public class XmlParser {
     public static final String CLOSING_BRACKET = ")";
     public static final String MARC_TAG_001 = "001";
     public static final String MARC_TAG_856 = "856";
+    public static final char MARC_CODE_U = 'u';
+    public static final char MARC_CODE_3 = '3';
     public static final String MARC_PREFIX = "marc:";
 
     /**
@@ -65,6 +67,26 @@ public class XmlParser {
             }
         }
         return null;
+    }
+
+    public boolean alreadyExists(String description, String url){
+        List<DataField> dataFieldList = record.getDataFields();
+        for (DataField dataField : dataFieldList) {
+            Subfield subField_U;
+            Subfield subField_3;
+            String dataFieldTag = dataField.getTag();
+            if (dataFieldTag.equals(MARC_TAG_856)) {
+                subField_U = dataField.getSubfield(MARC_CODE_U);
+                subField_3 = dataField.getSubfield(MARC_CODE_3);
+                if(subField_U != null && subField_3 != null) {
+                    System.out.println(subField_3.getData() + "    " + subField_U.getData());
+                    if(subField_U.getData().equals(url) && subField_3.getData().equals(description)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
