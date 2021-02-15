@@ -1,6 +1,9 @@
 package no.unit.utils;
 
 import no.unit.alma.sru.ParsingException;
+import no.unit.marc.Marc21XmlParser;
+import no.unit.marc.Marc21XmlParserException;
+import no.unit.marc.Reference;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
@@ -31,6 +34,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Marc21ParserHelper {
 
@@ -38,44 +43,88 @@ public class Marc21ParserHelper {
     public static final String MARC_TAG_020 = "020";
     public static final char MARC_CODE_A = 'a';
 
-    public static String getCorrectPostsFromIsbnAsXML(String xml, String isbn) throws ParsingException {
+    /**
+     * Get records from xml.
+     *
+     * @param xml XML as String. Must have format of searchRetrieveResponse from alma.
+     * @return List of records as Reference objects
+     * @throws ParsingException When there are errors during parsing to XML and Marc21-objects
+     */
+    public static List<Reference> getRecords(String xml) throws ParsingException {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            String removedMarcInSruXml = xml.replace(MARC_PREFIX, "");
-            String removedSpaceBetweenElements = removedMarcInSruXml.replaceAll(">[\\s\r\n]*<", "><");
-            InputSource is = new InputSource(new StringReader(removedSpaceBetweenElements));
-            Document document = builder.parse(is);
+            List<Reference> records = new ArrayList<>();
+            for (Document marcFriendlyDocument : getMarcFriendlyDocuments(xml)) {
+                records.add(Marc21XmlParser.parse(nodeToString(marcFriendlyDocument)));
+            }
+            return records;
+        } catch (ParserConfigurationException | SAXException | IOException
+                | TransformerException | XPathExpressionException | Marc21XmlParserException e) {
+            throw new ParsingException("Could not parse xml to marc21 data", e);
+        }
+    }
 
-            XPath path = XPathFactory.newInstance().newXPath();
-            NodeList recordsNodes = (NodeList) path.compile("searchRetrieveResponse/records")
-                    .evaluate(document, XPathConstants.NODE);
-
-            String recordsAsXML = "<records>";
-            for (int i = 0; recordsNodes.getLength() > i; i++) {
-                path = XPathFactory.newInstance().newXPath();
-                Node recordNode = (Node) path.compile("recordData/record")
-                        .evaluate(recordsNodes.item(i), XPathConstants.NODE);
-
-                Document marcFriendlyDoc = builder.newDocument();
-                Node importedNode = marcFriendlyDoc.importNode(recordNode, true);
-                marcFriendlyDoc.appendChild(importedNode);
-
-                Record record = asMarcRecords(marcFriendlyDoc).next();
-
+    /**
+     * Get records from xml which has given ISBN in field 020$a.
+     *
+     * @param xml XML as String. Must have format of searchRetrieveResponse from alma
+     * @param isbn ISBN which records will be filtered for
+     * @return List of records as Reference objects
+     * @throws ParsingException When there are errors during parsing to XML and Marc21-objects
+     */
+    public static List<Reference> getRecordsWithCorrectIsbn(String xml, String isbn) throws ParsingException {
+        try {
+            List<Reference> records = new ArrayList<>();
+            for (Document marcFriendlyDocument : getMarcFriendlyDocuments(xml)) {
+                Record record = asMarcRecords(marcFriendlyDocument).next();
                 for (DataField dataField : record.getDataFields()) {
                     String datafieldTag = dataField.getTag();
                     if (MARC_TAG_020.equals(datafieldTag) && theDataFieldHasCorrectIsbnInSubfield(dataField, isbn)) {
-                        recordsAsXML += nodeToString(recordNode);
+                        records.add(Marc21XmlParser.parse(nodeToString(marcFriendlyDocument)));
                     }
                 }
             }
-            recordsAsXML += "</records>";
-            return recordsAsXML;
+            return records;
         } catch (ParserConfigurationException | SAXException | IOException
-                | TransformerException | XPathExpressionException e) {
+                | TransformerException | XPathExpressionException | Marc21XmlParserException e) {
             throw new ParsingException("Could not parse xml to marc21 data", e);
         }
+    }
+
+    private static List<Document> getMarcFriendlyDocuments(String xml)
+            throws XPathExpressionException,
+            ParserConfigurationException,
+            IOException,
+            SAXException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        String removedMarcInSruXml = xml.replace(MARC_PREFIX, "");
+        String removedSpaceBetweenElements = removedMarcInSruXml.replaceAll(">[\\s\r\n]*<", "><");
+        InputSource is = new InputSource(new StringReader(removedSpaceBetweenElements));
+        Document document = builder.parse(is);
+
+        XPath path = XPathFactory.newInstance().newXPath();
+        NodeList recordsNodes = (NodeList) path.compile("searchRetrieveResponse/records")
+                .evaluate(document, XPathConstants.NODE);
+
+        List<Document> marcFriendlyDocuments = new ArrayList<>();
+        for (int i = 0; recordsNodes.getLength() > i; i++) {
+            Node recordNode = (Node) path.compile("recordData/record")
+                    .evaluate(recordsNodes.item(i), XPathConstants.NODE);
+            marcFriendlyDocuments.add(tansformNodeToMarcParsingFriendlyDocument(builder, recordNode));
+        }
+        return marcFriendlyDocuments;
+    }
+
+    private static Document tansformNodeToMarcParsingFriendlyDocument(DocumentBuilder builder, Node recordNode) {
+        Document marcFriendlyDoc = builder.newDocument();
+        Node importedNode = marcFriendlyDoc.importNode(recordNode, true);
+        marcFriendlyDoc.appendChild(importedNode);
+        return marcFriendlyDoc;
+    }
+
+    private static MarcXmlReader asMarcRecords(Document doc) throws TransformerException {
+        ByteArrayOutputStream outputStream = removeStylesheet(doc);
+        return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray()));
     }
 
     private static boolean theDataFieldHasCorrectIsbnInSubfield(DataField dataField, String isbn) {
@@ -87,9 +136,12 @@ public class Marc21ParserHelper {
         return false;
     }
 
-    private static MarcXmlReader asMarcRecords(Document doc) throws TransformerException {
-        ByteArrayOutputStream outputStream = removeStylesheet(doc);
-        return new MarcXmlReader(new ByteArrayInputStream(outputStream.toByteArray()));
+    private static String nodeToString(Node node) throws TransformerException {
+        StringWriter buf = new StringWriter();
+        Transformer xform = TransformerFactory.newInstance().newTransformer();
+        xform.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        xform.transform(new DOMSource(node), new StreamResult(buf));
+        return buf.toString();
     }
 
     private static ByteArrayOutputStream removeStylesheet(Document result) throws TransformerException {
@@ -100,11 +152,4 @@ public class Marc21ParserHelper {
         return outputStream;
     }
 
-    private static String nodeToString(Node node) throws TransformerException {
-        StringWriter buf = new StringWriter();
-        Transformer xform = TransformerFactory.newInstance().newTransformer();
-        xform.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        xform.transform(new DOMSource(node), new StreamResult(buf));
-        return buf.toString();
-    }
 }
