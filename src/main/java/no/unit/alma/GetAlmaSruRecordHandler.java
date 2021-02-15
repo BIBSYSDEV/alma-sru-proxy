@@ -3,7 +3,8 @@ package no.unit.alma;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import no.unit.alma.sru.AlmaSruConnection;
-import no.unit.utils.StringUtils;
+import no.unit.alma.sru.ParsingException;
+import no.unit.utils.Marc21ParserHelper;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
@@ -16,6 +17,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static no.unit.utils.StringUtils.isEmpty;
+import static no.unit.utils.StringUtils.isNotEmpty;
 
 public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Object>, GatewayResponse> {
 
@@ -72,9 +75,9 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
 
         try {
             URL queryUrl;
-            if (StringUtils.isNotEmpty(mmsId) && StringUtils.isEmpty(isbn)) {
+            if (isNotEmpty(mmsId) && isEmpty(isbn)) {
                 queryUrl = connection.generateQueryByMmsIdUrl(mmsId, institution);
-            } else if (StringUtils.isNotEmpty(isbn) && StringUtils.isEmpty(mmsId)) {
+            } else if (isNotEmpty(isbn) && isEmpty(mmsId)) {
                 queryUrl = connection.generateQueryByIsbnUrl(isbn);
             } else {
                 throw new RuntimeException(format("This state should not be reached, as parameters MMSID = %s "
@@ -84,10 +87,14 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                 String xml = new BufferedReader(streamReader)
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
+                if (isNotEmpty(isbn)) {
+                    xml = Marc21ParserHelper.getCorrectPostFromIsbnAsXML(xml, isbn);
+                }
+
                 gatewayResponse.setBody(xml);
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             }
-        } catch (URISyntaxException | IOException e) {
+        } catch (URISyntaxException | IOException | ParsingException e) {
             DebugUtils.dumpException(e);
             gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE + " : " + e.getMessage());
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -105,11 +112,11 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
         final String mmsId = queryStringParameters.get(MMSID_KEY);
         final String isbn = queryStringParameters.get(ISBN_KEY);
         final String institution = queryStringParameters.get(INSTITUTION_KEY);
-        if (StringUtils.isEmpty(mmsId) && StringUtils.isEmpty(isbn)) {
+        if (isEmpty(mmsId) && isEmpty(isbn)) {
             throw new ParameterException(MANDATORY_PARAMETERS_MISSING);
-        } else if (StringUtils.isNotEmpty(mmsId) && StringUtils.isNotEmpty(isbn)) {
+        } else if (isNotEmpty(mmsId) && isNotEmpty(isbn)) {
             throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
-        } else if (StringUtils.isNotEmpty(isbn) && StringUtils.isNotEmpty(institution)) {
+        } else if (isNotEmpty(isbn) && isNotEmpty(institution)) {
             throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
         }
     }

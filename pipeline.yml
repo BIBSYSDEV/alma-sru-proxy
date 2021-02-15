@@ -252,6 +252,7 @@ Resources:
                   - cloudformation:*
                   - cloudwatch:*
                   - codebuild:*
+                  - codedeploy:*
                   - codepipeline:*
                   - ec2:*
                   - ecs:*
