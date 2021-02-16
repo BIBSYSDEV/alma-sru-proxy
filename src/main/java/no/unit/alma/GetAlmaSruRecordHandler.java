@@ -60,9 +60,6 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
     @Override
     @SuppressWarnings("unchecked")
     public GatewayResponse handleRequest(final Map<String, Object> input, Context context) {
-        //TODO: Remove - For testing only
-        System.out.println(input);
-
         GatewayResponse gatewayResponse = new GatewayResponse();
         try {
             Config.getInstance().checkProperties();
