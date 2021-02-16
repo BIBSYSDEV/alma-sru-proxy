@@ -110,16 +110,16 @@ public class Marc21ParserHelper {
         for (int i = 0; recordsNodes.getLength() > i; i++) {
             Node recordNode = (Node) path.compile("recordData/record")
                     .evaluate(recordsNodes.item(i), XPathConstants.NODE);
-            marcFriendlyDocuments.add(tansformNodeToMarcParsingFriendlyDocument(builder, recordNode));
+            marcFriendlyDocuments.add(transformNodeToNewDocument(builder, recordNode));
         }
         return marcFriendlyDocuments;
     }
 
-    private static Document tansformNodeToMarcParsingFriendlyDocument(DocumentBuilder builder, Node recordNode) {
-        Document marcFriendlyDoc = builder.newDocument();
-        Node importedNode = marcFriendlyDoc.importNode(recordNode, true);
-        marcFriendlyDoc.appendChild(importedNode);
-        return marcFriendlyDoc;
+    private static Document transformNodeToNewDocument(DocumentBuilder builder, Node recordNode) {
+        Document document = builder.newDocument();
+        Node importedNode = document.importNode(recordNode, true);
+        document.appendChild(importedNode);
+        return document;
     }
 
     private static MarcXmlReader asMarcRecords(Document doc) throws TransformerException {
