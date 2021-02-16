@@ -6,8 +6,10 @@ import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,19 +25,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
+
 
 public class XmlParser {
 
     public static final String EMPTY_STRING = "";
     public static final String CLOSING_BRACKET = ")";
+    public static final String XML_PROTOCOL = "<?xml version='1.0' encoding='UTF-8'?>";
     public static final String MARC_TAG_001 = "001";
     public static final String MARC_TAG_856 = "856";
     public static final char MARC_CODE_U = 'u';
     public static final char MARC_CODE_3 = '3';
     public static final String MARC_PREFIX = "marc:";
+    public static final String NODE_TEMPLATE = "<record>"
+            + "<datafield tag='856' ind1='4' ind2='2'>"
+            + "<subfield code='3'>1</subfield>"
+            + "<subfield code='u'>2</subfield>"
+            + "<subfield code='q'>3</subfield>"
+            + "</datafield>"
+            + "</record>";
 
     /**
      * Parses a SRU-response to extract the title of an marc21xml-record.
@@ -47,7 +55,7 @@ public class XmlParser {
     private Record record;
 
     public XmlParser(String xml) throws TransformerException{
-        this.record = asMarcRecord(asDocument(xml));
+        this.record = asMarcRecord(asDocument(xml.replace("&", "&amp;")));
     }
     public Record getRecord(){
         return record;
@@ -67,6 +75,24 @@ public class XmlParser {
             }
         }
         return null;
+    }
+
+    public Document create856Node(String description, String url, String descType) throws ParserConfigurationException, IOException, SAXException, TransformerException{
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        InputSource is = new InputSource();
+        is.setCharacterStream(new StringReader(NODE_TEMPLATE));
+        Document doc = db.parse(is);
+        NodeList datafields = doc.getElementsByTagName("datafield");
+        NodeList subfields = datafields.item(0).getChildNodes();
+        subfields.item(0).setTextContent(description);
+        subfields.item(1).setTextContent(url);
+        if(descType != null){
+            subfields.item(2).setTextContent(descType);
+        } else{
+            datafields.item(0).removeChild(subfields.item(2));
+        }
+        return doc;
     }
 
     public boolean alreadyExists(String description, String url){
