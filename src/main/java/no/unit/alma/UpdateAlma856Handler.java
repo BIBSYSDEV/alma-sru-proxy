@@ -23,7 +23,7 @@ public class UpdateAlma856Handler implements RequestHandler<Map<String, Object>,
 
     public static final String MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS =
             "Missing event element 'queryStringParameters'.";
-    public static final String MANDATORY_PARAMETERS_MISSING = "Mandatory parameters 'mms_id' or 'isbn' is missing.";
+    public static final String MANDATORY_PARAMETER_MISSING = "Mandatory parameter 'isbn' is missing.";
     public static final String INTERNAL_SERVER_ERROR_MESSAGE = "An error occurred, error has been logged";
 
     protected final transient GetRecordByISBNConnection connection = new GetRecordByISBNConnection();
@@ -79,7 +79,7 @@ public class UpdateAlma856Handler implements RequestHandler<Map<String, Object>,
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
         final String isbn = queryStringParameters.get(ISBN_KEY);
         if (StringUtils.isEmpty(isbn)) {
-            throw new ParameterException(MANDATORY_PARAMETERS_MISSING);
+            throw new ParameterException(MANDATORY_PARAMETER_MISSING);
         }
     }
 

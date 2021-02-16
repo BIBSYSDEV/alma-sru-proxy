@@ -159,6 +159,11 @@ public class UpdateAlma856HandlerTest {
         } catch(Exception e){
             System.out.println(e);
         }
-
     }
+
+    @Test
+    public void testXmlInsertion(){
+        
+    }
+
 }

@@ -160,6 +160,27 @@ Resources:
             Method: get
             Path: /
 
+  UpdateAlma856Function:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        Environment:
+          Variables:
+            ALLOWED_ORIGIN: '*'
+            ALMA_SRU_HOST: !Ref SruEndpoint
+        Handler: no.unit.alma.UpdateAlma856Handler::handleRequest
+        Runtime: java11
+        MemorySize: 2048
+        AutoPublishAlias: live
+        DeploymentPreference:
+          Type: AllAtOnce # Or Canary10Percent5Minutes, Linear10PercentEvery1Minute, ...
+        Events:
+          GetAlmaSruRecordEvent:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              RestApiId: !Ref AlmaSruProxyApi
+              Method: put
+              Path: /update
+
   GetAlmaSruRecordFunctionScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
