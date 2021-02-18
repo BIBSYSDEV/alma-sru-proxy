@@ -72,7 +72,7 @@ public class GatewayResponse {
 
     private void generateDefaultHeaders() {
         Map<String, String> headers = new ConcurrentHashMap<>();
-        headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML);
+        headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
         final String corsAllowDomain = Config.getInstance().getCorsHeader();
         if (StringUtils.isNotEmpty(corsAllowDomain)) {
             headers.put(CORS_ALLOW_ORIGIN_HEADER, corsAllowDomain);
