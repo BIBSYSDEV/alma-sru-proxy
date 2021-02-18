@@ -33,6 +33,15 @@ public class AlmaSruConnection {
         return new InputStreamReader(url.openStream());
     }
 
+    /**
+     * Builds an URL for quering Alma based on MMSID.
+     *
+     * @param mmsId Almas MMSID
+     * @param institution Institution name
+     * @return URL to connect to
+     * @throws MalformedURLException If URL that is built is not valid
+     * @throws URISyntaxException If URL that is built is not valid
+     */
     public URL generateQueryByMmsIdUrl(String mmsId, String institution)
             throws MalformedURLException, URISyntaxException {
         String encodedCqlQuery = new CqlFormatter()
@@ -48,6 +57,14 @@ public class AlmaSruConnection {
         }
     }
 
+    /**
+     * Builds an URL for quering Alma based on ISBN.
+     *
+     * @param isbn to query for
+     * @return URL to connect to
+     * @throws MalformedURLException If URL that is built is not valid
+     * @throws URISyntaxException If URL that is built is not valid
+     */
     public URL generateQueryByIsbnUrl(String isbn)
             throws MalformedURLException, URISyntaxException {
         String encodedCqlQuery = new CqlFormatter()

@@ -2,16 +2,22 @@ package no.unit.alma;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import no.unit.alma.sru.AlmaSruConnection;
 import no.unit.alma.sru.ParsingException;
+import no.unit.marc.Reference;
 import no.unit.utils.Marc21ParserHelper;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -54,9 +60,6 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
     @Override
     @SuppressWarnings("unchecked")
     public GatewayResponse handleRequest(final Map<String, Object> input, Context context) {
-        //TODO: Remove - For testing only
-        System.out.println(input);
-
         GatewayResponse gatewayResponse = new GatewayResponse();
         try {
             Config.getInstance().checkProperties();
@@ -83,15 +86,21 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                 throw new RuntimeException(format("This state should not be reached, as parameters MMSID = %s "
                         + "and ISBN= %s should have been checked against this previously", mmsId, isbn));
             }
+
+            List<Reference> records;
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
                 String xml = new BufferedReader(streamReader)
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
                 if (isNotEmpty(isbn)) {
-                    xml = Marc21ParserHelper.getCorrectPostFromIsbnAsXML(xml, isbn);
+                    records = Marc21ParserHelper.getRecordsWithCorrectIsbn(xml, isbn);
+                } else {
+                    records = Marc21ParserHelper.getRecords(xml);
                 }
 
-                gatewayResponse.setBody(xml);
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                Type listOfMyClassObject = new TypeToken<List<Reference>>() {}.getType();
+                gatewayResponse.setBody(gson.toJson(records, listOfMyClassObject));
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             }
         } catch (URISyntaxException | IOException | ParsingException e) {
