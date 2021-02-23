@@ -6,9 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import no.unit.alma.sru.AlmaSruConnection;
-import no.unit.alma.sru.ParsingException;
+import no.unit.marc.ParsingException;
 import no.unit.marc.Reference;
-import no.unit.utils.Marc21ParserHelper;
+import no.unit.marc.SearchRetrieveResponseParser;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
@@ -93,9 +93,10 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
                 if (isNotEmpty(isbn)) {
-                    records = Marc21ParserHelper.getRecordsWithCorrectIsbn(xml, isbn);
+                    records = SearchRetrieveResponseParser
+                            .getReferenceObjectsFromSearchRetrieveResponseWithCorrectIsbn(xml, isbn);
                 } else {
-                    records = Marc21ParserHelper.getRecords(xml);
+                    records = SearchRetrieveResponseParser.getReferenceObjectsFromSearchRetrieveResponse(xml);
                 }
 
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
