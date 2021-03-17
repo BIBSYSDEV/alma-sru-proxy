@@ -6,7 +6,9 @@ The return value is expected to be the title of the most recent publication of t
 
 A second endpoint will get an Alma-record by given ```mms_id``` from NETWORK_ZONE. The return value is expected to be 
 the Alma-record in xml format. Adding a second parameter ```institution``` will try to add local information from the
-given institution. The institution-parameter is expected to be in alma-code (e.g. NB, NTNU_UB, UBO).
+given institution. The institution-parameter is expected to be in alma-code (e.g. NB, NTNU_UB, UBO). Instead of 
+```mms_id``` (possibly with ```institution```) one can provide only ```isbn``` as parameter. The lambda will then return the
+corresponding records (the records with the given isbn in field 020$a).
 
 The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are 
 defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same 

@@ -2,20 +2,29 @@ package no.unit.alma;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import no.unit.alma.sru.AlmaSruConnection;
-import no.unit.utils.StringUtils;
+import no.unit.marc.ParsingException;
+import no.unit.marc.Reference;
+import no.unit.marc.SearchRetrieveResponseParser;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static no.unit.utils.StringUtils.isEmpty;
+import static no.unit.utils.StringUtils.isNotEmpty;
 
 public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Object>, GatewayResponse> {
 
@@ -51,9 +60,6 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
     @Override
     @SuppressWarnings("unchecked")
     public GatewayResponse handleRequest(final Map<String, Object> input, Context context) {
-        //TODO: Remove - For testing only
-        System.out.println(input);
-
         GatewayResponse gatewayResponse = new GatewayResponse();
         try {
             Config.getInstance().checkProperties();
@@ -72,22 +78,33 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
 
         try {
             URL queryUrl;
-            if (StringUtils.isNotEmpty(mmsId) && StringUtils.isEmpty(isbn)) {
+            if (isNotEmpty(mmsId) && isEmpty(isbn)) {
                 queryUrl = connection.generateQueryByMmsIdUrl(mmsId, institution);
-            } else if (StringUtils.isNotEmpty(isbn) && StringUtils.isEmpty(mmsId)) {
+            } else if (isNotEmpty(isbn) && isEmpty(mmsId)) {
                 queryUrl = connection.generateQueryByIsbnUrl(isbn);
             } else {
                 throw new RuntimeException(format("This state should not be reached, as parameters MMSID = %s "
                         + "and ISBN= %s should have been checked against this previously", mmsId, isbn));
             }
+
+            List<Reference> records;
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
                 String xml = new BufferedReader(streamReader)
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
-                gatewayResponse.setBody(xml);
+                if (isNotEmpty(isbn)) {
+                    records = SearchRetrieveResponseParser
+                            .getReferenceObjectsFromSearchRetrieveResponseWithCorrectIsbn(xml, isbn);
+                } else {
+                    records = SearchRetrieveResponseParser.getReferenceObjectsFromSearchRetrieveResponse(xml);
+                }
+
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                Type listOfMyClassObject = new TypeToken<List<Reference>>() {}.getType();
+                gatewayResponse.setBody(gson.toJson(records, listOfMyClassObject));
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             }
-        } catch (URISyntaxException | IOException e) {
+        } catch (URISyntaxException | IOException | ParsingException e) {
             DebugUtils.dumpException(e);
             gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE + " : " + e.getMessage());
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -105,11 +122,11 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
         final String mmsId = queryStringParameters.get(MMSID_KEY);
         final String isbn = queryStringParameters.get(ISBN_KEY);
         final String institution = queryStringParameters.get(INSTITUTION_KEY);
-        if (StringUtils.isEmpty(mmsId) && StringUtils.isEmpty(isbn)) {
+        if (isEmpty(mmsId) && isEmpty(isbn)) {
             throw new ParameterException(MANDATORY_PARAMETERS_MISSING);
-        } else if (StringUtils.isNotEmpty(mmsId) && StringUtils.isNotEmpty(isbn)) {
+        } else if (isNotEmpty(mmsId) && isNotEmpty(isbn)) {
             throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
-        } else if (StringUtils.isNotEmpty(isbn) && StringUtils.isNotEmpty(institution)) {
+        } else if (isNotEmpty(isbn) && isNotEmpty(institution)) {
             throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
         }
     }

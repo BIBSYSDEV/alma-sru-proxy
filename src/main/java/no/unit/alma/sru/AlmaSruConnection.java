@@ -1,7 +1,5 @@
 package no.unit.alma.sru;
 
-import java.util.Locale;
-
 import no.unit.alma.Config;
 import no.unit.alma.sru.cql.formatter.CqlFormatter;
 import no.unit.utils.StringUtils;
@@ -13,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Locale;
 
 public class AlmaSruConnection {
 
@@ -34,6 +33,15 @@ public class AlmaSruConnection {
         return new InputStreamReader(url.openStream());
     }
 
+    /**
+     * Builds an URL for quering Alma based on MMSID.
+     *
+     * @param mmsId Almas MMSID
+     * @param institution Institution name
+     * @return URL to connect to
+     * @throws MalformedURLException If URL that is built is not valid
+     * @throws URISyntaxException If URL that is built is not valid
+     */
     public URL generateQueryByMmsIdUrl(String mmsId, String institution)
             throws MalformedURLException, URISyntaxException {
         String encodedCqlQuery = new CqlFormatter()
@@ -49,6 +57,14 @@ public class AlmaSruConnection {
         }
     }
 
+    /**
+     * Builds an URL for quering Alma based on ISBN.
+     *
+     * @param isbn to query for
+     * @return URL to connect to
+     * @throws MalformedURLException If URL that is built is not valid
+     * @throws URISyntaxException If URL that is built is not valid
+     */
     public URL generateQueryByIsbnUrl(String isbn)
             throws MalformedURLException, URISyntaxException {
         String encodedCqlQuery = new CqlFormatter()
