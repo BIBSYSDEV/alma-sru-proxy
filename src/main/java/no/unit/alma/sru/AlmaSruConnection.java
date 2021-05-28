@@ -97,7 +97,7 @@ public class AlmaSruConnection {
                 .setParameter(VERSION_KEY, SRU_VERSION_1_2)
                 .setParameter(OPERATION_KEY, OPERATION_SEARCH_RETRIEVE)
                 .setParameter(RECORD_SCHEMA_KEY, RECORD_SCHEMA)
-                .setParameter(MAXIMUM_RECORDS_KEY, ONE_RECORD_ONLY)
+//                .setParameter(MAXIMUM_RECORDS_KEY, ONE_RECORD_ONLY)
                 .setParameter(START_RECORD_KEY, START_RECORD_1)
                 .setParameter(QUERY_KEY, encodedCqlQuery)
                 .build();
