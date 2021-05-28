@@ -9,7 +9,6 @@ import no.unit.alma.sru.AlmaSruConnection;
 import no.unit.marc.ParsingException;
 import no.unit.marc.Reference;
 import no.unit.marc.SearchRetrieveResponseParser;
-import org.apache.http.io.SessionOutputBuffer;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
