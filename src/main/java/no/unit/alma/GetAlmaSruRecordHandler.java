@@ -9,6 +9,7 @@ import no.unit.alma.sru.AlmaSruConnection;
 import no.unit.marc.ParsingException;
 import no.unit.marc.Reference;
 import no.unit.marc.SearchRetrieveResponseParser;
+import org.apache.http.io.SessionOutputBuffer;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
@@ -86,13 +87,13 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                 throw new RuntimeException(format("This state should not be reached, as parameters MMSID = %s "
                         + "and ISBN= %s should have been checked against this previously", mmsId, isbn));
             }
-
+            System.out.println("SRU-Query: " + queryUrl.toString());
             List<Reference> records;
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
                 String xml = new BufferedReader(streamReader)
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
-                System.out.println(xml);
+                System.out.printf("XML read from SRU: %s &n", xml);
                 if (isNotEmpty(isbn)) {
                     records = SearchRetrieveResponseParser
                             .getReferenceObjectsFromSearchRetrieveResponseWithCorrectIsbn(xml, isbn);
