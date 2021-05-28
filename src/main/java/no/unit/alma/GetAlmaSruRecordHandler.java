@@ -92,6 +92,7 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                 String xml = new BufferedReader(streamReader)
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
+                System.out.println(xml);
                 if (isNotEmpty(isbn)) {
                     records = SearchRetrieveResponseParser
                             .getReferenceObjectsFromSearchRetrieveResponseWithCorrectIsbn(xml, isbn);
