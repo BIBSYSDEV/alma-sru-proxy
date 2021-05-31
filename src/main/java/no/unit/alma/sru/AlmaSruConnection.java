@@ -51,9 +51,9 @@ public class AlmaSruConnection {
                 .withInstitution(institution)
                 .encode();
         if (StringUtils.isEmpty(institution)) {
-            return getAlmaURI(encodedCqlQuery).toURL();
+            return getAlmaUriMaxRecord(null, encodedCqlQuery).toURL();
         } else {
-            return getAlmaURI(institution, encodedCqlQuery).toURL();
+            return getAlmaUriMaxRecord(institution, encodedCqlQuery).toURL();
         }
     }
 
@@ -72,19 +72,19 @@ public class AlmaSruConnection {
                 .withSorting(false)
                 .withIsbn(isbn)
                 .encode();
-        URI uri = getAlmaURI(encodedCqlQuery);
+        URI uri = getAlmaUri(encodedCqlQuery);
         return uri.toURL();
     }
 
-    private URI getAlmaURI(String institution, String encodedCqlQuery) throws URISyntaxException {
+    private URI getAlmaUriMaxRecord(String institution, String encodedCqlQuery) throws URISyntaxException {
         String almaSruQueryPath = Config.ALMA_SRU_QUERY_PATH_NETWORK;
         if (StringUtils.isNotEmpty(institution)) {
             almaSruQueryPath = almaSruQueryPath.replace(NETWORK, institution.toUpperCase(Locale.getDefault()));
         }
-        return buildFullUri(encodedCqlQuery, almaSruQueryPath);
+        return buildFullUri(encodedCqlQuery, almaSruQueryPath, ONE_RECORD_ONLY);
     }
 
-    private URI getAlmaURI(String encodedCqlQuery) throws URISyntaxException {
+    private URI getAlmaUri(String encodedCqlQuery) throws URISyntaxException {
         String almaSruQueryPath = Config.ALMA_SRU_QUERY_PATH_NETWORK;
         return buildFullUri(encodedCqlQuery, almaSruQueryPath);
     }
@@ -97,7 +97,21 @@ public class AlmaSruConnection {
                 .setParameter(VERSION_KEY, SRU_VERSION_1_2)
                 .setParameter(OPERATION_KEY, OPERATION_SEARCH_RETRIEVE)
                 .setParameter(RECORD_SCHEMA_KEY, RECORD_SCHEMA)
-                .setParameter(MAXIMUM_RECORDS_KEY, ONE_RECORD_ONLY)
+                .setParameter(START_RECORD_KEY, START_RECORD_1)
+                .setParameter(QUERY_KEY, encodedCqlQuery)
+                .build();
+    }
+
+    private URI buildFullUri(String encodedCqlQuery, String almaSruQueryPath,
+                             String maxRecords) throws URISyntaxException {
+        return new URIBuilder()
+                .setScheme(HTTPS)
+                .setHost(Config.getInstance().getAlmaSruHost())
+                .setPath(almaSruQueryPath)
+                .setParameter(VERSION_KEY, SRU_VERSION_1_2)
+                .setParameter(OPERATION_KEY, OPERATION_SEARCH_RETRIEVE)
+                .setParameter(RECORD_SCHEMA_KEY, RECORD_SCHEMA)
+                .setParameter(MAXIMUM_RECORDS_KEY, maxRecords)
                 .setParameter(START_RECORD_KEY, START_RECORD_1)
                 .setParameter(QUERY_KEY, encodedCqlQuery)
                 .build();

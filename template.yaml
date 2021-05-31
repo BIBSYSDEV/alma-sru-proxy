@@ -56,6 +56,10 @@ Resources:
             reason: "Skip encryption for artifacts bucket"
           - id: W69
             reason: "Skip bucket policy for artifacts bucket"
+          - id: W89
+            reason: "Lambda functions should be deployed inside a VPC"
+          - id: W92
+            reason: "Lambda functions should define ReservedConcurrentExecutions to reserve simultaneous executions"
     Properties:
       Name: !Sub "${AWS::StackName}"
       StageName: v1

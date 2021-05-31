@@ -86,12 +86,13 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                 throw new RuntimeException(format("This state should not be reached, as parameters MMSID = %s "
                         + "and ISBN= %s should have been checked against this previously", mmsId, isbn));
             }
-
+            System.out.println("SRU-Query: " + queryUrl);
             List<Reference> records;
             try (InputStreamReader streamReader = connection.connect(queryUrl)) {
                 String xml = new BufferedReader(streamReader)
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
+//                System.out.printf("XML read from SRU: %s &n", xml);
                 if (isNotEmpty(isbn)) {
                     records = SearchRetrieveResponseParser
                             .getReferenceObjectsFromSearchRetrieveResponseWithCorrectIsbn(xml, isbn);
