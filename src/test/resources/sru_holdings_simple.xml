@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/">
+    <version>1.2</version>
+    <numberOfRecords>1</numberOfRecords>
+    <records>
+        <record>
+            <recordSchema>isohold</recordSchema>
+            <recordPacking>xml</recordPacking>
+            <recordData>
+                <holdings xmlns="http://www.loc.gov/standards/iso20775/">
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1042300</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>Norsk Skogfinsk Museum</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>2</copiesCount>
+                                <status>
+                                    <availableCount>0</availableCount>
+                                    <earliestDispatchDate>2019-12-19T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>barcode15</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>2238439990002286</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>wl0001</sublocation>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                    </status>
+                                    <policy>3</policy>
+                                </availabilityInformation>
+                            </copyInformation>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>barcode14</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>2238439990002286</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>wl0001</sublocation>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                        <dateTimeAvailable>2019-12-19T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <resource>
+                        <resourceIdentifier>
+                            <value>999919767594702286</value>
+                            <typeOrSource>
+                                <text>SUFFICIENT</text>
+                            </typeOrSource>
+                        </resourceIdentifier>
+                    </resource>
+                </holdings>
+            </recordData>
+            <recordIdentifier>999919767594702286</recordIdentifier>
+            <recordPosition>1</recordPosition>
+        </record>
+    </records>
+    <extraResponseData xmlns:xb="http://www.exlibris.com/repository/search/xmlbeans/">
+        <xb:exact>true</xb:exact>
+        <xb:responseDate>2019-12-19T10:34:06+0100</xb:responseDate>
+    </extraResponseData>
+</searchRetrieveResponse>
