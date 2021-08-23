@@ -1,6 +1,7 @@
 package no.unit.alma;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.time.ZonedDateTime;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class AvailabilityParser {
@@ -30,14 +32,15 @@ public class AvailabilityParser {
 
     public AvailabilityResponse getAvailabilityResponse(String xml, String libraryCode)
         throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-        Document doc = readXmlFromUrl(xml);
+        Document doc = parseXml(xml);
         return parseSruHoldingInfo(doc, libraryCode);
     }
 
-    private Document readXmlFromUrl(String xml) throws ParserConfigurationException, IOException, SAXException {
+    protected Document parseXml(String xml) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
-        return db.parse(xml);
+        InputSource inputSource = new InputSource(new StringReader(xml));
+        return db.parse(inputSource);
     }
 
     protected AvailabilityResponse parseSruHoldingInfo(Document doc, String libraryCode)

@@ -26,11 +26,8 @@ public class AvailabilityParserTest {
 
 
     private Document createDocument(String fileName) throws SAXException, IOException, ParserConfigurationException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         final String xmlDoc = IoUtils.stringFromResources(Path.of(fileName));
-        InputSource inputSourceNB = new InputSource(new StringReader(xmlDoc));
-        return documentBuilder.parse(inputSourceNB);
+        return availabilityParser.parseXml(xmlDoc);
     }
 
     @Test
