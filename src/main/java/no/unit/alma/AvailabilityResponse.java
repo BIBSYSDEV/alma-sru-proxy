@@ -5,8 +5,8 @@ public class AvailabilityResponse {
     private String mmsId = "";
     private String institution = "";
     private String libraryCode = "";
-    private int totalNumberOfItems = 0;
-    private int numberAvailForInterLibraryLoan = 0;
+    private int totalNumberOfItems;
+    private int numberAvailForInterLibraryLoan;
     private String availableDate = "";
 
     public int getTotalNumberOfItems() {

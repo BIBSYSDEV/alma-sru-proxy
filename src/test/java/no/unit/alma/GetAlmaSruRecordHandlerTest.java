@@ -26,12 +26,14 @@ import static org.mockito.Mockito.when;
 
 public class GetAlmaSruRecordHandlerTest {
 
+    public static final String SRU_HOLDINGS_COMPLEX_XML = "/sru_holdings_complex.xml";
     public static final String SRU_RESPONSE_1_HIT = "/SRU_response_1_hit.xml";
     public static final String SRU_RESPONSE_2_HITS = "/SRU_response_2_hits.xml";
     public static final String SRU_RESPONSE_3_HITS_FOR_ONE_ISBN = "/SRU_response_3_hits_for_one_isbn.xml";
     public static final String SRU_RESPONSE_2_WITH_BAD_XML = "/SRU_response_bad_xml.xml";
     public static final String MOCK_MMS_ID = "1123456789";
     public static final String MOCK_INSTITUTION = "NTNU_UB";
+    public static final String MOCK_LIBRARYCODE = "1150401";
     public static final String MOCK_ISBN = "978-0-367-19672-1";
     public static final String MOCK_SRU_HOST = "alma-sru-host-dot-com";
     public static final String EXPECTED_TITLE = "Bedriftsintern telekommunikasjon";
@@ -125,6 +127,26 @@ public class GetAlmaSruRecordHandlerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), gatewayResponse.getStatusCode());
         assertTrue(gatewayResponse.getBody().contains(EXPECTED_TITLE));
+    }
+
+    @Test
+    public void testFetchRecordTitleByMmsidMedHoldingsInfo() throws IOException {
+        Map<String, String> queryParameters = new HashMap<>();
+        queryParameters.put(GetAlmaSruRecordHandler.MMSID_KEY, MOCK_MMS_ID);
+        queryParameters.put(GetAlmaSruRecordHandler.INSTITUTION_KEY, MOCK_INSTITUTION);
+        queryParameters.put(GetAlmaSruRecordHandler.LIBRARY_CODE_KEY, MOCK_LIBRARYCODE);
+        queryParameters.put(GetAlmaSruRecordHandler.RECORD_SCHEMA_KEY, AlmaSruConnection.RECORD_SCHEMA_ISOHOLD);
+        Map<String, Object> event = new HashMap<>();
+        event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
+
+        InputStream stream = GetAlmaSruRecordHandlerTest.class.getResourceAsStream(SRU_HOLDINGS_COMPLEX_XML);
+        when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
+
+        final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
+
+        assertEquals(Response.Status.OK.getStatusCode(), gatewayResponse.getStatusCode());
+        assertTrue(gatewayResponse.getBody().contains(MOCK_LIBRARYCODE));
+        assertTrue(gatewayResponse.getBody().contains("\"totalNumberOfItems\": 3"));
     }
 
     @Test

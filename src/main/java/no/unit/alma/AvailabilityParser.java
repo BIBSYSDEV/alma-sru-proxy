@@ -20,15 +20,15 @@ import org.xml.sax.SAXException;
 
 public class AvailabilityParser {
 
-    private final String XPATH_INSTITUTION_IDENTIFIER = "institutionIdentifier/value";
-    private final String XPATH_COPIES_COUNT = "holdingSimple/copiesSummary/copiesCount";
-    private final String XPATH_COPIES_SUMMARY_STATUS = "holdingSimple/copiesSummary/status";
-    private final String XPATH_AVAILABLE_FOR = "availableFor";
-    private final String XPATH_AVAILABLE_COUNT = "availableCount";
-    private final String XPATH_EARLIEST_DISPATCH_DATE = "earliestDispatchDate";
-    private final String XPATH_HOLDING = "//holding";
-    private final String AVAILABILITYCODE_AVAILAVLE_FOR_INTERLIBRARYLOAN = "1";
-    private final String ISILPREFIX = "NO-";
+    private final static String XPATH_INSTITUTION_IDENTIFIER = "institutionIdentifier/value";
+    private final static String XPATH_COPIES_COUNT = "holdingSimple/copiesSummary/copiesCount";
+    private final static String XPATH_COPIES_SUMMARY_STATUS = "holdingSimple/copiesSummary/status";
+    private final static String XPATH_AVAILABLE_FOR = "availableFor";
+    private final static String XPATH_AVAILABLE_COUNT = "availableCount";
+    private final static String XPATH_EARLIEST_DISPATCH_DATE = "earliestDispatchDate";
+    private final static String XPATH_HOLDING = "//holding";
+    private final static String AVAILABILITYCODE_AVAILAVLE_FOR_INTERLIBRARYLOAN = "1";
+    private final static String ISILPREFIX = "NO-";
 
     public AvailabilityResponse getAvailabilityResponse(String xml, String libraryCode)
         throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
@@ -96,7 +96,7 @@ public class AvailabilityParser {
                                                       Node statusNode) throws XPathExpressionException {
         ZonedDateTime earliestDispatchDate = getEarliestDispatchDate(xpath, statusNode);
         ZonedDateTime availableDate = getAvailableDate(availabilityResponse);
-        if ((earliestDispatchDate != null) && (availableDate == null || availableDate.isBefore(earliestDispatchDate))) {
+        if (earliestDispatchDate != null && (availableDate == null || availableDate.isBefore(earliestDispatchDate))) {
             availabilityResponse.setAvailableDate(earliestDispatchDate.toString());
         }
     }
