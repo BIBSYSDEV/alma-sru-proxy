@@ -5,6 +5,8 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import no.unit.alma.sru.AlmaSruConnection;
 import no.unit.marc.ParsingException;
 import no.unit.marc.Reference;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.xml.sax.SAXException;
 
 import static java.lang.String.format;
 import static no.unit.utils.StringUtils.isEmpty;
@@ -31,7 +34,9 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
     public static final String QUERY_STRING_PARAMETERS_KEY = "queryStringParameters";
     public static final String MMSID_KEY = "mms_id";
     public static final String INSTITUTION_KEY = "institution";
+    public static final String LIBRARY_CODE_KEY = "libraryCode";
     public static final String ISBN_KEY = "isbn";
+    public static final String RECORD_SCHEMA_KEY = "recordSchema";
 
     public static final String MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS =
             "Missing event element 'queryStringParameters'.";
@@ -74,12 +79,15 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
         String mmsId = queryStringParameters.get(MMSID_KEY);
         String institution = queryStringParameters.get(INSTITUTION_KEY);
+        String libraryCode = queryStringParameters.get(LIBRARY_CODE_KEY);
         String isbn = queryStringParameters.get(ISBN_KEY);
+        String recordSchema = queryStringParameters.getOrDefault(RECORD_SCHEMA_KEY,
+            AlmaSruConnection.DEFAULT_RECORD_SCHEMA);
 
         try {
             URL queryUrl;
             if (isNotEmpty(mmsId) && isEmpty(isbn)) {
-                queryUrl = connection.generateQueryByMmsIdUrl(mmsId, institution);
+                queryUrl = connection.generateQueryByMmsIdUrl(mmsId, institution, recordSchema);
             } else if (isNotEmpty(isbn) && isEmpty(mmsId)) {
                 queryUrl = connection.generateQueryByIsbnUrl(isbn);
             } else {
@@ -92,20 +100,28 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                 String xml = new BufferedReader(streamReader)
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
-                //System.out.printf("XML read from SRU: %s &n", xml);
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                Type listOfMyClassObject = new TypeToken<List<Reference>>() {}.getType();
                 if (isNotEmpty(isbn)) {
                     records = SearchRetrieveResponseParser
                             .getReferenceObjectsFromSearchRetrieveResponseWithCorrectIsbn(xml, isbn);
+                    gatewayResponse.setBody(gson.toJson(records, listOfMyClassObject));
+                } else if (recordSchema.equals(AlmaSruConnection.RECORD_SCHEMA_ISOHOLD)) {
+                    AvailabilityParser parser = new AvailabilityParser();
+                    AvailabilityResponse availabilityResponse = parser.getAvailabilityResponse(xml, libraryCode);
+                    availabilityResponse.setMmsId(mmsId);
+                    availabilityResponse.setInstitution(institution);
+                    availabilityResponse.setLibraryCode(libraryCode);
+                    gatewayResponse.setBody(gson.toJson(availabilityResponse));
                 } else {
                     records = SearchRetrieveResponseParser.getReferenceObjectsFromSearchRetrieveResponse(xml);
+                    gatewayResponse.setBody(gson.toJson(records, listOfMyClassObject));
                 }
 
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                Type listOfMyClassObject = new TypeToken<List<Reference>>() {}.getType();
-                gatewayResponse.setBody(gson.toJson(records, listOfMyClassObject));
                 gatewayResponse.setStatusCode(Response.Status.OK.getStatusCode());
             }
-        } catch (URISyntaxException | IOException | ParsingException e) {
+        } catch (URISyntaxException | IOException | ParsingException | ParserConfigurationException | SAXException
+                | XPathExpressionException e) {
             DebugUtils.dumpException(e);
             gatewayResponse.setErrorBody(INTERNAL_SERVER_ERROR_MESSAGE + " : " + e.getMessage());
             gatewayResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -123,11 +139,15 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
         final String mmsId = queryStringParameters.get(MMSID_KEY);
         final String isbn = queryStringParameters.get(ISBN_KEY);
         final String institution = queryStringParameters.get(INSTITUTION_KEY);
+        final String libraryCode = queryStringParameters.get(LIBRARY_CODE_KEY);
+        final String recordSchema = queryStringParameters.get(RECORD_SCHEMA_KEY);
         if (isEmpty(mmsId) && isEmpty(isbn)) {
             throw new ParameterException(MANDATORY_PARAMETERS_MISSING);
         } else if (isNotEmpty(mmsId) && isNotEmpty(isbn)) {
             throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
         } else if (isNotEmpty(isbn) && isNotEmpty(institution)) {
+            throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
+        } else if (isNotEmpty(recordSchema) && isNotEmpty(libraryCode) && (isEmpty(institution) || isEmpty(mmsId))) {
             throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
         }
     }

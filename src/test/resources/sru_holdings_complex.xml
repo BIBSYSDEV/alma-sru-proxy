@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?><searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/">
+    <version>1.2</version>
+    <numberOfRecords>1</numberOfRecords>
+    <records>
+        <record>
+            <recordSchema>isohold</recordSchema>
+            <recordPacking>xml</recordPacking>
+            <recordData>
+                <holdings xmlns="http://www.loc.gov/standards/iso20775/">
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1150401</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>Biblioteket Ålesund</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>2</copiesCount>
+                                <status>
+                                    <availableCount>2</availableCount>
+                                    <availableFor>1</availableFor>
+                                    <earliestDispatchDate>2019-12-16T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                                <status>
+                                    <availableCount>2</availableCount>
+                                    <availableFor>2</availableFor>
+                                    <earliestDispatchDate>2019-12-16T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                                <status>
+                                    <availableCount>2</availableCount>
+                                    <availableFor>3</availableFor>
+                                    <earliestDispatchDate>2019-12-16T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>19a031968</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22257098950002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>xb0001</sublocation>
+                                <shelfLocator>612 Kr</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>1</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>2</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>3</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>19a031967</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22257098950002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>xb0001</sublocation>
+                                <shelfLocator>612 Kr</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>1</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>2</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>3</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1160109</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>Bibliotek for medisin og helse</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>4</copiesCount>
+                                <status>
+                                    <availableCount>2</availableCount>
+                                    <availableFor>1</availableFor>
+                                    <earliestDispatchDate>2019-12-16T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                                <status>
+                                    <availableCount>2</availableCount>
+                                    <availableFor>2</availableFor>
+                                    <earliestDispatchDate>2019-12-16T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                                <status>
+                                    <availableCount>2</availableCount>
+                                    <availableFor>3</availableFor>
+                                    <earliestDispatchDate>2019-12-16T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>18a033548</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22238469350002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ux0044</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                        <dateTimeAvailable>2020-01-13T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>18a033547</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22238469350002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ux0044</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>1</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>2</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>3</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>18a033545</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22238469350002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ux0044</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>1</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>2</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                    <status>
+                                        <availabilityStatus>1</availabilityStatus>
+                                        <availableFor>3</availableFor>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>18a033546</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22238469350002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ux0044</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1150401</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>Biblioteket Ålesund</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>1</copiesCount>
+                                <status>
+                                    <availableCount>0</availableCount>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>19a031966</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22257023480002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>xb0009</sublocation>
+                                <shelfLocator>612 Kr</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                    </status>
+                                    <policy>3</policy>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1160128</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>Biblioteket Tungasletta</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>1</copiesCount>
+                                <status>
+                                    <availableCount>0</availableCount>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>18a032049</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22236949060002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ux0104</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1160109</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>Bibliotek for medisin og helse</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>1</copiesCount>
+                                <status>
+                                    <availableCount>0</availableCount>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>19a002387</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22248648690002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>a00558</sublocation>
+                                <shelfLocator>QS 4 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1160128</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>Biblioteket Tungasletta</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>2</copiesCount>
+                                <status>
+                                    <availableCount>0</availableCount>
+                                    <earliestDispatchDate>2020-01-03T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>18a032048</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22237149440002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ux0093</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                        <dateTimeAvailable>2020-01-03T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>18a032047</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22237149440002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ux0093</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                        <dateTimeAvailable>2020-01-06T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1160109</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>Bibliotek for medisin og helse</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>1</copiesCount>
+                                <status>
+                                    <availableCount>0</availableCount>
+                                    <earliestDispatchDate>2020-01-03T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>18a032808</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22237108820002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>a00304</sublocation>
+                                <shelfLocator>QT 4 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                        <dateTimeAvailable>2020-01-03T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <holding>
+                        <institutionIdentifier>
+                            <value>NO-1050201</value>
+                            <typeOrSource>
+                                <text>ISIL</text>
+                            </typeOrSource>
+                        </institutionIdentifier>
+                        <physicalLocation>NTNU Biblioteket Gjøvik</physicalLocation>
+                        <holdingSimple>
+                            <copiesSummary>
+                                <copiesCount>2</copiesCount>
+                                <status>
+                                    <availableCount>0</availableCount>
+                                    <earliestDispatchDate>2019-12-16T00:00:00.000Z</earliestDispatchDate>
+                                </status>
+                            </copiesSummary>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>19a012613</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22249102080002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ug0004</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                        <dateTimeAvailable>2019-12-16T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                            <copyInformation>
+                                <pieceIdentifier>
+                                    <value>19a020707</value>
+                                    <typeOrSource>
+                                        <text>ITEM ID</text>
+                                    </typeOrSource>
+                                </pieceIdentifier>
+                                <resourceIdentifier>
+                                    <value>22249102080002203</value>
+                                    <typeOrSource>
+                                        <text>HOLDING MMS ID</text>
+                                    </typeOrSource>
+                                </resourceIdentifier>
+                                <sublocation>ug0004</sublocation>
+                                <shelfLocator>612 Kro</shelfLocator>
+                                <availabilityInformation>
+                                    <status>
+                                        <availabilityStatus>2</availabilityStatus>
+                                        <dateTimeAvailable>2019-12-18T00:00:00.000Z</dateTimeAvailable>
+                                    </status>
+                                </availabilityInformation>
+                            </copyInformation>
+                        </holdingSimple>
+                    </holding>
+                    <resource>
+                        <resourceIdentifier>
+                            <value>999920062314202203</value>
+                            <typeOrSource>
+                                <text>SUFFICIENT</text>
+                            </typeOrSource>
+                        </resourceIdentifier>
+                    </resource>
+                </holdings>
+            </recordData>
+            <recordIdentifier>999920062314202203</recordIdentifier>
+            <recordPosition>1</recordPosition>
+        </record>
+    </records>
+    <extraResponseData xmlns:xb="http://www.exlibris.com/repository/search/xmlbeans/">
+        <xb:exact>true</xb:exact>
+        <xb:responseDate>2019-12-16T14:04:54+0100</xb:responseDate>
+    </extraResponseData>
+</searchRetrieveResponse>

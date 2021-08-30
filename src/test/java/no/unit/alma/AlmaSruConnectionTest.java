@@ -37,13 +37,13 @@ public class AlmaSruConnectionTest {
 
     @Test
     public void testGenerateQueryByMmsIdUrl() throws MalformedURLException, URISyntaxException {
-        URL url = almaSruConnection.generateQueryByMmsIdUrl(MOCK_MMS_ID, null);
+        URL url = almaSruConnection.generateQueryByMmsIdUrl(MOCK_MMS_ID, null, null);
         assertTrue(url.getQuery().endsWith("query=alma.mms_id%3D1123456789"));
     }
 
     @Test
     public void testGenerateQueryByMmsIdUrlWithInstitution() throws MalformedURLException, URISyntaxException {
-        URL url = almaSruConnection.generateQueryByMmsIdUrl(MOCK_MMS_ID, MOCK_INSTITUTION);
+        URL url = almaSruConnection.generateQueryByMmsIdUrl(MOCK_MMS_ID, MOCK_INSTITUTION, null);
         assertTrue(url.getQuery().endsWith("query=alma.all_for_ui%3D1123456789"));
     }
 
