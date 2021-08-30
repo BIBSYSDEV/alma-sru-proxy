@@ -100,7 +100,6 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                 String xml = new BufferedReader(streamReader)
                         .lines()
                         .collect(Collectors.joining(System.lineSeparator()));
-                //System.out.printf("XML read from SRU: %s &n", xml);
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 Type listOfMyClassObject = new TypeToken<List<Reference>>() {}.getType();
                 if (isNotEmpty(isbn)) {
