@@ -272,10 +272,6 @@ Resources:
                   - resource-groups:*
                   - route53:* # GetHostedZone
                 Resource: '*'
-              - Effect: Allow
-                Action:
-                  - codestar-connections:PassConnection
-                Resource: !Ref CodeStarConnectionArn
 
   CodeBuildRole:
     DependsOn: CloudFormationRole # make sure that CloudFormationRole is deleted last
