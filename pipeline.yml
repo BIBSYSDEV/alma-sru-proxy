@@ -59,10 +59,6 @@ Parameters:
     Type: String
     Default: alma-sru-proxy
     Description: The name to use for the CloudFormation stack managed by this pipeline. (The stack created with the template in StackTemplatePath).
-  CodeStarConnectionArn:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: '/github-connection'
-    Description: The ARN for the CodestarConnection that connects to the Git (BitBucket) repo
   GitRepo:
     Type: String
     Default: alma-sru-proxy
@@ -208,10 +204,6 @@ Resources:
                   - !Sub 'arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${DeployStackName}/*'
               - Effect: Allow
                 Action:
-                  - codestar-connections:UseConnection
-                Resource: !Ref CodeStarConnectionArn
-              - Effect: Allow
-                Action:
                   - codebuild:BatchGetBuilds
                   - codebuild:StartBuild
                 Resource:
@@ -280,10 +272,6 @@ Resources:
                   - resource-groups:*
                   - route53:* # GetHostedZone
                 Resource: '*'
-              - Effect: Allow
-                Action:
-                  - codestar-connections:PassConnection
-                Resource: !Ref CodeStarConnectionArn
 
   CodeBuildRole:
     DependsOn: CloudFormationRole # make sure that CloudFormationRole is deleted last
@@ -425,7 +413,6 @@ Resources:
                     "StackTemplatePath": "${StackTemplatePath}",
                     "StackTemplateConfigurationPath": "${StackTemplateConfigurationPath}",
                     "DeployStackName": "${DeployStackName}",
-                    "CodeStarConnectionArn": "/github-connection",
                     "GitRepo": "${GitRepo}",
                     "GitBranch": "${GitBranch}",
                     "PipelineApprovalAction": "${PipelineApprovalAction}",
