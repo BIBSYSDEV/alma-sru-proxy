@@ -81,7 +81,7 @@ Parameters:
     AllowedValues:
       - 'Yes'
       - 'No'
-    Default: 'Yes'
+    Default: 'No'
     Type: String
   PipelineApprovalEmail:
     Type: String

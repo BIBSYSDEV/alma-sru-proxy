@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.xml.sax.SAXException;
 
 import static java.lang.String.format;
+import static no.unit.alma.sru.AlmaSruConnection.RECORD_SCHEMA_ISOHOLD;
 import static no.unit.utils.StringUtils.isEmpty;
 import static no.unit.utils.StringUtils.isNotEmpty;
 
@@ -41,6 +42,8 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
     public static final String MISSING_EVENT_ELEMENT_QUERYSTRINGPARAMETERS =
             "Missing event element 'queryStringParameters'.";
     public static final String MANDATORY_PARAMETERS_MISSING = "Mandatory parameters 'mms_id' or 'isbn' is missing.";
+    public static final String MANDATORY_PARAMETER_LIBRARY_CODE_MISSING =
+            "Mandatory parameter 'libraryCode' is missing.";
     public static final String COMBINATION_OF_PARAMETERS_NOT_SUPPORTED =
             format("This combination of parameters is not supported. Supply either %s alone, %s and %s or only %s",
                     MMSID_KEY, MMSID_KEY, INSTITUTION_KEY, ISBN_KEY);
@@ -106,7 +109,7 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                     records = SearchRetrieveResponseParser
                             .getReferenceObjectsFromSearchRetrieveResponseWithCorrectIsbn(xml, isbn);
                     gatewayResponse.setBody(gson.toJson(records, listOfMyClassObject));
-                } else if (recordSchema.equals(AlmaSruConnection.RECORD_SCHEMA_ISOHOLD)) {
+                } else if (recordSchema.equals(RECORD_SCHEMA_ISOHOLD)) {
                     AvailabilityParser parser = new AvailabilityParser();
                     AvailabilityResponse availabilityResponse = parser.getAvailabilityResponse(xml, libraryCode);
                     availabilityResponse.setMmsId(mmsId);
@@ -149,6 +152,9 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
             throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
         } else if (isNotEmpty(recordSchema) && isNotEmpty(libraryCode) && (isEmpty(institution) || isEmpty(mmsId))) {
             throw new ParameterException(COMBINATION_OF_PARAMETERS_NOT_SUPPORTED);
+        } else if (isNotEmpty(mmsId) && isNotEmpty(institution) && RECORD_SCHEMA_ISOHOLD.equalsIgnoreCase(recordSchema)
+                && isEmpty(libraryCode)) {
+            throw new ParameterException(MANDATORY_PARAMETER_LIBRARY_CODE_MISSING);
         }
     }
 

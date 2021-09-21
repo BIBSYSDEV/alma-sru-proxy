@@ -17,7 +17,6 @@ public class AvailabilityResponse {
         this.totalNumberOfItems = totalNumberOfItems;
     }
 
-
     public int getNumberAvailForInterLibraryLoan() {
         return numberAvailForInterLibraryLoan;
     }
