@@ -15,9 +15,9 @@ Parameters:
     AllowedPattern: "^[a-zA-Z0-9$\\-_.+!*'(),]*$"
     ConstraintDescription: "May contain only letters, numbers and one of $-_.+!*'(),"
   SruEndpoint:
-    Type: String
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: '/alma/sruEndpoint'
     Description: Url Endpoint to the SRU server
-    Default: 'bibsys.alma.exlibrisgroup.com'
 
 Conditions:
   HasDomainName: !Not [!Equals [!Ref CustomDomain, '']]
