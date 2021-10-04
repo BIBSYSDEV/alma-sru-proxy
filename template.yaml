@@ -18,7 +18,6 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Default: '/alma/sruEndpoint'
     Description: Url Endpoint to the SRU server
-    Default: 'bibsys.alma.exlibrisgroup.com'
   MaxConcurrency:
     Type: Number
     Default: 20
