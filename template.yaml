@@ -18,16 +18,6 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Default: '/alma/sruEndpoint'
     Description: Url Endpoint to the SRU server
-  MaxConcurrency:
-    Type: Number
-    Default: 20
-    Description: Max number of provisioned hot instances for a lambda function
-  MinConcurrency:
-    Type: Number
-    Default: 1
-    MaxValue: 1
-    MinValue: 1
-    Description: Min number of provisioned hot instances for a lambda function
 
 Conditions:
   HasDomainName: !Not [!Equals [!Ref CustomDomain, '']]
@@ -97,7 +87,7 @@ Resources:
                   description: isbn.
               x-amazon-apigateway-integration:
                 uri:
-                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetAlmaSruRecordFunction.Arn}:live/invocations
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetAlmaSruRecordFunction.Arn}/invocations
                 responses: {}
                 httpMethod: POST
                 type: AWS_PROXY
@@ -150,12 +140,7 @@ Resources:
           ALMA_SRU_HOST: !Ref SruEndpoint
       Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
       Runtime: java11
-      MemorySize: 2048
-      AutoPublishAlias: live
-      DeploymentPreference:
-        Type: AllAtOnce # Or Canary10Percent5Minutes, Linear10PercentEvery1Minute, ...
-      ProvisionedConcurrencyConfig:
-        ProvisionedConcurrentExecutions: 1
+      MemorySize: 1024
       Events:
         GetAlmaSruRecordEvent:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -163,28 +148,6 @@ Resources:
             RestApiId: !Ref AlmaSruProxyApi
             Method: get
             Path: /
-
-  GetAlmaSruRecordFunctionScalableTarget:
-    Type: AWS::ApplicationAutoScaling::ScalableTarget
-    Properties:
-      MaxCapacity: !Ref MaxConcurrency
-      MinCapacity: !Ref MinConcurrency
-      ResourceId: !Sub function:${GetAlmaSruRecordFunction}:live # You need to specify an alis or version here
-      RoleARN: !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/lambda.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_LambdaConcurrency
-      ScalableDimension: lambda:function:ProvisionedConcurrency
-      ServiceNamespace: lambda
-    DependsOn: GetAlmaSruRecordFunctionAliaslive # This is your function logical ID + "Alias" + what you use for AutoPublishAlias
-
-  GetAlmaSruRecordFunctionScalingPolicy:
-    Type: AWS::ApplicationAutoScaling::ScalingPolicy
-    Properties:
-      PolicyName: GetAlmaSruRecordFunctionScalingPolicy
-      PolicyType: TargetTrackingScaling
-      ScalingTargetId: !Ref GetAlmaSruRecordFunctionScalableTarget
-      TargetTrackingScalingPolicyConfiguration:
-        TargetValue: 0.70 # Any value between 0.1 and 0.9 can be used here
-        PredefinedMetricSpecification:
-          PredefinedMetricType: LambdaProvisionedConcurrencyUtilization
 
   AlmaSruProxyBasePathMapping:
     Type: AWS::ApiGateway::BasePathMapping
