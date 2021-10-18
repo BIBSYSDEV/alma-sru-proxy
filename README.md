@@ -1,14 +1,19 @@
 # Alma-SRU Proxy
 
-The purpose of this project is to fetch an Alma-record (publication) by given parameters. One has to send the authors id
- (authorityId resp. ```scn```) and the authors name (```creatorname```) in inverted form as query parameters.
+The purpose of this project is to fetch an Alma-record (publication) by given parameters. One has to
+send the authors id (authorityId resp. ```scn```) and the authors name (```creatorname```) in 
+inverted form as query parameters.
 The return value is expected to be the title of the most recent publication of the author. 
 
-A second endpoint will get an Alma-record by given ```mms_id``` from NETWORK_ZONE. The return value is expected to be 
-the Alma-record in xml format. Adding a second parameter ```institution``` will try to add local information from the
-given institution. The institution-parameter is expected to be in alma-code (e.g. NB, NTNU_UB, UBO). Instead of 
-```mms_id``` (possibly with ```institution```) one can provide only ```isbn``` as parameter. The lambda will then return the
-corresponding records (the records with the given isbn in field 020$a).
+A second endpoint will get an Alma-record by given ```mms_id``` from NETWORK_ZONE. The return value 
+is expected to be the Alma-record in xml format. Adding a second parameter ```institution``` will 
+try to add local information from the given institution. The institution-parameter is expected to be
+in alma-code (e.g. NB, NTNU_UB, UBO). Instead of ```mms_id``` (possibly with ```institution```) one 
+can provide only ```isbn``` as parameter. The lambda will then return the corresponding records 
+(the records with the given isbn in field 020$a).
+
+A third endpoint is able to retrieve holdings-data to a given ```mms_id``` (```recordSchema=isohold```)
+and response from sru is filtered by given ```library_code```. 
 
 The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are 
 defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same 
@@ -257,3 +262,101 @@ Bootstrap:
           </record>
      ```
 
+  * GET to
+
+          /alma/?mms_id=[mms_id]&instituition=[NB]&recordSchema=isohold&libraryCode=[libraryCode]
+        
+          NB! the mms_id from NETWORK_ZONE is expected. 
+
+    Response:
+       ```xml
+    <?xml version="1.0" encoding="UTF-8"?><searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/">
+        <version>1.2</version>
+        <numberOfRecords>1</numberOfRecords>
+        <records>
+            <record>
+                <recordSchema>isohold</recordSchema>
+                <recordPacking>xml</recordPacking>
+                <recordData>
+                    <holdings xmlns="http://www.loc.gov/standards/iso20775/">
+                        <holding>
+                            <institutionIdentifier>
+                                <value>NO-1042300</value>
+                                <typeOrSource>
+                                    <text>ISIL</text>
+                                </typeOrSource>
+                            </institutionIdentifier>
+                            <physicalLocation>Norsk Skogfinsk Museum</physicalLocation>
+                            <holdingSimple>
+                                <copiesSummary>
+                                    <copiesCount>2</copiesCount>
+                                    <status>
+                                        <availableCount>0</availableCount>
+                                        <earliestDispatchDate>2019-12-19T00:00:00.000Z</earliestDispatchDate>
+                                    </status>
+                                </copiesSummary>
+                                <copyInformation>
+                                    <pieceIdentifier>
+                                        <value>barcode15</value>
+                                        <typeOrSource>
+                                            <text>ITEM ID</text>
+                                        </typeOrSource>
+                                    </pieceIdentifier>
+                                    <resourceIdentifier>
+                                        <value>2238439990002286</value>
+                                        <typeOrSource>
+                                            <text>HOLDING MMS ID</text>
+                                        </typeOrSource>
+                                    </resourceIdentifier>
+                                    <sublocation>wl0001</sublocation>
+                                    <availabilityInformation>
+                                        <status>
+                                            <availabilityStatus>2</availabilityStatus>
+                                        </status>
+                                        <policy>3</policy>
+                                    </availabilityInformation>
+                                </copyInformation>
+                                <copyInformation>
+                                    <pieceIdentifier>
+                                        <value>barcode14</value>
+                                        <typeOrSource>
+                                            <text>ITEM ID</text>
+                                        </typeOrSource>
+                                    </pieceIdentifier>
+                                    <resourceIdentifier>
+                                        <value>2238439990002286</value>
+                                        <typeOrSource>
+                                            <text>HOLDING MMS ID</text>
+                                        </typeOrSource>
+                                    </resourceIdentifier>
+                                    <sublocation>wl0001</sublocation>
+                                    <availabilityInformation>
+                                        <status>
+                                            <availabilityStatus>2</availabilityStatus>
+                                            <dateTimeAvailable>2019-12-19T00:00:00.000Z</dateTimeAvailable>
+                                        </status>
+                                    </availabilityInformation>
+                                </copyInformation>
+                            </holdingSimple>
+                        </holding>
+                        <resource>
+                            <resourceIdentifier>
+                                <value>999919767594702286</value>
+                                <typeOrSource>
+                                    <text>SUFFICIENT</text>
+                                </typeOrSource>
+                            </resourceIdentifier>
+                        </resource>
+                    </holdings>
+                </recordData>
+                <recordIdentifier>999919767594702286</recordIdentifier>
+                <recordPosition>1</recordPosition>
+            </record>
+        </records>
+        <extraResponseData xmlns:xb="http://www.exlibris.com/repository/search/xmlbeans/">
+            <xb:exact>true</xb:exact>
+            <xb:responseDate>2019-12-19T10:34:06+0100</xb:responseDate>
+        </extraResponseData>
+    </searchRetrieveResponse>
+
+     ```
