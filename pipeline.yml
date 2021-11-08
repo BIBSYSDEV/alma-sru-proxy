@@ -121,11 +121,9 @@ Resources:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: IntelligentTieringRule
+          - Id: DeleteContentAfter8Days
             Status: Enabled
-            Transition:
-              StorageClass: INTELLIGENT_TIERING
-              TransitionInDays: 30
+            ExpirationInDays: 8
 
   PipelineApprovalTopic:
     Type: AWS::SNS::Topic
