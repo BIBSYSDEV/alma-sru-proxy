@@ -78,6 +78,7 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
             gatewayResponse.setStatusCode(Response.Status.BAD_REQUEST.getStatusCode());
             return gatewayResponse;
         }
+        System.out.println("RequestContext: " + input.get("requestContext"));
 
         Map<String, String> queryStringParameters = (Map<String, String>) input.get(QUERY_STRING_PARAMETERS_KEY);
         String mmsId = queryStringParameters.get(MMSID_KEY);
