@@ -5,7 +5,7 @@ plugins {
     id 'jacoco'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.owasp.dependencycheck' version '6.5.0.1'
-    id 'nebula.lint' version '17.4.0'
+    id 'nebula.lint' version '17.5.0'
 }
 
 group 'no.unit.alma'
