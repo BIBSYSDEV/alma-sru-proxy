@@ -4,7 +4,7 @@ plugins {
     id 'pmd'
     id 'jacoco'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.owasp.dependencycheck' version '6.5.0.1'
+    id 'org.owasp.dependencycheck' version '6.5.1'
     id 'nebula.lint' version '17.5.0'
 }
 
@@ -19,6 +19,11 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+    gradleVersion = "7.3.1"
+}
+
 dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
@@ -26,12 +31,11 @@ dependencies {
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.9'
     implementation group: 'org.marc4j', name: 'marc4j', version: '2.9.2'
     implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '3.11.0'
-    implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.1'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.9'
     implementation group: 'com.github.BIBSYSDEV', name: 'marc21-xml-parser', version: '2.11.5'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-    testImplementation group: 'com.github.bibsysdev', name: 'core', version: '1.16.23'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.1.0'
+    implementation group: 'com.github.bibsysdev', name: 'core', version: '1.16.29'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.2.0'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.2'
 
     shadowJar {
