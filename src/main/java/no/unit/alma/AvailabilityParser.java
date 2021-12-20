@@ -76,7 +76,7 @@ public class AvailabilityParser {
     private void parseStatus(AvailabilityResponse availabilityResponse, XPath xpath, Node statusNode)
             throws XPathExpressionException {
         String availableFor = (String) xpath.compile(XPATH_AVAILABLE_FOR).evaluate(statusNode, XPathConstants.STRING);
-        if (availableFor.equalsIgnoreCase(AVAILABILITYCODE_AVAILAVLE_FOR_INTERLIBRARYLOAN)) {
+        if (AVAILABILITYCODE_AVAILAVLE_FOR_INTERLIBRARYLOAN.equalsIgnoreCase(availableFor)) {
             availabilityResponse.setNumberAvailForInterLibraryLoan(
                 calculateNewAvailabilityCount(availabilityResponse, xpath, statusNode)
             );
