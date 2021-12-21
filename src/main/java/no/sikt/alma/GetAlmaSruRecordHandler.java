@@ -1,18 +1,15 @@
-package no.unit.alma;
+package no.sikt.alma;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
+import static java.lang.String.format;
+import static no.unit.alma.sru.AlmaSruConnection.RECORD_SCHEMA_ISOHOLD;
+import static no.unit.utils.StringUtils.isEmpty;
+import static no.unit.utils.StringUtils.isNotEmpty;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
-import no.unit.alma.sru.AlmaSruConnection;
-import no.unit.marc.ParsingException;
-import no.unit.marc.Reference;
-import no.unit.marc.SearchRetrieveResponseParser;
-
-import javax.ws.rs.core.Response;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.function.aws.MicronautRequestHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,14 +20,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Response;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+import no.unit.alma.AvailabilityParser;
+import no.unit.alma.AvailabilityResponse;
+import no.unit.alma.Config;
+import no.unit.alma.DebugUtils;
+import no.unit.alma.ParameterException;
+import no.unit.alma.sru.AlmaSruConnection;
+import no.unit.marc.ParsingException;
+import no.unit.marc.Reference;
+import no.unit.marc.SearchRetrieveResponseParser;
 import org.xml.sax.SAXException;
 
-import static java.lang.String.format;
-import static no.unit.alma.sru.AlmaSruConnection.RECORD_SCHEMA_ISOHOLD;
-import static no.unit.utils.StringUtils.isEmpty;
-import static no.unit.utils.StringUtils.isNotEmpty;
-
-public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Object>, GatewayResponse> {
+@Introspected
+public class GetAlmaSruRecordHandler extends MicronautRequestHandler<Map<String, Object>, GatewayResponse> {
 
     public static final String QUERY_STRING_PARAMETERS_KEY = "queryStringParameters";
     public static final String MMSID_KEY = "mms_id";
@@ -52,10 +57,12 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
     protected final transient AlmaSruConnection connection;
 
     public GetAlmaSruRecordHandler() {
+        super();
         connection = new AlmaSruConnection();
     }
 
     public GetAlmaSruRecordHandler(AlmaSruConnection connection) {
+        super();
         this.connection = connection;
     }
 
@@ -67,7 +74,7 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
      */
     @Override
     @SuppressWarnings("unchecked")
-    public GatewayResponse handleRequest(final Map<String, Object> input, Context context) {
+    public GatewayResponse execute(Map<String, Object> input) {
         GatewayResponse gatewayResponse = new GatewayResponse();
         try {
             Config.getInstance().checkProperties();

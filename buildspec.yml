@@ -6,45 +6,53 @@ env:
 phases:
 
   install:
+    on-failure: ABORT
     runtime-versions:
       java: corretto11
-      ruby: 2.6
+      docker: latest
     commands:
-      - pip3 install --upgrade cfn-lint
       # Upgrade AWS CLI to the latest version
       # Install aws-sam-cli
       - pip3 install aws-sam-cli
-      # Install cfn_nag
-      - gem install cfn-nag
+      - echo "Check docker is running"
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
 
   pre_build:
+    on-failure: ABORT
     commands:
       - echo "pre_build steps for revision ${CODEBUILD_RESOLVED_SOURCE_VERSION}..."
       - env
       - node -v
-      - aws --version
-      - cfn-lint -v
-      - cfn_nag -v
+      - aws --version- echo "Build native image"
+      - cd alma-sru-proxy
+      - ./gradlew buildNativeLambda
+#      - cfn-lint -v
+#      - cfn_nag -v
 
       # Lint
-      - cfn-lint # uses .cfnlintrc
+#      - cfn-lint # uses .cfnlintrc
 
       # Run cfn-nag (looks for patterns in CFN templates that may indicate insecure infrastructure)
-      - cfn_nag_scan --output-format txt --print-suppression --blacklist-path .cfn_nag_blacklist --input-path . --template-pattern '^(?!.*buildspec\.y[a]?ml)((..*\.y[a]?ml)|(..*\.template))$'
+#      - cfn_nag_scan --output-format txt --print-suppression --blacklist-path .cfn_nag_blacklist --input-path . --template-pattern '^(?!.*buildspec\.y[a]?ml)((..*\.y[a]?ml)|(..*\.template))$'
 
   build:
+    on-failure: ABORT
     commands:
+      - cd ..
       - echo Build started on `date`
       # Use AWS SAM to build and package the application by using AWS CloudFormation
       - sam build
-      - sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yml
+      - sam package --s3-bucket $S3_BUCKET --output-template-file packaged_raw.yml
 
       # Lint after 'package'
-      - cfn-lint packaged.yml
+#      - cfn-lint packaged.yml
 
     post_build:
+      on-failure: ABORT
       commands:
-        - echo Build completed on `date`
+        - BUILD_TIMESTAMP=$(date '+%s')
+        - envsubst '${BUILD_TIMESTAMP}' < packaged_raw.yaml > packaged.yaml
         - echo Files
         - ls -l
 

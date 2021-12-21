@@ -138,9 +138,11 @@ Resources:
         Variables:
           ALLOWED_ORIGIN:  '*'
           ALMA_SRU_HOST: !Ref SruEndpoint
-      Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
-      Runtime: java11
+      Handler: Provided
+      Runtime: provided
       MemorySize: 1024
+      Description: alma sru proxy
+      CodeUri: alma-sru-proxy/build/libs/alma-sru-proxy-1.0-lambda.zip
       Events:
         GetAlmaSruRecordEvent:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
