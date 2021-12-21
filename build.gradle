@@ -43,7 +43,7 @@ dependencies {
     implementation group: 'com.github.BIBSYSDEV', name: 'marc21-xml-parser', version: '2.11.5'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation group: 'com.github.bibsysdev', name: 'core', version: '1.16.30'
-    implementation ('org.apache.logging.log4j:log4j-over-slf4j') { version { strictly '1.7.32' }}
+    implementation ('org.slf4j:log4j-over-slf4j') { version { strictly '1.7.32' }}
     runtimeOnly("ch.qos.logback:logback-classic") { version { strictly '1.2.9' }}
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.2.0'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.2'
