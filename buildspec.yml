@@ -9,7 +9,6 @@ phases:
     on-failure: ABORT
     runtime-versions:
       java: corretto11
-      docker: latest
     commands:
       # Upgrade AWS CLI to the latest version
       # Install aws-sam-cli
@@ -26,7 +25,6 @@ phases:
       - node -v
       - aws --version
       - echo "Build native image"
-      - pwd
       - ./gradlew buildNativeLambda
 #      - cfn-lint -v
 #      - cfn_nag -v
