@@ -3,7 +3,7 @@ plugins {
     id 'checkstyle'
     id 'pmd'
     id 'jacoco'
-//    id("com.github.johnrengelman.shadow") version "7.1.0"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
     id 'io.micronaut.application' version '3.0.1'
     id 'nebula.lint' version '17.5.0'
 }
