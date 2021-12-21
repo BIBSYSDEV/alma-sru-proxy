@@ -26,7 +26,7 @@ phases:
       - node -v
       - aws --version
       - echo "Build native image"
-      - cd alma-sru-proxy
+      - pwd
       - ./gradlew buildNativeLambda
 #      - cfn-lint -v
 #      - cfn_nag -v
@@ -40,7 +40,6 @@ phases:
   build:
     on-failure: ABORT
     commands:
-      - cd ..
       - echo Build started on `date`
       # Use AWS SAM to build and package the application by using AWS CloudFormation
       - sam build
