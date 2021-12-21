@@ -24,7 +24,8 @@ phases:
       - echo "pre_build steps for revision ${CODEBUILD_RESOLVED_SOURCE_VERSION}..."
       - env
       - node -v
-      - aws --version- echo "Build native image"
+      - aws --version
+      - echo "Build native image"
       - cd alma-sru-proxy
       - ./gradlew buildNativeLambda
 #      - cfn-lint -v
