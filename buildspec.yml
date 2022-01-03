@@ -25,7 +25,7 @@ phases:
       - node -v
       - aws --version
       - echo "Build native image"
-      - ./gradlew buildNativeLambda
+      - ./gradlew buildNativeLambda --debug
 #      - cfn-lint -v
 #      - cfn_nag -v
 
