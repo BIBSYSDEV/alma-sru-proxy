@@ -35,7 +35,7 @@ dependencies {
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
     implementation group: 'com.github.BIBSYSDEV', name: 'marc21-xml-parser', version: '2.11.5'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-    testImplementation group: 'com.github.bibsysdev', name: 'core', version: '1.20.11'
+    testImplementation group: 'com.github.bibsysdev', name: 'core', version: '1.20.12'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.3.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.2'
 
