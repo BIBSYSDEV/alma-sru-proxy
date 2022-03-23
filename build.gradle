@@ -55,7 +55,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("no.sikt.nva.Application")
+    mainClass.set("no.sikt.alma.Application")
 }
 
 test {
