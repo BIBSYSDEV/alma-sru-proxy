@@ -164,7 +164,7 @@ Resources:
             Action: ['sts:AssumeRole']
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-        -
+
   DefaultLambdaPermissions:
     Type: AWS::IAM::Policy
     Properties:
