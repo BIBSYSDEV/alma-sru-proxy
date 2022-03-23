@@ -6,13 +6,13 @@ env:
     DOCKER_HUB_USERNAME: bibsdockeraccount:DockerHubUsername
     DOCKER_HUB_SECRET: bibsdockeraccount:DockerHubSecret
 
+
 phases:
 
   install:
     on-failure: ABORT
     runtime-versions:
       java: corretto11
-      docker: latest
     commands:
       # Upgrade AWS CLI to the latest version
       # Install aws-sam-cli
