@@ -294,6 +294,10 @@ Resources:
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
+              - Sid: SecretsmanagerPolicy
+                Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
               - Sid: CloudWatchLogsPolicy
                 Effect: Allow
                 Action:
@@ -307,12 +311,10 @@ Resources:
                   - s3:GetObject
                   - s3:GetObjectVersion
                   - s3:PutObject
-                  #            - s3:PutObjectAcl
                   - s3:CreateMultipartUpload
                   - s3:ListMultipartUploadParts
                   - s3:AbortMultipartUpload
                 Resource: !Sub
-                  - 'arn:aws:s3:::${BucketName}/*'
                   - BucketName: !Ref ArtifactsBucket
 
   CodeBuildProject:
