@@ -143,6 +143,7 @@ Resources:
       MemorySize: 1024
       Description: alma sru proxy
       CodeUri: alma-sru-proxy/build/libs/alma-sru-proxy-1.0-lambda.zip
+      Role: !GetAtt AlmaSruProxyExecutionRole.Arn
       Events:
         GetAlmaSruRecordEvent:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -150,6 +151,36 @@ Resources:
             RestApiId: !Ref AlmaSruProxyApi
             Method: get
             Path: /
+
+  AlmaSruProxyExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        -
+  DefaultLambdaPermissions:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub DefaultLambdaPermissions-${AWS::StackName}
+      Roles:
+        - !Ref AlmaSruProxyExecutionRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              - lambda:InvokeFunction
+            Resource: "*"
 
   AlmaSruProxyBasePathMapping:
     Type: AWS::ApiGateway::BasePathMapping
