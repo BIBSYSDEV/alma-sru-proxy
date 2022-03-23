@@ -13,7 +13,6 @@ phases:
     on-failure: ABORT
     runtime-versions:
       java: corretto11
-      docker: latest
     commands:
       # Upgrade AWS CLI to the latest version
       # Install aws-sam-cli
