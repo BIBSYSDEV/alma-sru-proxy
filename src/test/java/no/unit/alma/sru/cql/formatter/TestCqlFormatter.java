@@ -44,7 +44,7 @@ public class TestCqlFormatter {
                 .withAuthorityId(FAKE_AUTHORITY_ID)
                 .withRetrospective(true);
         String expected = "alma.authority_id=123 AND "
-                + "(alma.main_pub_date=1981 OR alma.main_pub_date=1982 "
+                + "(alma.main_pub_date=1982 "
                 + "OR alma.main_pub_date=1983 OR alma.main_pub_date=1984 OR alma.main_pub_date=1985 "
                 + "OR alma.main_pub_date=1986 OR alma.main_pub_date=1987 OR alma.main_pub_date=1988 "
                 + "OR alma.main_pub_date=1989 OR alma.main_pub_date=1990 OR alma.main_pub_date=1991 "
@@ -57,7 +57,8 @@ public class TestCqlFormatter {
                 + "OR alma.main_pub_date=2010 OR alma.main_pub_date=2011 OR alma.main_pub_date=2012 "
                 + "OR alma.main_pub_date=2013 OR alma.main_pub_date=2014 OR alma.main_pub_date=2015 "
                 + "OR alma.main_pub_date=2016 OR alma.main_pub_date=2017 OR alma.main_pub_date=2018 "
-                + "OR alma.main_pub_date=2019 OR alma.main_pub_date=2020 OR alma.main_pub_date=2021)";
+                + "OR alma.main_pub_date=2019 OR alma.main_pub_date=2020 OR alma.main_pub_date=2021 "
+                + "OR alma.main_pub_date=2022)";
         assertEquals(expected, cqlFormatter.build());
     }
 
@@ -78,7 +79,7 @@ public class TestCqlFormatter {
                 .withRetrospective(true)
                 .withSorting(true);
         String expected = "alma.authority_id=123 AND alma.creator=\"Nameson, Name\" AND "
-                + "(alma.main_pub_date=1981 OR alma.main_pub_date=1982 "
+                + "(alma.main_pub_date=1982 "
                 + "OR alma.main_pub_date=1983 OR alma.main_pub_date=1984 OR alma.main_pub_date=1985 "
                 + "OR alma.main_pub_date=1986 OR alma.main_pub_date=1987 OR alma.main_pub_date=1988 "
                 + "OR alma.main_pub_date=1989 OR alma.main_pub_date=1990 OR alma.main_pub_date=1991 "
@@ -91,7 +92,8 @@ public class TestCqlFormatter {
                 + "OR alma.main_pub_date=2010 OR alma.main_pub_date=2011 OR alma.main_pub_date=2012 "
                 + "OR alma.main_pub_date=2013 OR alma.main_pub_date=2014 OR alma.main_pub_date=2015 "
                 + "OR alma.main_pub_date=2016 OR alma.main_pub_date=2017 OR alma.main_pub_date=2018 "
-                + "OR alma.main_pub_date=2019 OR alma.main_pub_date=2020 OR alma.main_pub_date=2021) "
+                + "OR alma.main_pub_date=2019 OR alma.main_pub_date=2020 OR alma.main_pub_date=2021 "
+                + "OR alma.main_pub_date=2022) "
                 + "sortBy alma.main_pub_date/sort.descending";
 
         assertEquals(expected, cqlFormatter.build());
@@ -100,8 +102,8 @@ public class TestCqlFormatter {
     @Test
     public void generateTestableUri() {
         String expected = "alma.authority_id=90061718%20AND%20alma.creator=%22Ibsen,%20Henrik%22%20"
-                + "AND%20(alma.main_pub_date=1981%20"
-                + "OR%20alma.main_pub_date=1982%20OR%20alma.main_pub_date=1983%20"
+                + "AND%20("
+                + "alma.main_pub_date=1982%20OR%20alma.main_pub_date=1983%20"
                 + "OR%20alma.main_pub_date=1984%20OR%20alma.main_pub_date=1985%20"
                 + "OR%20alma.main_pub_date=1986%20OR%20alma.main_pub_date=1987%20"
                 + "OR%20alma.main_pub_date=1988%20OR%20alma.main_pub_date=1989%20"
@@ -120,7 +122,8 @@ public class TestCqlFormatter {
                 + "OR%20alma.main_pub_date=2014%20OR%20alma.main_pub_date=2015%20"
                 + "OR%20alma.main_pub_date=2016%20OR%20alma.main_pub_date=2017%20"
                 + "OR%20alma.main_pub_date=2018%20OR%20alma.main_pub_date=2019%20"
-                + "OR%20alma.main_pub_date=2020%20OR%20alma.main_pub_date=2021)%20"
+                + "OR%20alma.main_pub_date=2020%20OR%20alma.main_pub_date=2021%20"
+                + "OR%20alma.main_pub_date=2022)%20"
                 + "sortBy%20alma.main_pub_date%2Fsort.descending";
 
         String encoded = new CqlFormatter()
