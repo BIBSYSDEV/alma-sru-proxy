@@ -2,6 +2,10 @@ version: 0.2
 
 env:
   shell: bash
+  secrets-manager:
+    DOCKER_HUB_USERNAME: bibsdockeraccount:DockerHubUsername
+    DOCKER_HUB_SECRET: bibsdockeraccount:DockerHubSecret
+
 
 phases:
 
