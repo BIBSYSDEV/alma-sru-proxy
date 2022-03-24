@@ -142,7 +142,7 @@ Resources:
       Runtime: provided
       MemorySize: 1024
       Description: alma sru proxy
-      CodeUri: alma-sru-proxy/build/libs/alma-sru-proxy-1.0-lambda.zip
+      CodeUri: build/libs/alma-sru-proxy-1.0-lambda.zip
       Role: !GetAtt AlmaSruProxyExecutionRole.Arn
       Events:
         GetAlmaSruRecordEvent:
