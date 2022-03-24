@@ -298,6 +298,7 @@ Resources:
                 Effect: Allow
                 Action:
                   - secretsmanager:GetSecretValue
+                Resource: '*'
               - Sid: CloudWatchLogsPolicy
                 Effect: Allow
                 Action:
@@ -314,7 +315,7 @@ Resources:
                   - s3:CreateMultipartUpload
                   - s3:ListMultipartUploadParts
                   - s3:AbortMultipartUpload
-                Resource: !Sub
+                Resource:
                   - BucketName: !Ref ArtifactsBucket
 
   CodeBuildProject:
