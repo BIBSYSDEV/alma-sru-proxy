@@ -294,14 +294,15 @@ Resources:
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              - Sid: SecretsmanagerPolicy
-                Effect: Allow
-                Action:
-                  - secretsmanager:GetSecretValue
-                Resource: '*'
+#              - Sid: SecretsmanagerPolicy
+#                Effect: Allow
+#                Action:
+#                  - secretsmanager:GetSecretValue
+#                Resource: '*'
               - Sid: CloudWatchLogsPolicy
                 Effect: Allow
                 Action:
+                  - secretsmanager:GetSecretValue
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
                   - logs:PutLogEvents
