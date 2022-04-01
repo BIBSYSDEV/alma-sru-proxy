@@ -27,7 +27,8 @@ phases:
       - env
       - node -v
       - aws --version
-      - echo "Build native image"
+      - echo -n "$DOCKER_HUB_SECRET" | docker login --username $DOCKER_HUB_USERNAME --password-stdin
+      - docker pull amazonlinux:latest
       - ./gradlew buildNativeLambda
 #      - cfn-lint -v
 #      - cfn_nag -v
