@@ -299,7 +299,7 @@ Resources:
                 Action:
                   - secretsmanager:GetSecretValue
                 Resource:
-                  - "arn:aws:secretsmanager:*:979605241843:secret:*"
+                  - !Sub "arn:aws:secretsmanager:*:${AWS::AccountId}:secret:*"
               - Sid: CloudWatchLogsPolicy
                 Effect: Allow
                 Action:
@@ -315,7 +315,8 @@ Resources:
                   - s3:PutObject
                   - s3:ListMultipartUploadParts
                   - s3:AbortMultipartUpload
-                Resource:
+                Resource: !Sub
+                  - 'arn:aws:s3:::${BucketName}/*'
                   - BucketName: !Ref ArtifactsBucket
 
   CodeBuildProject:
