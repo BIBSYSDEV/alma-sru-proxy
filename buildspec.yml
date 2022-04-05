@@ -30,14 +30,6 @@ phases:
       - echo -n "$DOCKER_HUB_SECRET" | docker login --username $DOCKER_HUB_USERNAME --password-stdin
       - docker pull amazonlinux:latest
       - ./gradlew buildNativeLambda
-#      - cfn-lint -v
-#      - cfn_nag -v
-
-      # Lint
-#      - cfn-lint # uses .cfnlintrc
-
-      # Run cfn-nag (looks for patterns in CFN templates that may indicate insecure infrastructure)
-#      - cfn_nag_scan --output-format txt --print-suppression --blacklist-path .cfn_nag_blacklist --input-path . --template-pattern '^(?!.*buildspec\.y[a]?ml)((..*\.y[a]?ml)|(..*\.template))$'
 
   build:
     on-failure: ABORT
@@ -47,16 +39,13 @@ phases:
       - sam build
       - sam package --s3-bucket $S3_BUCKET --output-template-file packaged_raw.yml
 
-      # Lint after 'package'
-#      - cfn-lint packaged.yml
-
-    post_build:
-      on-failure: ABORT
-      commands:
-        - BUILD_TIMESTAMP=$(date '+%s')
-        - envsubst '${BUILD_TIMESTAMP}' < packaged_raw.yaml > packaged.yaml
-        - echo Files
-        - ls -l
+  post_build:
+    on-failure: ABORT
+    commands:
+      - BUILD_TIMESTAMP=$(date '+%s')
+      - envsubst '${BUILD_TIMESTAMP}' < packaged_raw.yaml > packaged.yaml
+      - echo Files
+      - ls -l
 
 artifacts:
   files:
