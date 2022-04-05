@@ -49,4 +49,4 @@ phases:
 
 artifacts:
   files:
-    - packaged.yaml
+    - '**/*'
