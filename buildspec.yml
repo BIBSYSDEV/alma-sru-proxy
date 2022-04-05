@@ -43,7 +43,7 @@ phases:
     on-failure: ABORT
     commands:
       - BUILD_TIMESTAMP=$(date '+%s')
-      - envsubst '${BUILD_TIMESTAMP}' < packaged_raw.yaml > packaged.yaml
+      - envsubst '${BUILD_TIMESTAMP}' < packaged_raw.yaml > packaged.yml
       - ls -l
 
 artifacts:
