@@ -56,7 +56,7 @@ class GetAlmaSruRecordHandlerTest {
         InputStream stream = GetAlmaSruRecordHandlerTest.class.getResourceAsStream(SRU_RESPONSE_2_HITS);
         when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
 
-        final GatewayResponse gatewayResponse = getAlmaSruRecordHandler.handleRequest(event, null);
+        final GatewayResponse gatewayResponse = getAlmaSruRecordHandler.execute(event);
 
         assertEquals(Response.Status.OK.getStatusCode(), gatewayResponse.getStatusCode());
         assertTrue(gatewayResponse.getBody().contains(EXPECTED_TITLE));

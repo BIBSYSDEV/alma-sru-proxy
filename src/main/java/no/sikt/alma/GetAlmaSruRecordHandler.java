@@ -76,9 +76,12 @@ public class GetAlmaSruRecordHandler extends MicronautRequestHandler<Map<String,
     @SuppressWarnings("unchecked")
     public GatewayResponse execute(Map<String, Object> input) {
         GatewayResponse gatewayResponse = new GatewayResponse();
+        System.out.println("welcome to my Handler");
         try {
             Config.getInstance().checkProperties();
+            System.out.printf("Config read");
             this.checkParameters(input);
+            System.out.println("input checked");
         } catch (ParameterException e) {
             DebugUtils.dumpException(e);
             gatewayResponse.setErrorBody(e.getMessage()); // Exception contains missing parameter name
