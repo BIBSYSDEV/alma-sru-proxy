@@ -38,7 +38,7 @@ phases:
       # Use AWS SAM to build and package the application by using AWS CloudFormation
       - sam build
       - echo "S3 bucket $S3_BUCKET ..."
-      - sam package --s3-bucket $S3_BUCKET --output-template-file packaged_raw.yml
+      - sam package --s3-bucket $S3_BUCKET --output-template-file packaged_raw.yaml
 
   post_build:
     on-failure: ABORT
