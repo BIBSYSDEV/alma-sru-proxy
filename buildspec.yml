@@ -37,16 +37,19 @@ phases:
       - echo Build started on `date`
       # Use AWS SAM to build and package the application by using AWS CloudFormation
       - sam build
+      - echo "S3 bucket $S3_BUCKET ..."
       - sam package --s3-bucket $S3_BUCKET --output-template-file packaged_raw.yml
 
   post_build:
     on-failure: ABORT
     commands:
       - BUILD_TIMESTAMP=$(date '+%s')
+      - echo Files
+      - ls -l
       - envsubst '${BUILD_TIMESTAMP}' < packaged_raw.yaml > packaged.yaml
       - echo Files
       - ls -l
 
 artifacts:
   files:
-    - '**/*'
+    - packaged.yaml
