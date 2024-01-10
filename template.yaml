@@ -61,7 +61,7 @@ Resources:
       EndpointConfiguration:
         Type: REGIONAL
       AccessLogSetting:
-        DestinationArn: !GetAtt ApiAccessLogGroup.Arn
+        DestinationArn: !GetAtt AlmaSruProxyAccessLogGroup.Arn
         Format: '{ "apiId": "$context.apiId", "requestId": "$context.requestId", "requestTime": "$context.requestTime", "requestTimeEpoch": "$context.requestTimeEpoch", "httpMethod": "$context.httpMethod", "path": "$context.path", "status": "$context.status",  "error.message": "$context.error.message" }'
       DefinitionBody:
         openapi: 3.0.3
