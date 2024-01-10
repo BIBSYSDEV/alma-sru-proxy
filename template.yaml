@@ -32,8 +32,13 @@ Globals:
       AllowMethods: '''OPTIONS, GET'''
       AllowOrigin: '''*'''
     EndpointConfiguration: REGIONAL
+    OpenApiVersion: 3.0.3
 
 Resources:
+  AlmaSruProxyAccessLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      RetentionInDays: 180
 
   AlmaSruProxyApi:
     Type: AWS::Serverless::Api
@@ -55,6 +60,9 @@ Resources:
       StageName: v1
       EndpointConfiguration:
         Type: REGIONAL
+      AccessLogSetting:
+        DestinationArn: !GetAtt ApiAccessLogGroup.Arn
+        Format: '{ "apiId": "$context.apiId", "requestId": "$context.requestId", "requestTime": "$context.requestTime", "requestTimeEpoch": "$context.requestTimeEpoch", "httpMethod": "$context.httpMethod", "path": "$context.path", "status": "$context.status",  "error.message": "$context.error.message" }'
       DefinitionBody:
         openapi: 3.0.3
         info:
