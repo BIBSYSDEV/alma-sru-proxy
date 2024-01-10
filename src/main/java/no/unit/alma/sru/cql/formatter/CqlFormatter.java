@@ -2,11 +2,11 @@ package no.unit.alma.sru.cql.formatter;
 
 import com.google.common.net.UrlEscapers;
 
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
+import no.unit.utils.YearWrapper;
 
 import static java.util.Objects.nonNull;
 
@@ -36,6 +36,7 @@ public class CqlFormatter {
     private static final String CLAUSE_DELIMITER_RIGHT = ")";
     private static final CharSequence LOGICAL_OR = "OR";
     private static final String WHITESPACE = " ";
+    private final YearWrapper yearProvider;
 
     private transient String authorityId;
     private transient String creator;
@@ -44,6 +45,14 @@ public class CqlFormatter {
     private transient String institution;
     private transient boolean sorted;
     private transient boolean retrospective;
+
+    public CqlFormatter() {
+        this.yearProvider = new YearWrapper();
+    }
+
+    public CqlFormatter(YearWrapper yearWrapper) {
+        this.yearProvider = yearWrapper;
+    }
 
     public CqlFormatter withAuthorityId(String authorityId) {
         this.authorityId = authorityId;
@@ -124,7 +133,7 @@ public class CqlFormatter {
     }
 
     private String generateDateClause() {
-        int currentYear = Year.now().getValue();
+        int currentYear = yearProvider.getCurrentYear();
         List<String> dateClauses = new ArrayList<>();
 
         IntStream.range(0, LAST_N_YEARS).forEach(year -> dateClauses

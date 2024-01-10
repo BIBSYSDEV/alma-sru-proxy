@@ -26,6 +26,7 @@ Conditions:
 Globals:
   Function:
     Timeout: 20
+    Runtime: java17
   Api:
     Cors:
       AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
@@ -147,7 +148,6 @@ Resources:
           ALLOWED_ORIGIN:  '*'
           ALMA_SRU_HOST: !Ref SruEndpoint
       Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
-      Runtime: java11
       MemorySize: 1024
       Events:
         GetAlmaSruRecordEvent:

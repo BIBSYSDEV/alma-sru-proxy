@@ -7,7 +7,7 @@ phases:
 
   install:
     runtime-versions:
-      java: corretto11
+      java: corretto17
       ruby: 2.6
     commands:
       - pip3 install --upgrade cfn-lint

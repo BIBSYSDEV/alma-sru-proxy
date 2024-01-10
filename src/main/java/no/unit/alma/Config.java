@@ -2,7 +2,7 @@ package no.unit.alma;
 
 import no.unit.utils.StringUtils;
 
-public class Config {
+public final class Config {
 
     public static final String MISSING_ENVIRONMENT_VARIABLES = "Missing environment variables ALMA_SRU_HOST";
     public static final String CORS_ALLOW_ORIGIN_HEADER_ENVIRONMENT_NAME = "ALLOWED_ORIGIN";
