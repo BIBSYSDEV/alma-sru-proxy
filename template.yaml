@@ -26,14 +26,20 @@ Conditions:
 Globals:
   Function:
     Timeout: 20
+    Runtime: java17
   Api:
     Cors:
       AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
       AllowMethods: '''OPTIONS, GET'''
       AllowOrigin: '''*'''
     EndpointConfiguration: REGIONAL
+    OpenApiVersion: 3.0.3
 
 Resources:
+  AlmaSruProxyAccessLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      RetentionInDays: 180
 
   AlmaSruProxyApi:
     Type: AWS::Serverless::Api
@@ -55,6 +61,9 @@ Resources:
       StageName: v1
       EndpointConfiguration:
         Type: REGIONAL
+      AccessLogSetting:
+        DestinationArn: !GetAtt AlmaSruProxyAccessLogGroup.Arn
+        Format: '{ "apiId": "$context.apiId", "requestId": "$context.requestId", "requestTime": "$context.requestTime", "requestTimeEpoch": "$context.requestTimeEpoch", "httpMethod": "$context.httpMethod", "path": "$context.path", "status": "$context.status",  "error.message": "$context.error.message" }'
       DefinitionBody:
         openapi: 3.0.3
         info:
@@ -139,7 +148,6 @@ Resources:
           ALLOWED_ORIGIN:  '*'
           ALMA_SRU_HOST: !Ref SruEndpoint
       Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
-      Runtime: java11
       MemorySize: 1024
       Events:
         GetAlmaSruRecordEvent:

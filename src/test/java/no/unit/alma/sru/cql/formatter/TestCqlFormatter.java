@@ -1,8 +1,13 @@
 package no.unit.alma.sru.cql.formatter;
 
+import no.unit.utils.YearWrapper;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestCqlFormatter {
 
@@ -12,35 +17,43 @@ public class TestCqlFormatter {
     public static final String FAKE_NAME = "Nameson, Name";
     public static final String IBSEN_SCN = "90061718";
     public static final String IBSEN_HENRIK = "Ibsen, Henrik";
+    private YearWrapper mockYearProvider;
+
+    @BeforeEach
+    public void beforeAll() {
+        YearWrapper mockYearProvider = mock(YearWrapper.class);
+        when(mockYearProvider.getCurrentYear()).thenReturn(2022);
+        this.mockYearProvider = mockYearProvider;
+    }
 
     @Test
     public void assertExists() {
-        new CqlFormatter();
+        new CqlFormatter(mockYearProvider);
     }
 
     @Test
     public void assertReturnsCqlString() {
-        CqlFormatter cqlFormatter = new CqlFormatter();
+        CqlFormatter cqlFormatter = new CqlFormatter(mockYearProvider);
         assertEquals(cqlFormatter.build().getClass(), String.class);
     }
 
     @Test
     public void assertReturnsCqlAuthorityQuery() {
-        CqlFormatter cqlFormatter = new CqlFormatter()
+        CqlFormatter cqlFormatter = new CqlFormatter(mockYearProvider)
                 .withAuthorityId(FAKE_AUTHORITY_ID);
         assertEquals(EXPECTED_AUTHORITY_ID_CQL + FAKE_AUTHORITY_ID, cqlFormatter.build());
     }
 
     @Test
     public void assertReturnsCqlCreatorQuery() {
-        CqlFormatter cqlFormatter = new CqlFormatter()
+        CqlFormatter cqlFormatter = new CqlFormatter(mockYearProvider)
                 .withCreator(FAKE_NAME);
         assertEquals(EXPECTED_CREATOR_CQL + "\"" + FAKE_NAME + "\"", cqlFormatter.build());
     }
 
     @Test
     public void assertReturnsCqlWithDateQuery() {
-        CqlFormatter cqlFormatter = new CqlFormatter()
+        CqlFormatter cqlFormatter = new CqlFormatter(mockYearProvider)
                 .withAuthorityId(FAKE_AUTHORITY_ID)
                 .withRetrospective(true);
         String expected = "alma.authority_id=123 AND "
@@ -64,7 +77,7 @@ public class TestCqlFormatter {
 
     @Test
     public void assertReturnsCqlWithSorting() {
-        CqlFormatter cqlFormatter = new CqlFormatter()
+        CqlFormatter cqlFormatter = new CqlFormatter(mockYearProvider)
                 .withAuthorityId(FAKE_AUTHORITY_ID)
                 .withSorting(true);
         String expected = "alma.authority_id=123 sortBy alma.main_pub_date/sort.descending";
@@ -73,7 +86,7 @@ public class TestCqlFormatter {
 
     @Test
     public void assertFullyFeaturedBuilder() {
-        CqlFormatter cqlFormatter = new CqlFormatter()
+        CqlFormatter cqlFormatter = new CqlFormatter(mockYearProvider)
                 .withAuthorityId(FAKE_AUTHORITY_ID)
                 .withCreator(FAKE_NAME)
                 .withRetrospective(true)
@@ -126,7 +139,7 @@ public class TestCqlFormatter {
                 + "OR%20alma.main_pub_date=2022)%20"
                 + "sortBy%20alma.main_pub_date%2Fsort.descending";
 
-        String encoded = new CqlFormatter()
+        String encoded = new CqlFormatter(mockYearProvider)
                 .withRetrospective(true)
                 .withSorting(true)
                 .withAuthorityId(IBSEN_SCN)

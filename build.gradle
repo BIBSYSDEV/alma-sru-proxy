@@ -3,16 +3,18 @@ plugins {
     id 'checkstyle'
     id 'pmd'
     id 'jacoco'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.owasp.dependencycheck' version '7.2.1'
-    id 'nebula.lint' version '17.7.0'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.owasp.dependencycheck' version '9.0.8'
+    id 'nebula.lint' version '19.0.1'
 }
 
 group 'no.unit.alma'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = JavaVersion.VERSION_11  // source-code version and must be <= targetCompatibility
-targetCompatibility = JavaVersion.VERSION_11 // bytecode target version
+java {
+    sourceCompatibility = JavaVersion.VERSION_17  // source-code version and must be <= targetCompatibility
+    targetCompatibility = JavaVersion.VERSION_17 // bytecode target version
+}
 
 repositories {
     mavenCentral()
@@ -21,40 +23,45 @@ repositories {
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = "7.3.1"
+    gradleVersion = "8.5"
 }
 
 dependencies {
-    implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.1'
-    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
-    implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
-    implementation group: 'org.marc4j', name: 'marc4j', version: '2.9.2'
-    implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '3.11.0'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
-    implementation group: 'com.github.BIBSYSDEV', name: 'marc21-xml-parser', version: '2.11.5'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-    testImplementation group: 'com.github.bibsysdev', name: 'core', version: '1.25.8'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.8.0'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.9.1'
-
-    shadowJar {
-        archiveClassifier.set('')
-        zip64 true
-    }
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
+    implementation 'com.google.guava:guava:33.0.0-jre'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'org.marc4j:marc4j:2.9.5'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.4'
+    implementation 'com.github.BIBSYSDEV:marc21-xml-parser:2.11.5'
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+    testImplementation 'com.github.bibsysdev:core:1.36.10'
+    testImplementation 'org.mockito:mockito-core:5.8.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+shadowJar {
+    archiveClassifier.set('')
+    zip64 true
+}
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
-    failFast = true
+    failFast = false
+    testLogging {
+        events 'skipped', 'passed', 'failed'
+    }
     finalizedBy jacocoTestReport
 }
 
-// We don't want a jar, just a fatJar
-jar.enabled = false
-project.tasks.build.dependsOn project.tasks.shadowJar
+tasks.named('jar').configure {
+    enabled = false
+}
+tasks.named('build').configure {
+    dependsOn tasks.named('shadowJar')
+}
 
 pmd {
     ruleSetConfig = rootProject.resources.text.fromFile('config/pmd/ruleset.xml')
@@ -69,28 +76,29 @@ checkstyle {
 
 tasks.withType(Checkstyle) {
     reports {
-        xml.enabled false
-        html.enabled true
-        html.stylesheet rootProject.resources.text.fromFile('config/checkstyle/checkstyle-simple.xsl')
+        xml.required
+        html.required
+        html.stylesheet = rootProject.resources.text.fromFile('config/checkstyle/checkstyle-simple.xsl')
     }
 }
 
 jacocoTestReport {
     reports {
-        xml.enabled false
-        csv.enabled false
-        html.destination file("${buildDir}/reports/jacoco")
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco"))
     }
 }
 
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.8"
 }
 
-check.dependsOn jacocoTestCoverageVerification
-jacocoTestCoverageVerification.dependsOn(jacocoTestReport)
+tasks.named('check').configure {
+    dependsOn tasks.named('jacocoTestCoverageVerification')
+}
 
-jacocoTestCoverageVerification {
+tasks.named('jacocoTestCoverageVerification').configure {
+    dependsOn tasks.named('jacocoTestReport')
+
     violationRules {
         rule {
             limit {
@@ -109,4 +117,3 @@ jacocoTestCoverageVerification {
         }
     }
 }
-

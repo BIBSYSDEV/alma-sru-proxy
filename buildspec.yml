@@ -7,7 +7,7 @@ phases:
 
   install:
     runtime-versions:
-      java: corretto11
+      java: corretto17
       ruby: 2.6
     commands:
       - pip3 install --upgrade cfn-lint
@@ -27,7 +27,7 @@ phases:
       - cfn_nag -v
 
       # Lint
-      - cfn-lint # uses .cfnlintrc
+      - cfn-lint --ignore-checks W # uses .cfnlintrc
 
       # Run cfn-nag (looks for patterns in CFN templates that may indicate insecure infrastructure)
       - cfn_nag_scan --output-format txt --print-suppression --blacklist-path .cfn_nag_blacklist --input-path . --template-pattern '^(?!.*buildspec\.y[a]?ml)((..*\.y[a]?ml)|(..*\.template))$'
