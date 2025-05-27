@@ -70,6 +70,7 @@ pmd {
 }
 
 checkstyle {
+    toolVersion = '10.24.0'
     configFile = rootProject.resources.text.fromFile('config/checkstyle/checkstyle.xml').asFile()
     showViolations = true
 }
