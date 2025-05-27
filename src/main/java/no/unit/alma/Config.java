@@ -16,7 +16,7 @@ public final class Config {
     private Config() {
     }
 
-    private static class LazyHolder {
+    private static final class LazyHolder {
 
         private static final Config INSTANCE = new Config();
 
