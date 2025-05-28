@@ -4,8 +4,7 @@ plugins {
     id 'pmd'
     id 'jacoco'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id 'org.owasp.dependencycheck' version '9.0.8'
-    id 'nebula.lint' version '19.0.1'
+    id 'nebula.lint' version '20.5.8'
 }
 
 group 'no.unit.alma'
@@ -23,22 +22,22 @@ repositories {
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = "8.5"
+    gradleVersion = "8.14.1"
 }
 
 dependencies {
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
-    implementation 'com.google.guava:guava:33.0.0-jre'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    implementation 'com.google.guava:guava:33.4.8-jre'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.3'
     implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'org.marc4j:marc4j:2.9.5'
-    implementation 'com.amazonaws:aws-lambda-java-events:3.11.4'
+    implementation 'com.google.code.gson:gson:2.13.1'
+    implementation 'org.marc4j:marc4j:2.9.6'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.15.0'
     implementation 'com.github.BIBSYSDEV:marc21-xml-parser:2.11.5'
-    implementation 'org.apache.commons:commons-lang3:3.14.0'
-    testImplementation 'com.github.bibsysdev:core:1.36.10'
-    testImplementation 'org.mockito:mockito-core:5.8.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    testImplementation 'com.github.bibsysdev:core:2.2.5'
+    testImplementation 'org.mockito:mockito-core:5.18.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -51,7 +50,7 @@ tasks.named('test') {
     useJUnitPlatform()
     failFast = false
     testLogging {
-        events 'skipped', 'passed', 'failed'
+        events 'skipped', 'failed'
     }
     finalizedBy jacocoTestReport
 }
@@ -64,12 +63,14 @@ tasks.named('build').configure {
 }
 
 pmd {
+    toolVersion = '7.13.0'
     ruleSetConfig = rootProject.resources.text.fromFile('config/pmd/ruleset.xml')
     ruleSets = []
     ignoreFailures = false
 }
 
 checkstyle {
+    toolVersion = '10.24.0'
     configFile = rootProject.resources.text.fromFile('config/checkstyle/checkstyle.xml').asFile()
     showViolations = true
 }
@@ -89,7 +90,7 @@ jacocoTestReport {
 }
 
 jacoco {
-    toolVersion = "0.8.8"
+    toolVersion = "0.8.13"
 }
 
 tasks.named('check').configure {

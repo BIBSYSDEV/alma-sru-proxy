@@ -110,7 +110,7 @@ public class GetAlmaSruRecordHandler implements RequestHandler<Map<String, Objec
                     records = SearchRetrieveResponseParser
                             .getReferenceObjectsFromSearchRetrieveResponseWithCorrectIsbn(xml, isbn);
                     gatewayResponse.setBody(gson.toJson(records, listOfMyClassObject));
-                } else if (recordSchema.equals(RECORD_SCHEMA_ISOHOLD)) {
+                } else if (RECORD_SCHEMA_ISOHOLD.equals(recordSchema)) {
                     AvailabilityParser parser = new AvailabilityParser();
                     AvailabilityResponse availabilityResponse = parser.getAvailabilityResponse(xml, libraryCode);
                     availabilityResponse.setMmsId(mmsId);

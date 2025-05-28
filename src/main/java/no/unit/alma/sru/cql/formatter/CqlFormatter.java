@@ -120,11 +120,11 @@ public class CqlFormatter {
     }
 
     private String generateSortSpecification(String index) {
-        return index + MODIFIER_SEPARATOR + CqlFormatter.SORT_MODIFIER;
+        return index + MODIFIER_SEPARATOR + SORT_MODIFIER;
     }
 
     private String generateIndex(String index) {
-        return String.join(TERM_PATH_SEPARATOR, CqlFormatter.TERM_SET, index);
+        return String.join(TERM_PATH_SEPARATOR, TERM_SET, index);
     }
 
     public CqlFormatter withCreator(String creator) {
@@ -150,7 +150,7 @@ public class CqlFormatter {
         if (value.contains(WHITESPACE)) {
             cqlValue = STRING_DELIMITER + value + STRING_DELIMITER;
         }
-        return String.join(CqlFormatter.BEGINS_COMPARATOR, term, cqlValue);
+        return String.join(BEGINS_COMPARATOR, term, cqlValue);
     }
 
     public CqlFormatter withRetrospective(boolean retrospective) {

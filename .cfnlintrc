@@ -6,3 +6,5 @@ ignore_templates:
 - ./**/buildspec.yaml
 - ./**/buildspec*.yml
 - ./**/buildspec*.yaml
+ignore_checks:
+- W3045 # Ignoring this check because 'AccessControl' should still be supported for our use case
