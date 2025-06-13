@@ -13,7 +13,7 @@ phases:
       - pip3 install --upgrade cfn-lint
       # Upgrade AWS CLI to the latest version
       # Install aws-sam-cli
-      - pip3 install aws-sam-cli
+      - pip3 install aws-sam-cli -U
       # Install cfn_nag
       - gem install cfn-nag
 
@@ -25,6 +25,7 @@ phases:
       - aws --version
       - cfn-lint -v
       - cfn_nag -v
+      - sam --version
 
       # Lint
       - cfn-lint --ignore-checks W # uses .cfnlintrc
@@ -42,11 +43,11 @@ phases:
       # Lint after 'package'
       - cfn-lint packaged.yml
 
-    post_build:
-      commands:
-        - echo Build completed on `date`
-        - echo Files
-        - ls -l
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Files
+      - ls -l
 
 artifacts:
   files:
