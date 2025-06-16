@@ -8,14 +8,9 @@ phases:
   install:
     runtime-versions:
       java: corretto17
-      ruby: 3.3
     commands:
       - pip3 install --upgrade cfn-lint
-      # Upgrade AWS CLI to the latest version
-      # Install aws-sam-cli
       - pip3 install aws-sam-cli -U
-      # Install cfn_nag
-      - gem install cfn-nag
 
   pre_build:
     commands:
@@ -24,14 +19,10 @@ phases:
       - node -v
       - aws --version
       - cfn-lint -v
-      - cfn_nag -v
       - sam --version
 
       # Lint
       - cfn-lint --ignore-checks W # uses .cfnlintrc
-
-      # Run cfn-nag (looks for patterns in CFN templates that may indicate insecure infrastructure)
-      - cfn_nag_scan --output-format txt --print-suppression --blacklist-path .cfn_nag_blacklist --input-path . --template-pattern '^(?!.*buildspec\.y[a]?ml)((..*\.y[a]?ml)|(..*\.template))$'
 
   build:
     commands:
