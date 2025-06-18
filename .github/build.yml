@@ -1,0 +1,15 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  build:
+    uses: BIBSYSDEV/nva-github-workflows/.github/workflows/java.yml@v1
+    with:
+      java_version: "17"
+      lint_openapi: false
+      cloudformation_template: "template.yaml pipeline.yml"
