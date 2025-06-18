@@ -1,0 +1,22 @@
+name: Lint CloudFormation Templates
+
+on: [ pull_request ]
+
+jobs:
+  cloudformation-linter:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Cloud Formation Linter with Latest Version
+        uses: scottbrenner/cfn-lint-action@v2
+
+      - name: Run cfn-lint on template and pipeline
+        run: |
+          cfn-lint --version
+          cfn-lint -t ./template.yaml
+          cfn-lint -t ./pipeline.yml
+          echo Linting Complete!
