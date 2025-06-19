@@ -26,7 +26,7 @@ Conditions:
 Globals:
   Function:
     Timeout: 20
-    Runtime: java17
+    Runtime: java21
   Api:
     Cors:
       AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
