@@ -7,25 +7,24 @@ paths:
     get:
       summary:  Get Alma record given by mms_id and optional institution
       description:  gets the Alma record by mms_id
-      consumes:
-        - application/json
-      produces:
-        - application/json
       parameters:
         - in: query
           name: mms_id
           required: false
-          type: string
+          schema:
+            type: string
           description: mms_id.
         - in: query
           name: institution
           required: false
-          type: string
+          schema:
+            type: string
           description: institution (alma_code).
         - in: query
           name: isbn
           required: false
-          type: string
+          schema:
+            type: string
           description: isbn.
       x-amazon-apigateway-integration:
         uri:
