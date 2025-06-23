@@ -11,8 +11,8 @@ group 'no.unit.alma'
 version '1.0-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17  // source-code version and must be <= targetCompatibility
-    targetCompatibility = JavaVersion.VERSION_17 // bytecode target version
+    sourceCompatibility = JavaVersion.VERSION_21  // source-code version and must be <= targetCompatibility
+    targetCompatibility = JavaVersion.VERSION_21 // bytecode target version
 }
 
 repositories {
@@ -75,7 +75,7 @@ checkstyle {
     showViolations = true
 }
 
-tasks.withType(Checkstyle) {
+tasks.withType(Checkstyle).configureEach {
     reports {
         xml.required
         html.required
