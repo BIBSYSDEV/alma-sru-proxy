@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: Alma SRU Proxy
+  version: '1.0'
+paths:
+  /:
+    get:
+      summary:  Get Alma record given by mms_id and optional institution
+      description:  gets the Alma record by mms_id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: mms_id
+          required: false
+          type: string
+          description: mms_id.
+        - in: query
+          name: institution
+          required: false
+          type: string
+          description: institution (alma_code).
+        - in: query
+          name: isbn
+          required: false
+          type: string
+          description: isbn.
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetAlmaSruRecordFunction.Arn}/invocations
+        responses: {}
+        httpMethod: POST
+        type: AWS_PROXY
+      responses:
+        '200':
+          description: alma record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAlmaSruRecordResponseBody'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                title: 400 Bad request
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: error message
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                title: 500 internal server error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: error message
+
+components:
+  schemas:
+    getAlmaSruRecordResponseBody:
+      title: alma record
+      type: object
+      properties:
+        title:
+          type: string
+          description: bibliographic record from Alma
