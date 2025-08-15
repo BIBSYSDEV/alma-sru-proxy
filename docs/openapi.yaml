@@ -1,30 +1,41 @@
 openapi: 3.0.3
 info:
   title: Alma SRU Proxy
+  description: Fetch an Alma-record (publication) by given parameters from Alma.
   version: '1.0'
+  contact:
+    email: kontakt@sikt.no
+servers:
+  - url: https://api.sandbox.bibs.aws.unit.no/alma
+  - url: https://api.bibs.aws.unit.no/alma
 paths:
   /:
     get:
-      summary:  Get Alma record given by mms_id and optional institution
-      description:  gets the Alma record by mms_id
+      summary:  Get Alma record given by either mms_id and optional institution, or isbn
+      description:  gets the Alma record by mms_id or isbn
+      tags:
+        - Record
       parameters:
         - in: query
           name: mms_id
           required: false
           schema:
             type: string
+          example: '990600890834702201'
           description: mms_id.
         - in: query
           name: institution
           required: false
           schema:
             type: string
+          example: 'NB'
           description: institution (alma_code).
         - in: query
           name: isbn
           required: false
           schema:
             type: string
+          example: '9788205345362'
           description: isbn.
       x-amazon-apigateway-integration:
         uri:
@@ -66,8 +77,75 @@ components:
   schemas:
     getAlmaSruRecordResponseBody:
       title: alma record
+      description: bibliographic record from Alma
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: The unique identifier for the record
+            example: "990600890834702201"
+          mainTitle:
+            type: string
+            description: The main title of the record
+            example: "Samlede verker"
+          statementOfResponsibility:
+            type: string
+            description: The statement of responsibility for the record
+            example: "Henrik Ibsen"
+          authors:
+            type: array
+            description: A list of authors associated with the record
+            items:
+              $ref: '#/components/schemas/Author'
+          year:
+            type: string
+            description: The publication year of the record
+            example: "2006"
+          isbn:
+            type: array
+            description: A list of ISBN numbers associated with the record
+            items:
+              type: string
+            example: [ "9788205345362", "8205345368" ]
+          publisher:
+            type: string
+            description: The publisher of the record
+            example: "Gyldendal"
+          xmlPresentation:
+            type: string
+            description: The XML representation of the record
+            format: xml
+            example: |
+              <record xmlns="http://www.loc.gov/MARC21/slim">
+                <leader>02846cam a2200565 c 4500</leader>
+                <controlfield tag="001">990600890834702201</controlfield>
+                <!-- More XML content -->
+              </record>
+          linePresentation:
+            type: string
+            description: The line-based presentation of the record
+            example: |
+              *ldr 02846cam a2200565 c 4500
+              *001 990600890834702201
+              *005 20250707074746.0
+              *007 ta
+              *007 cr||||||||||||
+              *008 150729s2006    no ||||e |||||000|1|nob|^
+
+    Author:
       type: object
       properties:
-        title:
+        name:
           type: string
-          description: bibliographic record from Alma
+          description: The name of the author
+          example: "Ibsen, Henrik"
+        date:
+          type: string
+          description: The lifespan or date related to the author
+          example: "1828-1906"
+        id:
+          type: string
+          description: The unique identifier for the author
+          example: "(NO-TrBIB)90061718"
