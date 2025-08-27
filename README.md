@@ -360,3 +360,7 @@ Bootstrap:
     </searchRetrieveResponse>
 
      ```
+
+# API-documentation
+
+To see API-documentation in a interactive Swagger UI. Click [here for development specification](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/BIBSYSDEV/alma-sru-proxy/develop/docs/openapi.yaml). Or click [here for production](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/BIBSYSDEV/alma-sru-proxy/master/docs/openapi.yaml).
