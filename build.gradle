@@ -33,7 +33,7 @@ dependencies {
     implementation 'org.marc4j:marc4j:2.9.6'
     implementation 'com.amazonaws:aws-lambda-java-events:3.15.0'
     implementation 'com.github.BIBSYSDEV:marc21-xml-parser:2.11.5'
-    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
     testImplementation 'com.github.bibsysdev:core:2.2.6'
     testImplementation 'org.mockito:mockito-core:5.18.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.13.1'
@@ -50,14 +50,14 @@ tasks.named('test') {
 }
 
 pmd {
-    toolVersion = '7.13.0'
+    toolVersion = '7.16.0'
     ruleSetConfig = rootProject.resources.text.fromFile('config/pmd/ruleset.xml')
     ruleSets = []
     ignoreFailures = false
 }
 
 checkstyle {
-    toolVersion = '10.24.0'
+    toolVersion = '10.26.1'
     configFile = rootProject.resources.text.fromFile('config/checkstyle/checkstyle.xml').asFile()
     showViolations = true
 }
