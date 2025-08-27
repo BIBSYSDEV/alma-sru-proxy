@@ -1,0 +1,30 @@
+name: Dependency Submission
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+
+  dependency-submission:
+    name: Dependency graph
+    # With the line below, dependency graphs are only accepted for the default branch, skip job on other branches
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: corretto
+
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v4
+        with:
+          # Optional: Publish detailed results to gradle.
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
