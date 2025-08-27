@@ -3,7 +3,6 @@ plugins {
     id 'checkstyle'
     id 'pmd'
     id 'jacoco'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'nebula.lint' version '20.6.2'
 }
 
@@ -41,11 +40,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-shadowJar {
-    archiveClassifier.set('')
-    zip64 true
-}
-
 tasks.named('test') {
     useJUnitPlatform()
     failFast = false
@@ -53,13 +47,6 @@ tasks.named('test') {
         events 'skipped', 'failed'
     }
     finalizedBy jacocoTestReport
-}
-
-tasks.named('jar').configure {
-    enabled = false
-}
-tasks.named('build').configure {
-    dependsOn tasks.named('shadowJar')
 }
 
 pmd {
