@@ -1,5 +1,7 @@
 package no.unit.alma.sru;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import no.unit.alma.Config;
 import no.unit.alma.sru.cql.formatter.CqlFormatter;
 import no.unit.utils.StringUtils;
@@ -31,7 +33,7 @@ public class AlmaSruConnection {
     public static final String NETWORK = "NETWORK";
 
     public InputStreamReader connect(URL url) throws IOException {
-        return new InputStreamReader(url.openStream());
+        return new InputStreamReader(url.openStream(), UTF_8);
     }
 
     /**
