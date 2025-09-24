@@ -16,7 +16,7 @@ public class GatewayResponse {
 
     public static final String CORS_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin";
     public static final String EMPTY_JSON = "{}";
-    public static final transient String ERROR_KEY = "error";
+    public static final String ERROR_KEY = "error";
     private String body;
     private transient Map<String, String> headers;
     private int statusCode;
