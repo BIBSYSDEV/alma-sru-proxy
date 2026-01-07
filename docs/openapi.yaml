@@ -8,9 +8,13 @@ info:
 servers:
   - url: https://api.sandbox.bibs.aws.unit.no/alma
   - url: https://api.bibs.aws.unit.no/alma
+tags:
+  - name: Record
+    description: A SRU Record
 paths:
   /:
     get:
+      operationId: getRecordByAlmaIdOrIsbn
       summary:  Get Alma record given by either mms_id and optional institution, or isbn
       description:  gets the Alma record by mms_id or isbn
       tags:
