@@ -1,5 +1,8 @@
 name: Dependency Submission
 
+permissions:
+  contents: write   # To submit dependency graph
+
 on:
   push:
     branches: [ develop ]

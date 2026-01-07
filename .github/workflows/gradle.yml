@@ -1,5 +1,10 @@
 name: Java CI with Gradle
 
+permissions:
+  contents: read          # To read source code
+  checks: write           # To publish test results
+  pull-requests: write    # To comment on PRs
+
 on: [ push, pull_request ]
 
 jobs:

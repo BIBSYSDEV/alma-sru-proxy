@@ -1,5 +1,9 @@
 name: Lint OpenAPI
 
+permissions:
+  contents: read          # To read OpenAPI files
+  pull-requests: write    # To comment on PRs
+
 on: [ push ]
 
 jobs:

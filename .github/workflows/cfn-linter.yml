@@ -1,5 +1,9 @@
 name: Lint CloudFormation Templates
 
+permissions:
+  contents: read        # To read Cloudformation files
+  pull-requests: write  # To comment on PRs
+
 on: [ pull_request ]
 
 jobs:
