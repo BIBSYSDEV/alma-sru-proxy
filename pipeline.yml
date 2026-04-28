@@ -338,7 +338,7 @@ Resources:
         Type: GITHUB
         Location: https://github.com/BIBSYSDEV/alma-sru-proxy.git
       Triggers:
-        Webhook: true
+        Webhook: false
       TimeoutInMinutes: 10
 
   Pipeline:
