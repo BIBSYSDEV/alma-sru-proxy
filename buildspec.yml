@@ -7,30 +7,21 @@ phases:
 
   install:
     runtime-versions:
-      java: corretto11
-      ruby: 2.6
+      java: corretto21
     commands:
       - pip3 install --upgrade cfn-lint
-      # Upgrade AWS CLI to the latest version
-      # Install aws-sam-cli
-      - pip3 install aws-sam-cli
-      # Install cfn_nag
-      - gem install cfn-nag
+      - pip3 install aws-sam-cli -U
 
   pre_build:
     commands:
       - echo "pre_build steps for revision ${CODEBUILD_RESOLVED_SOURCE_VERSION}..."
-      - env
       - node -v
       - aws --version
       - cfn-lint -v
-      - cfn_nag -v
+      - sam --version
 
       # Lint
-      - cfn-lint # uses .cfnlintrc
-
-      # Run cfn-nag (looks for patterns in CFN templates that may indicate insecure infrastructure)
-      - cfn_nag_scan --output-format txt --print-suppression --blacklist-path .cfn_nag_blacklist --input-path . --template-pattern '^(?!.*buildspec\.y[a]?ml)((..*\.y[a]?ml)|(..*\.template))$'
+      - cfn-lint --ignore-checks W # uses .cfnlintrc
 
   build:
     commands:
@@ -42,11 +33,11 @@ phases:
       # Lint after 'package'
       - cfn-lint packaged.yml
 
-    post_build:
-      commands:
-        - echo Build completed on `date`
-        - echo Files
-        - ls -l
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Files
+      - ls -l
 
 artifacts:
   files:

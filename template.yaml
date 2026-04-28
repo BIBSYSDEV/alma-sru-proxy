@@ -26,14 +26,20 @@ Conditions:
 Globals:
   Function:
     Timeout: 20
+    Runtime: java21
   Api:
     Cors:
       AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
       AllowMethods: '''OPTIONS, GET'''
       AllowOrigin: '''*'''
     EndpointConfiguration: REGIONAL
+    OpenApiVersion: 3.0.3
 
 Resources:
+  AlmaSruProxyAccessLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      RetentionInDays: 180
 
   AlmaSruProxyApi:
     Type: AWS::Serverless::Api
@@ -55,81 +61,14 @@ Resources:
       StageName: v1
       EndpointConfiguration:
         Type: REGIONAL
+      AccessLogSetting:
+        DestinationArn: !GetAtt AlmaSruProxyAccessLogGroup.Arn
+        Format: '{ "apiId": "$context.apiId", "requestId": "$context.requestId", "integrationId": "$context.integration.requestId", "time": "$context.requestTime", "timeEpoch": "$context.requestTimeEpoch", "ip": "$context.identity.sourceIp", "method": "$context.httpMethod", "path": "$context.path", "status": "$context.status", "latency": "$context.integration.latency", "userAgent": "$context.identity.userAgent", "error.message": "$context.error.message" }'
       DefinitionBody:
-        openapi: 3.0.3
-        info:
-          title: Alma SRU Proxy
-          version: '1.0'
-        paths:
-          /:
-            get:
-              summary:  Get Alma record given by mms_id and optional institution
-              description:  gets the Alma record by mms_id
-              consumes:
-                - application/json
-              produces:
-                - application/json
-              parameters:
-                - in: query
-                  name: mms_id
-                  required: false
-                  type: string
-                  description: mms_id.
-                - in: query
-                  name: institution
-                  required: false
-                  type: string
-                  description: institution (alma_code).
-                - in: query
-                  name: isbn
-                  required: false
-                  type: string
-                  description: isbn.
-              x-amazon-apigateway-integration:
-                uri:
-                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetAlmaSruRecordFunction.Arn}/invocations
-                responses: {}
-                httpMethod: POST
-                type: AWS_PROXY
-              responses:
-                '200':
-                  description: alma record
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/getAlmaSruRecordResponseBody'
-                '400':
-                  description: Bad request.
-                  content:
-                    application/json:
-                      schema:
-                        title: 400 Bad request
-                        type: object
-                        properties:
-                          error:
-                            type: string
-                            description: error message
-                '500':
-                  description: Internal server error.
-                  content:
-                    application/json:
-                      schema:
-                        title: 500 internal server error
-                        type: object
-                        properties:
-                          error:
-                            type: string
-                            description: error message
-
-        components:
-          schemas:
-            getAlmaSruRecordResponseBody:
-              title: alma record
-              type: object
-              properties:
-                title:
-                  type: string
-                  description: bibliographic record from Alma
+        'Fn::Transform':
+          Name: AWS::Include
+          Parameters:
+            Location: ./docs/openapi.yaml
 
   GetAlmaSruRecordFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -139,7 +78,6 @@ Resources:
           ALLOWED_ORIGIN:  '*'
           ALMA_SRU_HOST: !Ref SruEndpoint
       Handler: no.unit.alma.GetAlmaSruRecordHandler::handleRequest
-      Runtime: java11
       MemorySize: 1024
       Events:
         GetAlmaSruRecordEvent:

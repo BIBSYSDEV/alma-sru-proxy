@@ -25,6 +25,8 @@ public class AlmaSruConnectionTest {
     @BeforeEach
     public void setup() {
         almaSruConnection = new AlmaSruConnection();
+        var config = Config.getInstance();
+        config.setAlmaSruHost("localhost.com");
     }
 
     @Test

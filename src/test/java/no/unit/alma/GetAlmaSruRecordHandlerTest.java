@@ -3,12 +3,12 @@ package no.unit.alma;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import jakarta.ws.rs.core.Response;
 import no.unit.alma.sru.AlmaSruConnection;
 import no.unit.marc.Reference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -121,7 +121,7 @@ public class GetAlmaSruRecordHandlerTest {
         event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
 
         InputStream stream = GetAlmaSruRecordHandlerTest.class.getResourceAsStream(SRU_RESPONSE_2_HITS);
-        when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
+        when(mockConnection.connect(any())).thenReturn(getStream(stream));
 
         final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
 
@@ -140,7 +140,7 @@ public class GetAlmaSruRecordHandlerTest {
         event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
 
         InputStream stream = GetAlmaSruRecordHandlerTest.class.getResourceAsStream(SRU_HOLDINGS_COMPLEX_XML);
-        when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
+        when(mockConnection.connect(any())).thenReturn(getStream(stream));
 
         final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
 
@@ -157,7 +157,7 @@ public class GetAlmaSruRecordHandlerTest {
         event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
 
         InputStream stream = GetAlmaSruRecordHandlerTest.class.getResourceAsStream(SRU_RESPONSE_2_HITS);
-        when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
+        when(mockConnection.connect(any())).thenReturn(getStream(stream));
 
         final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
 
@@ -173,7 +173,7 @@ public class GetAlmaSruRecordHandlerTest {
         event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
 
         InputStream stream = GetAlmaSruRecordHandlerTest.class.getResourceAsStream(SRU_RESPONSE_3_HITS_FOR_ONE_ISBN);
-        when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
+        when(mockConnection.connect(any())).thenReturn(getStream(stream));
 
         final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
 
@@ -191,7 +191,7 @@ public class GetAlmaSruRecordHandlerTest {
         event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
 
         InputStream stream = GetAlmaSruRecordHandlerTest.class.getResourceAsStream(SRU_RESPONSE_2_WITH_BAD_XML);
-        when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
+        when(mockConnection.connect(any())).thenReturn(getStream(stream));
 
         final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
 
@@ -206,7 +206,7 @@ public class GetAlmaSruRecordHandlerTest {
         event.put(GetAlmaSruRecordHandler.QUERY_STRING_PARAMETERS_KEY, queryParameters);
 
         InputStream stream = GetAlmaSruRecordHandlerTest.class.getResourceAsStream(SRU_RESPONSE_1_HIT);
-        when(mockConnection.connect(any())).thenReturn(new InputStreamReader(stream));
+        when(mockConnection.connect(any())).thenReturn(getStream(stream));
 
         final GatewayResponse gatewayResponse = mockAlmaRecordHandler.handleRequest(event, null);
 
@@ -215,7 +215,12 @@ public class GetAlmaSruRecordHandlerTest {
         List<Reference> references = gson.fromJson(gatewayResponse.getBody(), listOfMyClassObject);
 
         assertEquals(1, references.size());
-        assertEquals("1986", references.get(0).getYear());
-        assertEquals("998611116644702201", references.get(0).getId());
+        assertEquals("1986", references.getFirst().getYear());
+        assertEquals("998611116644702201", references.getFirst().getId());
     }
+
+    private InputStreamReader getStream(InputStream stream) {
+        return new InputStreamReader(stream);
+    }
+
 }

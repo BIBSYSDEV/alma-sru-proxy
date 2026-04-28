@@ -1,9 +1,10 @@
 package no.unit.alma.sru;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import no.unit.alma.Config;
 import no.unit.alma.sru.cql.formatter.CqlFormatter;
 import no.unit.utils.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,6 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Locale;
+import org.apache.hc.core5.net.URIBuilder;
 
 public class AlmaSruConnection {
 
@@ -31,7 +33,7 @@ public class AlmaSruConnection {
     public static final String NETWORK = "NETWORK";
 
     public InputStreamReader connect(URL url) throws IOException {
-        return new InputStreamReader(url.openStream());
+        return new InputStreamReader(url.openStream(), UTF_8);
     }
 
     /**
