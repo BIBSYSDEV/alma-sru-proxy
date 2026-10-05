@@ -9,3 +9,4 @@ ignore_templates:
 - ./**/openapi.yaml
 ignore_checks:
 - W3045 # Ignoring this check because 'AccessControl' should still be supported for our use case
+#- E6101 # Might give a false positive in later versions of cfn-lint for Outputs section missing Stage
