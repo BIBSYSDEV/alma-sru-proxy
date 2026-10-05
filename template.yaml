@@ -25,7 +25,7 @@ Conditions:
 
 Globals:
   Function:
-    Timeout: 20
+    Timeout: 10
     Runtime: java21
   Api:
     Cors:
@@ -61,6 +61,11 @@ Resources:
       StageName: v1
       EndpointConfiguration:
         Type: REGIONAL
+      MethodSettings:
+        - ResourcePath: '/*'
+          HttpMethod: '*'
+          ThrottlingRateLimit: 100
+          ThrottlingBurstLimit: 200
       AccessLogSetting:
         DestinationArn: !GetAtt AlmaSruProxyAccessLogGroup.Arn
         Format: '{ "apiId": "$context.apiId", "requestId": "$context.requestId", "integrationId": "$context.integration.requestId", "time": "$context.requestTime", "timeEpoch": "$context.requestTimeEpoch", "ip": "$context.identity.sourceIp", "method": "$context.httpMethod", "path": "$context.path", "status": "$context.status", "latency": "$context.integration.latency", "userAgent": "$context.identity.userAgent", "error.message": "$context.error.message" }'
