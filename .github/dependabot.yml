@@ -8,5 +8,5 @@ updates:
   - package-ecosystem: 'gradle'
     directory: '/' # Location of package manifests
     schedule:
-      interval: 'daily'
+      interval: 'weekly'
     target-branch: 'develop'

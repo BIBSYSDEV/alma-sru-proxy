@@ -1,11 +1,11 @@
 package no.unit.alma;
 
 import com.google.gson.JsonObject;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import no.unit.utils.StringUtils;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,7 +16,7 @@ public class GatewayResponse {
 
     public static final String CORS_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin";
     public static final String EMPTY_JSON = "{}";
-    public static final transient String ERROR_KEY = "error";
+    public static final String ERROR_KEY = "error";
     private String body;
     private transient Map<String, String> headers;
     private int statusCode;

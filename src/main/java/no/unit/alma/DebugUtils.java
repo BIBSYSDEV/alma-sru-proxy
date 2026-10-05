@@ -18,7 +18,7 @@ public class DebugUtils {
     }
 
     /**
-     * From org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace
+     * From org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace.
      * in org.apache.commons:commons-lang3:3.9
      */
     public static String getStackTrace(final Throwable throwable) {
