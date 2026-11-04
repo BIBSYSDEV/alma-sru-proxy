@@ -25,7 +25,7 @@ Conditions:
 
 Globals:
   Function:
-    Timeout: 10
+    Timeout: 20
     Runtime: java21
   Api:
     Cors:
