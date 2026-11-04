@@ -1,0 +1,28 @@
+name: Lint CloudFormation Templates
+
+permissions:
+  contents: read        # To read Cloudformation files
+  pull-requests: write  # To comment on PRs
+
+on: [ pull_request ]
+
+jobs:
+  cloudformation-linter:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Cloud Formation Linter with Latest Version
+        uses: scottbrenner/cfn-lint-action@ed184e91f5085a2932501da8314e899e5e0ef5be # v2.7.1
+        with:
+          version: "1.53.3"
+
+      - name: Run cfn-lint on template and pipeline
+        run: |
+          cfn-lint --version
+          cfn-lint -t ./template.yaml --info
+          cfn-lint -t ./pipeline.yml --info
+          echo Linting Complete!
