@@ -1,7 +1,7 @@
 package no.unit.utils;
 
 /**
- * From org.apache.commons.lang3.StringUtils
+ * From org.apache.commons.lang3.StringUtils.
  * in org.apache.commons:commons-lang3:3.9
  */
 public class StringUtils {
