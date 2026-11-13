@@ -3,10 +3,14 @@ package no.unit.alma;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class DebugUtils {
+public final class DebugUtils {
 
     public static final String NEWLINE = "\n";
     public static final String CARRIAGE_RETURN = "\r";
+
+    private DebugUtils() {
+        // NO-OP
+    }
 
     /**
      * Writes a stackTrace into a string.
