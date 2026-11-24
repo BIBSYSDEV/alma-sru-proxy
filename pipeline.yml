@@ -11,8 +11,10 @@ Metadata:
       - Label:
           default: Git Settings
         Parameters:
+          - GitHubOwner
           - GitRepo
           - GitBranch
+          - GitHubConnectionArn
       - Label:
           default: Stack Settings
         Parameters:
@@ -33,6 +35,8 @@ Metadata:
         default: Git Repo
       GitBranch:
         default: Git Branch
+      GitHubConnectionArn:
+        default: SSM parameter with CodeConnections (GitHub App) connection ARN
       StackTemplatePath:
         default: Stack template path
       StackTemplateConfigurationPath:
@@ -67,13 +71,12 @@ Parameters:
     Type: String
     Default: develop
     Description: Git repository branch
-  GitHubOAuthToken:
-    Description: OAuth token used by AWS CodePipeline to connect to GitHub
-    NoEcho: true
-    Type: String
-    Default: '{{resolve:secretsmanager:githubtoken:SecretString}}'
+  GitHubConnectionArn:
+    Description: SSM parameter holding the ARN of the CodeConnections (GitHub App) connection used by CodePipeline to read the repo
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: github-connection
   GitHubOwner:
-    Description: GitHub username owning the repo
+    Description: GitHub organization owning the repo
     Type: String
     Default: BIBSYSDEV
   PipelineApprovalAction:
@@ -205,6 +208,11 @@ Resources:
                   - codebuild:StartBuild
                 Resource:
                   - !GetAtt CodeBuildProject.Arn
+              - Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                  - codeconnections:UseConnection
+                Resource: !Ref GitHubConnectionArn
               - !If
                 - IsPipelineApprovalActionCondition
                 - Effect: "Allow"
@@ -252,6 +260,8 @@ Resources:
                   - codebuild:*
                   - codedeploy:*
                   - codepipeline:*
+                  - codestar-connections:PassConnection
+                  - codeconnections:PassConnection
                   - ec2:*
                   - ecs:*
                   - elasticfilesystem:*
@@ -362,15 +372,14 @@ Resources:
             - Name: Source
               ActionTypeId:
                 Category: Source
-                Owner: ThirdParty
+                Owner: AWS
                 Version: '1'
-                Provider: GitHub
+                Provider: CodeStarSourceConnection
               Configuration:
-                Owner: !Ref GitHubOwner
-                OAuthToken: !Ref GitHubOAuthToken
-                Repo: !Ref GitRepo
-                Branch: !Ref GitBranch
-                PollForSourceChanges: false
+                ConnectionArn: !Ref GitHubConnectionArn
+                FullRepositoryId: !Sub '${GitHubOwner}/${GitRepo}'
+                BranchName: !Ref GitBranch
+                DetectChanges: true
               OutputArtifacts: [Name: SourceArtifacts]
               Namespace: SourceVariables
               RunOrder: 1
